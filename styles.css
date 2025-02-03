@@ -40,6 +40,22 @@ h5 {
     margin-bottom: 20px;
 }
 
+h6 {
+    font-family: 'Courier New', monospace;  /* Keeping with the vintage style */
+    font-size: 1.1rem;  /* Slightly smaller than h5, but still readable */
+    color: #b59e99;  /* Soft grayish hue, complementary to the vintage feel */
+    text-align: center;  /* Center-aligned to match the tone */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-style: italic;  /* Adds a playful, handwritten touch */
+}
+
+h6:hover {
+    color: #8a4d82;  /* Change to a muted purple on hover for subtle interaction */
+    cursor: pointer;  /* Indicates it's clickable (if you want it to be) */
+}
+
+
 /* Paragraph Styling */
 p {
     font-family: 'Courier New', monospace;
