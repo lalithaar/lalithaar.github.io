@@ -1,0 +1,75 @@
+/* Body */
+body {
+    font-family: 'Courier New', monospace;  /* Monospace font for a vintage feel */
+    background-color: #f4f1e1;  /* Light parchment color */
+    color: #3e2c41;  /* Dark brown for a more classic, earthy feel */
+    margin: 0;
+    padding: 20px;
+}
+
+/* Header Styling */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Main Content */
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #d4a7c6;  /* Subtle border to create an aged effect */
+}
+
+/* Heading 2 */
+h2 {
+    font-family: 'Courier New', monospace;  /* Monospace font */
+    color: #8a4d82;  /* Muted purple for a vintage look */
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+/* Subheading */
+h5 {
+    font-family: 'Courier New', monospace;  /* Same monospace font */
+    color: #b59e99;  /* A softer, vintage hue */
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+/* Paragraph Styling */
+p {
+    font-family: 'Courier New', monospace;
+    line-height: 1.8;
+    color: #3e2c41;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Link Styling */
+a {
+    color: #5b87f7;  /* Light vintage blue */
+    text-decoration: none;
+    border-bottom: 2px solid #5b87f7;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #3e2c41;
+    background-color: #f4e1c1;  /* Light parchment background for hover effect */
+    border-bottom: 2px solid #3e2c41;
+    padding-bottom: 2px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    font-family: 'Courier New', monospace;
+    color: #5b87f7;
+    font-size: 1.2rem;
+}
+
