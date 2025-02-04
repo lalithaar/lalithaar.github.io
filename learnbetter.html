@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>Resources Page</title>
+    <style>
+        /* Add some custom styles for the table */
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="nav d-flex align-items-center gap-3 p-3">
+        <h3 class="me-4">Lalitha A R</h3>
+        <a href="#home" class="nav-link">Home</a>
+        <div class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#explore" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Explore
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                <li><a class="dropdown-item" href="#resources">Resources</a></li>
+                <li><a class="dropdown-item" href="#projects">Projects</a></li>
+            </ul>
+        </div>
+        <a href="#contact" class="nav-link">Contact</a>
+    </div>  
+
+    <!-- Search Bar -->
+    <div class="container mt-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search for resources..." onkeyup="filterTable()">
+    </div>
+
+    <!-- Resources Table -->
+    <div class="container mt-2" id="resources">
+        <h3>Resources</h3>
+        <div class="container mt-4 letter-container" id="resourcesNote">
+            <p>These are the resources that have helped me learn better over time. I hope they assist you on your learning journey as well!</p>
+            <p>Best wishes,<br>
+                Lalitha</p>
+        </div>
+        <table class="table table-bordered" id="resourcesTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Tags</th>
+                    <th>Link</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="https://www.calnewport.com/blog/">Cal Newport Blog Archive</a></td>
+                    <td>How to learn better, Blog</td>
+                    <td><a href="https://www.calnewport.com/blog/">Link</a></td>
+                    <td>Use Ctrl+F to search for keywords like “math”, “exam”, “study” etc.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.calnewport.com/books/straight-a-student/">Straight A Student by Cal Newport</a></td>
+                    <td>How to learn better, Book</td>
+                    <td><a href="https://www.calnewport.com/books/straight-a-student/">Link</a></td>
+                    <td>Really good consolidated book based on his research and experiences on learning better.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.learningscientists.org/">The Learning Scientists</a></td>
+                    <td>How to learn better, Blog</td>
+                    <td><a href="https://www.learningscientists.org/">Link</a></td>
+                    <td>Research-based learning advice as the name suggests.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.scotthyoung.com/blog/">Scott Young Blog</a></td>
+                    <td>How to learn better, Blog</td>
+                    <td><a href="https://www.scotthyoung.com/blog/">Link</a></td>
+                    <td>He covered the MIT 4-Year Curriculum in a single year without attending lectures formally.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.youtube.com/c/AliAbdaal">Ali Abdaal Study Playlist</a></td>
+                    <td>How to learn better, YouTube</td>
+                    <td><a href="https://www.youtube.com/c/AliAbdaal">Link</a></td>
+                    <td>He has really good tips and ideas, especially the 2-hour masterclass.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://betterexplained.com/">Better Explained</a></td>
+                    <td>How to learn better, Math, Blog</td>
+                    <td><a href="https://betterexplained.com/">Link</a></td>
+                    <td>Gold for building intuition for math.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.youtube.com/c/3blue1brown">3Blue1Brown</a></td>
+                    <td>Math, YouTube</td>
+                    <td><a href="https://www.youtube.com/c/3blue1brown">Link</a></td>
+                    <td>Gold for building intuition for math, especially if you are a visual learner.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.mathsisfun.com/">Math is Fun</a></td>
+                    <td>Math, Blog</td>
+                    <td><a href="https://www.mathsisfun.com/">Link</a></td>
+                    <td>Blog that breaks down math concepts in simple words, good for understanding the concepts.</td>
+                </tr>
+                <tr>
+                    <td><a href="link-to-jun-yuh-system">The Learning System by Jun Yuh</a></td>
+                    <td>How to learn better, Book</td>
+                    <td><a href="link-to-jun-yuh-system">Link</a></td>
+                    <td>A biomed. engineering student who graduated BS and MS with a perfect CGPA.</td>
+                </tr>
+                <tr>
+                    <td><a href="link-to-jun-yuh-guide">The Guide to Academic Success by Jun Yuh</a></td>
+                    <td>How to learn better, Book</td>
+                    <td><a href="link-to-jun-yuh-guide">Link</a></td>
+                    <td>A biomed. engineering student who graduated BS and MS with a perfect CGPA.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://ocw.mit.edu/courses/mathematics/18-06-linear-algebra-spring-2010/">18.06 Linear Algebra by Prof. Gilbert Strang</a></td>
+                    <td>Math, Lectures</td>
+                    <td><a href="https://ocw.mit.edu/courses/mathematics/18-06-linear-algebra-spring-2010/">Link</a></td>
+                    <td>MIT Course.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="container mt-5" id="contact">
+        <h3>Contact</h3>
+        <p>Whether it's a chat about something random or a deeper discussion, feel free to reach out!</p>
+        <p>Student Email: <a href="mailto:24f2006078@ds.study.iitm.ac.in">24f2006078@ds.study.iitm.ac.in</a></p>
+        <p>Personal Email: <a href="mailto:arlalithablogs@gmail.com">arlalithablogs@gmail.com</a></p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer text-center p-3 mt-4">
+        <h6>Lalitha A R © 2025</h6>
+    </div>
+
+    <script>
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('resourcesTable');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td');
+                let found = false;
+
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                tr[i].style.display = found ? "" : "none";
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
