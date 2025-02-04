@@ -3,22 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <title>Home Page</title>
 </head>
 <body>
-    <h2> Hello Amazing human</h2>
-    <h5>or if you're a furry friend, like a cat, dog, or something equally cute... <span><h6>who landed here by mistake ( is it? 🤫) </h6></span></h5>
-    <p> I am Lalitha</p>
-    <p>Thank you for being here :>
-        I am so glad you exist
-        and that you chose to visit my site :>
-    </p>
-    <p>The site is still in construction, but please drop me a message <span><a href="mailto:24f2006078@ds.study.iitm.ac.in">here</a></span></p>
-    <p>If you are a cat, dog, or other adorable creature..., please also send a pic of yours </p>
-    <p>Have a great day ahead :></p>
-    <p>Stay safe and take care</p>
-    <p>Love,</p>
-    <p>Lalitha</p>
+    <div class="nav d-flex align-items-center gap-3">
+        <h3 class="me-4">Lalitha A R</h3>
+        <a href="#home" class="nav-link">Home</a>
+        <div class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#explore" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Explore
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                <li><a class="dropdown-item" href="#resources">Resources</a></li>
+                <li><a class="dropdown-item" href="#projects">Projects</a></li>
+            </ul>
+        </div>
+        <a href="#contact" class="nav-link">Contact</a>
+    </div>  
+
+    <div class="container mt-4 letter-container" id="home">
+        <h6 class="letter-heading">Hello Amazing Human :D</h6>
+        <p class="letter-subheading">or if you're a furry friend, like a cat, dog, or something equally cute... 
+            <small class="d-block text-muted">(who landed here by mistake 🤫)</small>
+        </p>
+        <p>I am Lalitha</p>
+        <p>Thank you for being here. I’m so glad you exist and that you chose to visit my site!</p>
+        <p>The site is still under construction, but please feel free to drop me a message 
+            <a href="mailto:24f2006078@ds.study.iitm.ac.in">here</a>.
+        </p>
+        <p>If you are a cat, dog, or any other adorable creature, please also send me a picture of yours. 🐾</p>
+        <p>Have a great day ahead!</p>
+        <p>Stay safe and take care,</p>
+        <p>Lalitha</p>
+    </div>
+    
+    
+
+    <div class="container mt-5" id="resources">
+        <h3>Resources</h3>
+        <div class="row g-4"> <!-- Added spacing between cards -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="learnbetter.html">Learn Better</a></h5>
+                        <p class="card-text">Resources I have gathered over time to help me learn better</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="skillsworkshop.html">Skills Workshop</a></h5>
+                        <p class="card-text">Resources from workshops on building skills</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5" id="projects">
+        <h3>Projects</h3>
+        <div class="row g-4"> <!-- Added spacing between cards -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="project1.html">Ramakoti Yagna</a></h5>
+                        <p class="card-text">A spiritual project coordinated under Deva Bhasha Sanskrit Society, IITM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5" id="contact">
+        <h3>Contact</h3>
+        <p>Whether it's a chat about something random or a deeper discussion, feel free to reach out!</p>
+        <p>Student Email: <a href="mailto:24f2006078@ds.study.iitm.ac.in">24f2006078@ds.study.iitm.ac.in</a></p>
+        <p>Personal Email: <a href="mailto:arlalithablogs@gmail.com">arlalithablogs@gmail.com</a></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
