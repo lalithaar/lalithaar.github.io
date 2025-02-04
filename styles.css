@@ -27,7 +27,7 @@ main {
 /* Heading 2 */
 h2 {
     font-family: 'Courier New', monospace;  /* Monospace font */
-    color: #8a4d82;  /* Muted purple for a vintage look */
+    color: #3e2c41;  /* Dark brown to maintain color consistency */
     margin-bottom: 10px;
     font-size: 2.5rem;
 }
@@ -35,32 +35,16 @@ h2 {
 /* Subheading */
 h5 {
     font-family: 'Courier New', monospace;  /* Same monospace font */
-    color: #b59e99;  /* A softer, vintage hue */
+    color: #3e2c41;  /* Dark brown to match other text */
     font-size: 1.3rem;
     margin-bottom: 20px;
 }
-
-h6 {
-    font-family: 'Courier New', monospace;  /* Keeping with the vintage style */
-    font-size: 1.1rem;  /* Slightly smaller than h5, but still readable */
-    color: #b59e99;  /* Soft grayish hue, complementary to the vintage feel */
-    text-align: center;  /* Center-aligned to match the tone */
-    margin-top: 10px;
-    margin-bottom: 20px;
-    font-style: italic;  /* Adds a playful, handwritten touch */
-}
-
-h6:hover {
-    color: #8a4d82;  /* Change to a muted purple on hover for subtle interaction */
-    cursor: pointer;  /* Indicates it's clickable (if you want it to be) */
-}
-
 
 /* Paragraph Styling */
 p {
     font-family: 'Courier New', monospace;
     line-height: 1.8;
-    color: #3e2c41;
+    color: #3e2c41;  /* Dark brown for consistent text color */
     font-size: 1rem;
     margin-bottom: 20px;
 }
@@ -75,7 +59,7 @@ a {
 
 a:hover {
     color: #3e2c41;
-    background-color: #f4e1c1;  /* Light parchment background for hover effect */
+    background-color: #f4f1e1;  /* Same pale white background for hover effect */
     border-bottom: 2px solid #3e2c41;
     padding-bottom: 2px;
 }
@@ -85,7 +69,79 @@ footer {
     text-align: center;
     margin-top: 40px;
     font-family: 'Courier New', monospace;
-    color: #5b87f7;
+    color: #5b87f7;  /* Consistent light blue */
     font-size: 1.2rem;
 }
 
+/* Letter container style */
+.letter-container {
+    background-color: #f4e1c1;  /* Light parchment background */
+    border: 2px solid #d4a7c6;  /* Slight vintage border */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    font-family: 'Courier New', monospace;  /* Monospace font for vintage feel */
+}
+
+/* Adding a "burned" edge effect */
+.letter-container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: url('burned-paper-border.png') no-repeat center center;  /* Burned paper border image */
+    background-size: cover;
+    border-radius: 15px;
+    z-index: -1;
+}
+
+/* Letter heading style */
+.letter-heading {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #3e2c41;  /* Dark brown color */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Subheading style */
+.letter-subheading {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #3e2c41;  /* Dark brown */
+    margin-bottom: 20px;
+}
+
+/* Links within the letter */
+.letter-container a {
+    color: #5b87f7;  /* Vintage blue */
+    text-decoration: none;
+    border-bottom: 2px solid #5b87f7;
+    transition: all 0.3s ease;
+}
+
+.letter-container a:hover {
+    color: #3e2c41;
+    background-color: #f4e1c1;
+    border-bottom: 2px solid #3e2c41;
+    padding-bottom: 2px;
+}
+
+/* Letter paragraphs */
+.letter-container p {
+    line-height: 1.8;
+    color: #3e2c41;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Small text styling */
+.letter-container small {
+    font-size: 0.85rem;
+    color: #6b4f5a;  /* Slightly muted color for the small text */
+}
