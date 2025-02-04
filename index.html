@@ -3,22 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <title>Home Page</title>
 </head>
 <body>
-    <h2> Hello Amazing human</h2>
-    <h5>or if you're a furry friend, like a cat, dog, or something equally cute... <span><h6>who landed here by mistake ( is it? 🤫) </h6></span></h5>
-    <p> I am Lalitha</p>
-    <p>Thank you for being here :>
-        I am so glad you exist
-        and that you chose to visit my site :>
-    </p>
-    <p>The site is still in construction, but please drop me a message <span><a href="mailto:24f2006078@ds.study.iitm.ac.in">here</a></span></p>
-    <p>If you are a cat, dog, or other adorable creature..., please also send a pic of yours </p>
-    <p>Have a great day ahead :></p>
-    <p>Stay safe and take care</p>
-    <p>Love,</p>
-    <p>Lalitha</p>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand custom-brand" href="#">Lalitha A R</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link custom-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link custom-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle custom-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Projects</a>
+                        <ul class="dropdown-menu custom-dropdown" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item custom-dropdown-item" href="project1.html">Project 1</a></li>
+                            <li><a class="dropdown-item custom-dropdown-item" href="project2.html">Project 2</a></li>
+                            <li><a class="dropdown-item custom-dropdown-item" href="project3.html">Project 3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-5 custom-container">
+        <h2 class="custom-heading">Hello Amazing Human</h2>
+        <h5 class="custom-subheading">or if you're a furry friend, like a cat, dog, or something equally cute... <small class="custom-small">who landed here by mistake (is it? 🤫)</small></h5>
+        <p class="custom-text">I am Lalitha</p>
+        <p class="custom-text">Thank you for being here :> I am so glad you exist and that you chose to visit my site :></p>
+        <p class="custom-text">The site is still in construction, but please drop me a message <a class="custom-link" href="mailto:24f2006078@ds.study.iitm.ac.in">here</a></p>
+        <p class="custom-text">If you are a cat, dog, or other adorable creature..., please also send a pic of yours</p>
+        <p class="custom-text">Have a great day ahead :></p>
+        <p class="custom-text">Stay safe and take care</p>
+        <p class="custom-text">Love,</p>
+        <p class="custom-text">Lalitha</p>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
