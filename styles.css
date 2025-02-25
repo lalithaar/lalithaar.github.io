@@ -1,57 +1,57 @@
 /* Body */
 body {
-    font-family: 'Courier New', monospace;  /* Monospace font for a vintage feel */
-    background-color: #f4f1e1;  /* Light parchment color */
-    color: #3e2c41;  /* Dark brown for a more classic, earthy feel */
+    font-family: 'Courier New', monospace;
+    background-color: #f4f1e1;
+    color: #3e2c41;
     margin: 0;
-    padding: 20px;
+    padding: 10px;  /* Reduced padding */
 }
 
 /* Header Styling */
 header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;  /* Reduced margin */
 }
 
 /* Main Content */
 main {
-    max-width: 800px;
+    max-width: 700px;  /* Reduced max-width */
     margin: 0 auto;
-    padding: 30px;
+    padding: 20px;  /* Reduced padding */
     background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 2px solid #d4a7c6;  /* Subtle border to create an aged effect */
+    border-radius: 10px;  /* Reduced border-radius */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);  /* Reduced box-shadow */
+    border: 2px solid #d4a7c6;
 }
 
 /* Heading 2 */
 h2 {
-    font-family: 'Courier New', monospace;  /* Monospace font */
-    color: #3e2c41;  /* Dark brown to maintain color consistency */
-    margin-bottom: 10px;
-    font-size: 2.5rem;
+    font-family: 'Courier New', monospace;
+    color: #3e2c41;
+    margin-bottom: 8px;  /* Reduced margin */
+    font-size: 2rem;  /* Reduced font-size */
 }
 
 /* Subheading */
 h5 {
-    font-family: 'Courier New', monospace;  /* Same monospace font */
-    color: #3e2c41;  /* Dark brown to match other text */
-    font-size: 1.3rem;
-    margin-bottom: 20px;
+    font-family: 'Courier New', monospace;
+    color: #3e2c41;
+    font-size: 1.2rem;  /* Slightly reduced font-size */
+    margin-bottom: 15px;  /* Reduced margin */
 }
 
 /* Paragraph Styling */
 p {
     font-family: 'Courier New', monospace;
-    line-height: 1.8;
-    color: #3e2c41;  /* Dark brown for consistent text color */
-    font-size: 1rem;
-    margin-bottom: 20px;
+    line-height: 1.6;  /* Reduced line-height */
+    color: #3e2c41;
+    font-size: 0.95rem;  /* Slightly reduced font-size */
+    margin-bottom: 15px;  /* Reduced margin */
 }
 
 /* Link Styling */
 a {
-    color: #5b87f7;  /* Light vintage blue */
+    color: #5b87f7;
     text-decoration: none;
     border-bottom: 2px solid #5b87f7;
     transition: all 0.3s ease;
@@ -59,7 +59,7 @@ a {
 
 a:hover {
     color: #3e2c41;
-    background-color: #f4f1e1;  /* Same pale white background for hover effect */
+    background-color: #f4f1e1;
     border-bottom: 2px solid #3e2c41;
     padding-bottom: 2px;
 }
@@ -67,59 +67,59 @@ a:hover {
 /* Footer */
 footer {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 30px;  /* Reduced margin */
     font-family: 'Courier New', monospace;
-    color: #5b87f7;  /* Consistent light blue */
-    font-size: 1.2rem;
+    color: #5b87f7;
+    font-size: 1rem;  /* Reduced font-size */
 }
 
 /* Letter container style */
 .letter-container {
-    background-color: #f4e1c1;  /* Light parchment background */
-    border: 2px solid #d4a7c6;  /* Slight vintage border */
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
+    background-color: #f4e1c1;
+    border: 2px solid #d4a7c6;
+    padding: 20px;  /* Reduced padding */
+    border-radius: 10px;  /* Reduced border-radius */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);  /* Reduced box-shadow */
+    max-width: 700px;  /* Reduced max-width */
     margin: 0 auto;
     position: relative;
-    font-family: 'Courier New', monospace;  /* Monospace font for vintage feel */
+    font-family: 'Courier New', monospace;
 }
 
 /* Adding a "burned" edge effect */
 .letter-container::before {
     content: '';
     position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background: url('burned-paper-border.png') no-repeat center center;  /* Burned paper border image */
+    top: -8px;  /* Adjusted position */
+    left: -8px;  /* Adjusted position */
+    right: -8px;  /* Adjusted position */
+    bottom: -8px;  /* Adjusted position */
+    background: url('burned-paper-border.png') no-repeat center center;
     background-size: cover;
-    border-radius: 15px;
+    border-radius: 10px;  /* Reduced border-radius */
     z-index: -1;
 }
 
 /* Letter heading style */
 .letter-heading {
     text-align: center;
-    font-size: 2.5rem;
-    color: #3e2c41;  /* Dark brown color */
+    font-size: 2rem;  /* Reduced font-size */
+    color: #3e2c41;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;  /* Reduced margin */
 }
 
 /* Subheading style */
 .letter-subheading {
     text-align: center;
-    font-size: 1.5rem;
-    color: #3e2c41;  /* Dark brown */
-    margin-bottom: 20px;
+    font-size: 1.3rem;  /* Reduced font-size */
+    color: #3e2c41;
+    margin-bottom: 15px;  /* Reduced margin */
 }
 
 /* Links within the letter */
 .letter-container a {
-    color: #5b87f7;  /* Vintage blue */
+    color: #5b87f7;
     text-decoration: none;
     border-bottom: 2px solid #5b87f7;
     transition: all 0.3s ease;
@@ -134,14 +134,14 @@ footer {
 
 /* Letter paragraphs */
 .letter-container p {
-    line-height: 1.8;
+    line-height: 1.6;  /* Reduced line-height */
     color: #3e2c41;
-    font-size: 1rem;
-    margin-bottom: 20px;
+    font-size: 0.95rem;  /* Slightly reduced font-size */
+    margin-bottom: 15px;  /* Reduced margin */
 }
 
 /* Small text styling */
 .letter-container small {
-    font-size: 0.85rem;
-    color: #6b4f5a;  /* Slightly muted color for the small text */
+    font-size: 0.8rem;  /* Slightly reduced font-size */
+    color: #6b4f5a;
 }
