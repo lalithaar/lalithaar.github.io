@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MQNKFPKSKX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MQNKFPKSKX');
+</script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>Workshop</title>
+    <style>
+        /* Add some custom styles for the table */
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="nav d-flex align-items-center gap-3 p-3">
+        <h3 class="me-4">Lalitha A R</h3>
+        <a href="#home" class="nav-link">Home</a>
+        <div class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#explore" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Explore
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                <li><a class="dropdown-item" href="#resources">Resources</a></li>
+                <li><a class="dropdown-item" href="#projects">Projects</a></li>
+            </ul>
+        </div>
+        <a href="#contact" class="nav-link">Contact</a>
+    </div>  
+
+    <!-- Search Bar -->
+    <div class="container mt-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search for resources..." onkeyup="filterTable()">
+    </div>
+
+    <!-- Resources Table -->
+    <div class="container mt-2" id="resources">
+        <h3>Beyond Education</h3>
+        <div class="container mt-4 letter-container" id="resourcesNote">
+            <p>Here are slides, links to resources from my workshop,
+                <br>
+                <b>Beyond Education</b> - <i>Lessons from Book Blogging, Freelancing & Networking at 14</i></p>
+            <p>Hope they help you in your journey,
+                <br>
+                Best wishes,<br>
+                Lalitha</p>
+        </div>
+
+        <table class="table table-bordered" id="resourcesTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Link</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="https://simonsinek.com/books/start-with-why/">Start with Why - Simon Sinek</a></td>
+                    <td>Why</td>
+                    <td>Book</td>
+                    <td><a href="https://simonsinek.com/books/start-with-why/">Link</a></td>
+                    <td>Don't stress too much about it, just do what makes you fulfilled and you will find your way</td>
+                </tr>
+                <tr>
+                    <td><a href="https://simonsinek.com/books/find-your-why/">Find Your Why - Simon Sinek</a></td>
+                    <td>Why</td>
+                    <td>Book</td>
+                    <td><a href="https://simonsinek.com/books/find-your-why/">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.16personalities.com/free-personality-test">MBTI Test</a></td>
+                    <td>Who</td>
+                    <td>Test</td>
+                    <td><a href="https://www.16personalities.com/free-personality-test">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://personalvalu.es/">Personal Values</a></td>
+                    <td>Who</td>
+                    <td>Test</td>
+                    <td><a href="https://personalvalu.es/">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://aliabdaal.com/newsletter/the-odyssey-plan-revisited/">Odyssey Planning</a></td>
+                    <td>Who</td>
+                    <td>Article</td>
+                    <td><a href="https://aliabdaal.com/newsletter/the-odyssey-plan-revisited/">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.youtube.com/watch?v=bMkznpM63cI">Vanessa Lau - Reflections</a></td>
+                    <td>Why</td>
+                    <td>Video</td>
+                    <td><a href="https://www.youtube.com/watch?v=bMkznpM63cI">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://youtube.com/watch?v=-19nb0nAwEY">Sunny Lenarduzzi - How to Be Yourself</a></td>
+                    <td>Who</td>
+                    <td>Video</td>
+                    <td><a href="https://youtube.com/watch?v=-19nb0nAwEY">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://lalithaar.github.io/learnbetter.html">Learning How to Learn Better - My Collection</a></td>
+                    <td>What</td>
+                    <td>Website</td>
+                    <td><a href="https://lalithaar.github.io/learnbetter.html">Link</a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.youtube.com/c/AlexCattoni">Alex Cattoni - Copywriting</a></td>
+                    <td>What</td>
+                    <td>Skill</td>
+                    <td><a href="https://www.youtube.com/c/AlexCattoni">Link</a></td>
+                    <td>One of the best if you want to learn copywriting</td>
+                </tr>
+                <tr>
+                    <td><a href="https://www.youtube.com/channel/UCpzJCfqlpzCwxaUAR0nwYgA">Saheli Chatterjee - Freelancing</a></td>
+                    <td>What</td>
+                    <td>Skill</td>
+                    <td><a href="https://www.youtube.com/channel/UCpzJCfqlpzCwxaUAR0nwYgA">Link</a></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+
+
+    <!-- Contact Section -->
+    <div class="container mt-5" id="contact">
+        <h3>Contact</h3>
+        <p>Whether it's a chat about something random or a deeper discussion, feel free to reach out!</p>
+        <p>Student Email: <a href="mailto:24f2006078@ds.study.iitm.ac.in">24f2006078@ds.study.iitm.ac.in</a></p>
+        <p>Personal Email: <a href="mailto:arlalithablogs@gmail.com">arlalithablogs@gmail.com</a></p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer text-center p-3 mt-4">
+        <h6>Lalitha A R © 2025</h6>
+    </div>
+
+    <script>
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('resourcesTable');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td');
+                let found = false;
+
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                tr[i].style.display = found ? "" : "none";
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
