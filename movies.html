@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lalitha's Peaceful Picks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Halant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --light-blue: #D6ECF0;
+            --dark-text: #2c3e50;
+            --highlight: #4CAF50;
+        }
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--light-blue);
+            color: var(--dark-text);
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            color: var(--highlight);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: var(--highlight);
+            color: white;
+            cursor: pointer;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-family: 'Lora', serif;
+            border: 2px solid var(--highlight);
+            border-radius: 5px;
+        }
+        .notes {
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌸 Lalitha's Comfort Films 🌸</h1>
+    <input type="text" id="search" placeholder="Search by title, language, or genre..." />
+    
+    <table id="movieTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Language</th>
+                <th>Genre</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Maara</td>
+                <td>Tamil</td>
+                <td>Romantic Beautiful</td>
+                <td class="notes">Whimsical, pastel perfection. No conflict, only charm.</td>
+            </tr>
+            <tr>
+                <td>Barfi!</td>
+                <td>Hindi</td>
+                <td>Romance / Drama</td>
+                <td class="notes">Silent poetry. Minimal dialogue, maximal heart.</td>
+            </tr>
+            <tr>
+                <td>My Neighbor Totoro</td>
+                <td>Japanese</td>
+                <td>Fantasy / Family</td>
+                <td class="notes">Pure childhood joy. No villains, only fluff.</td>
+            </tr>
+            <tr>
+                <td>The Lunchbox</td>
+                <td>Hindi</td>
+                <td>Romance / Slice-of-Life</td>
+                <td class="notes">Quiet, tender, and food-filled. Zero violence.</td>
+            </tr>
+            <tr>
+                <td>Pride & Prejudice (2005)</td>
+                <td>English</td>
+                <td>Period Romance</td>
+                <td class="notes">Softest Mr. Darcy. *Sigh.*</td>
+            </tr>
+            <tr>
+                <td>Pariyerum Perumal</td>
+                <td>Tamil</td>
+                <td>Social Drama</td>
+                <td class="notes">Gentle activism. No graphic scenes.</td>
+            </tr>
+            <tr>
+                <td>Midnight in Paris</td>
+                <td>English</td>
+                <td>Fantasy / Romance</td>
+                <td class="notes">Nostalgic, dreamy, zero stress.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        // Search function
+        document.getElementById("search").addEventListener("keyup", function() {
+            let input = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#movieTable tbody tr");
+            
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        });
+
+    </script>
+</body>
+</html>

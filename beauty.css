@@ -1,0 +1,159 @@
+:root {
+        /* Define a more cohesive color palette */
+        --light-blue: #D6ECF0; /* A slightly softer light blue */
+        --dark-text: #2c3e50; /* A darker, softer black for main text */
+        --annotation-green: #4CAF50; /* A pleasant green for the highlight */
+        --annotation-text-color: #3b8d4f; /* A darker shade of green for annotation text */
+        --text-shadow-color: rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color:var(--light-blue);
+        color: var(--dark-text);
+        text-shadow: 0 1px 2px var(--text-shadow-color);
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        font-family: 'Lora', serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    /* center the title class both horizontally and vertically to the page */
+    .title {
+        justify-content: center;
+        align-items: center;
+        /* height: 100vh; */
+        text-align: center;
+        max-width: 80%; /* Limit the width of the content for better readability */
+        margin: 0 auto; /* Center the content horizontally */
+        max-height: 80%;
+    }
+
+    .sanskrit {
+        display: block; /* Change to block for proper positioning */
+        font-family: 'Halant', serif; /* Use Halant for Sanskrit text */
+        font-weight: 600; /* Medium weight for better readability */
+        color: var(--dark-text);
+        text-shadow: 0 1px 2px var(--text-shadow-color);
+        font-size: 2rem;
+        color: var(--dark-text);
+        margin-top: 20px;
+        text-align: center; /* Center the Sanskrit text */
+    }
+
+    ruby {
+        ruby-position: under;
+        text-decoration: underline;
+        text-decoration-style: wavy;
+        text-decoration-color: purple;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+
+    }
+    rt {
+        margin-top: 0.25rem ;
+        font-size: 1.5rem;
+        font-family: 'Shadows Into Light', cursive;
+        color: rgb(39, 128, 53); /* Color for the annotation text */
+
+    }
+    img {
+        width: 100px; /* Set a fixed width for the image */
+        height: auto; /* Maintain aspect ratio */
+        margin-top: 20px;
+        cursor: pointer; /* Change cursor to pointer for interactivity */
+    }
+    .flex {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* Center the content horizontally */
+        justify-content: center; /* Center the content vertically */
+    }
+
+    ul {
+        list-style: none; /* Remove default list styling */
+        padding: 0; /* Remove padding */
+        margin: 0; /* Remove margin */
+        display: flex; /* Use flexbox for horizontal layout */
+        justify-content: center; /* Center the navigation items */
+    }
+    a {
+        text-decoration: none;
+        color: var(--dark-text);
+        font-weight: 600;
+
+    }
+
+    li {
+        margin: 0 15px; /* Add spacing between navigation items */
+        font-family: 'Lora', serif; /* Use Lora for navigation items */
+        font-size: 1.25rem; /* Set font size for navigation items */
+    }
+    /* Add hover effect for navigation items */
+    li:hover {
+        color: var(--annotation-green); /* Change color on hover */
+        text-decoration: underline; /* Underline on hover */
+        text-decoration-style: wavy;
+    }
+
+    [popover] {
+        border: 0.5px solid var(--annotation-green);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+        border-radius: 8px;
+        background-color: lightblue;
+
+    }
+    :popover-open {
+        position: absolute;
+
+    }
+
+
+
+    @media (max-width: 768px)  /* Adjust styles for smaller screens */
+    {
+        .flex {
+            flex-direction: row; /* Stack elements vertically on smaller screens */
+            align-items: center; /* Center the content horizontally */
+        }
+        img {
+            width: 80px; /* Adjust image size for smaller screens */
+        }
+        h1 {
+            font-size: 1.5rem; /* Reduce font size for smaller screens */
+        }
+        .sanskrit {
+            font-size: 1.5rem; /* Reduce font size for Sanskrit text */
+        }
+
+        ul {
+            flex-direction: column; /* Stack items vertically on smaller screens */
+            align-items: center; /* Center the items */
+        }
+        #lotusImage {
+            width: 50px;
+        }
+
+        [popover] {
+            width: 75%;
+        }
+
+        
+    }
+
+
+    nav {
+        position: sticky;
+        top: 0;
+        background-color: var(--light-blue);
+        padding: 10px;
+        padding-top: 0;
+    }
+
+    .main {
+        height: 100vh;
+    }

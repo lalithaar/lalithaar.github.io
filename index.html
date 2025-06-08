@@ -3,96 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MQNKFPKSKX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <title>Lalitha A R</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Halant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  gtag('config', 'G-MQNKFPKSKX');
-</script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <title>Home Page</title>
+    <link rel="stylesheet" href="beauty.css">
 </head>
 <body>
-    <div class="nav d-flex align-items-center gap-3">
-        <h3 class="me-4">Lalitha A R</h3>
-        <a href="#home" class="nav-link">Home</a>
-        <div class="dropdown">
-            <a class="nav-link dropdown-toggle" href="#explore" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Explore
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
-                <li><a class="dropdown-item" href="#resources">Resources</a></li>
-                <li><a class="dropdown-item" href="#projects">Projects</a></li>
-            </ul>
+    <div class="main">
+    <div class="title">
+        <div class="flex">
+            <div class="image-container logo">
+                <img src="namewithpeacockfeather.svg" 
+                alt="Peacock feathers with name 'Lalitha'" 
+                id="feathername"
+                popovertarget="feathernametarget" 
+                popovertargetaction="toggle"
+                title="Not a single breath passes, without you in my heart!">
+            </div>
+            <p class="sanskrit" title="You have become the flesh that sustains me, the life that throbs within">सर्वं श्रीकृष्णसंकल्पम्</p>
+            <div class="image-container">
+                <img src="flute.svg"  
+                alt="A flute" 
+                id="flute"
+                popovertarget="flutetarget" 
+                popovertargetaction="toggle"
+                title="He stole my heart, never to return it!">
+            </div>
         </div>
-        <a href="#contact" class="nav-link">Contact</a>
-    </div>  
+        
+        <div class="flex">
+            <h1>Lalitha is a 
+                <span><ruby> creative enthusiast<rp>(</rp><rt>draws from ink older than time </rt><rp>)</rp> </ruby></span>.
 
-    <div class="container mt-4 letter-container" id="home">
-        <h6 class="letter-heading">Hello Amazing Human :D</h6>
-        <h6 class="letter-subheading">or if you're a furry friend, like a cat, dog, or something equally cute... 
-            <small class="d-block text-muted">(who landed here by mistake 🤫)</small>
-        </h6>
-        <p>I am Lalitha</p>
-        <p>Thank you for being here. I’m so glad you exist and that you chose to visit my site!</p>
-        <p>The site is still under construction, but please feel free to drop me a message 
-            <a href="mailto:24f2006078@ds.study.iitm.ac.in">here</a>.
-        </p>
-        <p>If you are a cat, dog, or any other adorable creature, please also send me a picture of yours. 🐾</p>
-        <p>Have a great day ahead!</p>
-        <p>Stay safe and take care,</p>
-        <p>Lalitha</p>
+                who enjoys thoughtful design and
+                <span><ruby> quiet moments <rp>(</rp><rt>divinely supervised</rt><rp>)</rp> </ruby></span>. 
+                Based 
+                <span><ruby> somewhere peaceful <rp>(</rp><rt>you wouldn't find it in a mortal map</rt><rp>)</rp> </ruby></span>.
+            </h1>
+            <div class="image-container">
+                <img src="lotuswithbutterfly.svg" 
+                alt="A lotus flower with a butterfly on it" 
+                id="lotusImage"
+                popovertarget="lotusbutterfly" 
+                popovertargetaction="toggle"
+                title="I worship the female bee who encircle around the lotus of my heart">
+            </div>
+            
+            <div id="lotusbutterfly" popover>
+                <blockquote>
+                    I worship the Divine Mother, the wondrous bee who circles the lotus of my heart                </blockquote>
+                <cite>Sharadha Bhujanga Stotram by Adi Shankaracharya</cite>
+            </div>
+            <div id="feathernametarget" popover>
+                <blockquote>
+                    Not a single breath passes, without you in my heart!                </blockquote>
+                <cite>Pitha Pirai Soodi from Thevaram</cite>
+            </div>
+            <div id="flutetarget" popover>
+                <blockquote>
+                    He stole my heart, never to return it!                </blockquote>
+                <cite>Thodudaya Seviyan from Thevaram</cite>
+            </div>
     </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="academics.html">Academics & Research</a></li>
+            <li><a href="learning.html">Resources</a></li>
+            <li><a href="#recs">Recommendations</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</div>
+
+
+
+<script>
+    const lotusImage = document.getElementById('lotusImage');
+    const lotusPopover = document.getElementById('lotusbutterfly');
+
+    // Add a click event listener to the image
+    lotusImage.addEventListener('click', function() {
+        lotusPopover.togglePopover(); // This will show/hide the popover
+    });
+
+    const feathername= document.getElementById('feathername');
+    const feathernametarget = document.getElementById('feathernametarget');
+
+    // Add a click event listener to the feather name image
+    feathername.addEventListener('click', function() {
+        feathernametarget.togglePopover(); // This will show/hide the popover
+    });
     
+    // Add a click event listener to the flute image
+    const fluteImage = document.getElementById('flute');
+    const flutePopover = document.getElementById('flutetarget');
     
-
-    <div class="container mt-5" id="resources">
-        <h3>Resources</h3>
-        <div class="row g-4"> <!-- Added spacing between cards -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="learnbetter.html">Learn Better</a></h5>
-                        <p class="card-text">Resources I have gathered over time to help me learn better</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="skillsworkshop.html">Skills Workshop</a></h5>
-                        <p class="card-text">Resources from workshop on building skills</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mt-5" id="projects">
-        <h3>Projects</h3>
-        <div class="row g-4"> <!-- Added spacing between cards -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="project1.html">Ramakoti Yagna</a></h5>
-                        <p class="card-text">A spiritual project coordinated under Deva Bhasha Sanskrit Society, IITM</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mt-5" id="contact">
-        <h3>Contact</h3>
-        <p>Whether it's a chat about something random or a deeper discussion, feel free to reach out!</p>
-        <p>Student Email: <a href="mailto:24f2006078@ds.study.iitm.ac.in">24f2006078@ds.study.iitm.ac.in</a></p>
-        <p>Personal Email: <a href="mailto:arlalithablogs@gmail.com">arlalithablogs@gmail.com</a></p>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    fluteImage.addEventListener('click', function() {
+        flutePopover.togglePopover(); // This will show/hide the popover
+    });
+</script>
 </body>
 </html>

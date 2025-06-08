@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources & More</title>
+    <script async src="https://www.googletagmanager.com/gtag/js/G-MQNKFPKSKX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-MQNKFPKSKX');
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Halant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --light-blue: #D6ECF0; /* A slightly softer light blue */
+            --dark-text: #2c3e50; /* A darker, softer black for main text */
+            --annotation-green: #4CAF50; /* A pleasant green for the highlight */
+            --annotation-text-color: #3b8d4f; /* A darker shade of green for annotation text */
+            --text-shadow-color: rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            --table-border-color: #AEC8CC; /* A softer border for tables */
+            --table-header-bg: #C1E1E6; /* A slightly darker light-blue for header */
+        }
+
+        /* --- Base Styles --- */
+        body {
+            font-family: 'Lora', serif; /* Consistent with main site headings */
+            background-color: var(--light-blue);
+            color: var(--dark-text);
+            text-shadow: 0 1px 2px var(--text-shadow-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0; /* Adjust padding in main content sections */
+        }
+
+        .container-content {
+            max-width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Lora', serif;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 1.5rem;
+            text-align: center; /* Centered headings for consistency */
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--light-blue);
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        /* Hamburger icon for mobile */
+        .hamburger {
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        .hamburger .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: var(--dark-text);
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex; /* Ensures links are horizontal by default */
+        }
+
+        nav li {
+            margin: 0 15px;
+            font-size: 1.25rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 600;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--annotation-green);
+            text-decoration: underline;
+            text-decoration-style: wavy;
+        }
+
+        /* Dropdown specific styles */
+        .dropdown {
+            position: relative;
+            /* When in desktop view, dropdown is inline-block */
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: var(--light-blue);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            padding: 10px 0;
+            top: calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dropdown-menu li a {
+            color: var(--dark-text);
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--annotation-green);
+        }
+
+        /* Show dropdown on hover (desktop) */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* --- Search Bar --- */
+        .search-container {
+            padding: 20px 0;
+            text-align: center;
+        }
+        #searchInput {
+            width: 60%;
+            padding: 10px 15px;
+            border: 1px solid var(--annotation-green);
+            border-radius: 25px;
+            font-size: 1rem;
+            background-color: white;
+            color: var(--dark-text);
+            font-family: 'Inter', sans-serif;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #searchInput::placeholder {
+            color: #8899a6;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--annotation-text-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        /* --- Resources Note / Letter Container --- */
+        .letter-container {
+            background-color: rgba(255, 255, 255, 0.6);
+            border: 1px dashed var(--annotation-green);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            font-style: italic;
+            text-align: left;
+        }
+        .letter-container p {
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        .letter-container p:last-child {
+            margin-bottom: 0;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* --- Table Styling --- */
+        .resources-table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+        th, td {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid var(--table-border-color);
+        }
+        th {
+            background-color: var(--table-header-bg);
+            font-weight: 700;
+            color: var(--dark-text);
+            text-shadow: none;
+        }
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        td a {
+            color: var(--dark-text);
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: purple;
+            transition: color 0.3s ease, text-decoration-color 0.3s ease;
+        }
+        td a:hover {
+            color: var(--annotation-green);
+            text-decoration-color: var(--annotation-green);
+        }
+
+        /* --- Contact Section --- */
+        .contact-section {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-top: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .contact-section h3 {
+            margin-bottom: 20px;
+        }
+        .contact-section p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .contact-section a {
+            color: var(--dark-text);
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: purple;
+            transition: color 0.3s ease, text-decoration-color 0.3s ease;
+        }
+        .contact-section a:hover {
+            color: var(--annotation-green);
+            text-decoration-color: var(--annotation-green);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--table-header-bg);
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .container-content {
+                max-width: 95%;
+                padding: 15px;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: flex-start; /* Align items to the start for mobile layout */
+                padding: 10px 20px; /* Add some horizontal padding for the nav */
+            }
+
+            .hamburger {
+                display: block; /* Show hamburger on smaller screens */
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                display: none; /* Hidden by default on mobile */
+                margin-top: 10px; /* Space from hamburger */
+            }
+
+            nav ul.active {
+                display: flex; /* Show when active */
+            }
+
+            nav li {
+                margin: 5px 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            nav a {
+                padding: 8px 0;
+                display: block;
+            }
+
+            .dropdown {
+                width: 100%;
+            }
+
+            .dropdown-menu {
+                position: static;
+                transform: none;
+                left: unset;
+                width: 100%;
+                box-shadow: none;
+                border-top: 1px solid var(--table-border-color);
+                display: none; /* Hidden by default on mobile, toggled by JS */
+            }
+
+            .dropdown-menu.show {
+                display: block; /* Show when 'show' class is added by JS */
+            }
+
+            .dropdown-menu li {
+                margin: 0;
+            }
+
+            .dropdown-menu li a {
+                padding: 8px 16px;
+            }
+
+            #searchInput {
+                width: 90%;
+            }
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .letter-container, .contact-section {
+                padding: 20px;
+            }
+            h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a {
+                font-size: 1rem;
+            }
+            .dropdown-menu {
+                min-width: unset;
+            }
+            th, td {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="hamburger" id="hamburger-icon">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#research">Research</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" href="#" id="exploreDropdown" role="button" aria-expanded="false">
+                    Explore
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="exploreDropdown">
+                    <li><a class="dropdown-item" href="#resources">Resources</a></li>
+                    <li><a class="dropdown-item" href="#projects">Projects</a></li>
+                </ul>
+            </li>
+            <li><a href="#recs">Recommendations</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container-content">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for resources..." onkeyup="filterTable()">
+        </div>
+
+        <div id="resources">
+            <h3>Learning Resources</h3>
+            <div class="letter-container" id="resourcesNote">
+                <p>These are the pathways of knowledge that have illuminated my own journey of understanding. May they also guide your learning path with clarity and grace.</p>
+                <p>With quiet contemplation,<br>
+                    Lalitha</p>
+            </div>
+            <div class="resources-table-wrapper">
+                <table id="resourcesTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tags</th>
+                            <th>Link</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="https://calnewport.com/archive/">Cal Newport Blog Archive</a></td>
+                            <td>Learning, Blog</td>
+                            <td><a href="https://calnewport.com/archive/">View</a></td>
+                            <td>A trove of insights on deep work and effective learning.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.amazon.com/How-Become-Straight-Student-Unconventional/dp/0767922719">Straight A Student by Cal Newport</a></td>
+                            <td>Learning, Book</td>
+                            <td><a href="https://www.amazon.com/How-Become-Straight-Student-Unconventional/dp/0767922719">View</a></td>
+                            <td>A well-consolidated guide to cultivating effective study habits.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.learningscientists.org/">The Learning Scientists</a></td>
+                            <td>Learning, Blog</td>
+                            <td><a href="https://www.learningscientists.org/">View</a></td>
+                            <td>Evidence-based strategies for deeper retention and recall.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.scotthyoung.com/blog/">Scott Young Blog</a></td>
+                            <td>Learning, Blog</td>
+                            <td><a href="https://www.scotthyoung.com/blog/">View</a></td>
+                            <td>Explorations into accelerated learning and self-education.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.youtube.com/c/AliAbdaal">Ali Abdaal Study Playlist</a></td>
+                            <td>Learning, Video</td>
+                            <td><a href="https://www.youtube.com/c/AliAbdaal">View</a></td>
+                            <td>Practical insights for productive study sessions.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://betterexplained.com/">Better Explained</a></td>
+                            <td>Mathematics, Intuition, Blog</td>
+                            <td><a href="https://betterexplained.com/">View</a></td>
+                            <td>A remarkable resource for grasping mathematical concepts intuitively.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.youtube.com/c/3blue1brown">3Blue1Brown</a></td>
+                            <td>Mathematics, Visualization, Video</td>
+                            <td><a href="https://www.youtube.com/c/3blue1brown">View</a></td>
+                            <td>Visual explanations that unveil the beauty of mathematics.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://www.mathsisfun.com/">Math is Fun</a></td>
+                            <td>Mathematics, Basics, Blog</td>
+                            <td><a href="https://www.mathsisfun.com/">View</a></td>
+                            <td>Simplifying complex ideas into understandable forms.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://drive.google.com/file/d/1FizfloHhBOGTE5Peq-QmmTV0PlzKofPR/view?usp=sharing">The Learning System by Jun Yuh</a></td>
+                            <td>Learning, Book</td>
+                            <td><a href="https://drive.google.com/file/d/1FizfloHhBOGTE5Peq-QmmTV0PlzKofPR/view?usp=sharing">View</a></td>
+                            <td>A profound approach to academic mastery.</td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://drive.google.com/file/d/1bMchWz3qqidGWpeUM4lGK4WaYFZC88Po/view?usp=sharing">The Guide to Academic Success by Jun Yuh</a></td>
+                            <td>Learning, Book</td>
+                            <td><a href="https://drive.google.com/file/d/1bMchWz3qqidGK4WaYFZC88Po/view?usp=sharing">View</a></td>
+                            <td>Further wisdom on navigating scholarly pursuits.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="contact" class="contact-section">
+            <h3>Engage & Connect</h3>
+            <p>Whether for a dialogue on shared interests, a quiet inquiry, or simply to exchange thoughts, I welcome your correspondence.</p>
+            <p>Student Email: <a href="mailto:24f2006078@ds.study.iitm.ac.in">24f2006078@ds.study.iitm.ac.in</a></p>
+            <p>Personal Email: <a href="mailto:arlalithablogs@gmail.com">arlalithablogs@gmail.com</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <h6>Lalitha A R Â© 2025</h6>
+    </footer>
+
+    <script>
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('resourcesTable');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td');
+                let found = false;
+
+                if (td.length > 0) {
+                    for (let j = 0; j < td.length; j++) {
+                        if (td[j]) {
+                            const txtValue = td[j].textContent || td[j].innerText;
+                            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    tr[i].style.display = found ? "" : "none";
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger-icon');
+            const navUl = document.querySelector('nav ul');
+            const exploreDropdownLink = document.getElementById('exploreDropdown');
+            const dropdownMenu = exploreDropdownLink.nextElementSibling;
+
+            // Toggle main navigation on hamburger click
+            hamburger.addEventListener('click', function() {
+                navUl.classList.toggle('active');
+            });
+
+            // Toggle 'Explore' dropdown on click
+            exploreDropdownLink.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                dropdownMenu.classList.toggle('show');
+
+                // Close other open dropdowns if any (though there's only one here)
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    if (menu !== dropdownMenu) {
+                        menu.classList.remove('show');
+                    }
+                });
+            });
+
+            // Close dropdowns when clicking outside
+            window.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown') && !event.target.closest('.hamburger')) {
+                    const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
+                    openDropdowns.forEach(menu => menu.classList.remove('show'));
+                    if (navUl.classList.contains('active') && !event.target.closest('nav ul')) {
+                        navUl.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
