@@ -1,0 +1,243 @@
+:root {
+    /* Backgrounds */
+    --bg-light: #fff8f1;
+    --bg-pink: #f7e9ec;
+    --bg-lilac: #e9ddf0;
+    --bg-lavender: #d8d0f6;
+    --bg-indigo: #c7c8f9;
+  
+    /* Primary Text */
+    --text-dark: #2d1e2f; /* warm, deep plum */
+    --text-soft: #4b3b4f; /* slightly softened */
+  
+    /* Accent Text (poetry, Sanskrit, highlights) */
+    --text-sanskrit: #6c3f77; /* a quiet purple, rich but calm */
+    --text-rose: #a6456a; /* devotional pink for emotion/hover */
+  
+    /* Links & Interactions */
+    --link: #7a4fa0;
+    --link-hover: #b16fa8;
+  
+    /* Borders / Lines */
+    --border: #d9cbe4;
+  
+    /* Code / Marks */
+    --code-bg: #f2ecf9;
+    --code-text: #5a3c6b;
+  
+    /* Shadows / Depth */
+    --shadow-soft: rgba(44, 31, 53, 0.08);
+  }
+  
+  .dark {
+    /* Backgrounds */
+    --bg-light: #120c16;         /* deep indigo night */
+    --bg-pink: #1d121f;          /* softened with warmth */
+    --bg-lilac: #2b1c33;
+    --bg-lavender: #3a2851;
+    --bg-indigo: #4d3a6e;
+  
+    /* Primary Text */
+    --text-dark: #f7f0fc;        /* near-white with lavender warmth */
+    --text-soft: #e4d9f0;        /* softened for body text */
+  
+    /* Accent Text (Sanskrit, emphasis) */
+    --text-sanskrit: #f8aeea;    /* pink like a petal lit by diya */
+    --text-rose: #e9a4c0;        /* soft sacred rose */
+  
+    /* Links & Interactions */
+    --link: #cbb3ff;             /* moonlit violet */
+    --link-hover: #f4bfff;       /* glowing bhajan light */
+  
+    /* Borders / Lines */
+    --border: #5e4b72;
+  
+    /* Code / Marks */
+    --code-bg: #23162f;
+    --code-text: #d4b2ff;
+  
+    /* Shadows / Depth */
+    --shadow-soft: rgba(240, 235, 255, 0.08);
+  }
+  
+body {
+    height: 100vh; /* Ensure the body takes up the full viewport height */
+    margin: 0; /* Remove default margin */
+    background: linear-gradient(
+  to bottom,
+  var(--bg-light),
+  var(--bg-pink),
+  var(--bg-lilac),
+  var(--bg-lavender),
+  var(--bg-indigo)
+
+);
+
+    background-attachment: fixed;
+    font-family: 'Shadows into light',cursive;
+    font-family: "Pixelify Sans", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.sidebar {
+    width: 200px;
+    height: 60vh;
+    max-height: 600px;
+    max-width: 250px; 
+    /* display: flex;
+    text-align: center;
+    justify-content: center; */
+
+}
+
+.left-sidebar {
+    background-color: var(--bg-lavender);
+}
+
+.right-sidebar {
+    background-color: var(--bg-lavender);
+}
+
+main {
+    width: 900px;
+    /* min-width: 500px; */
+    height: 80vh;
+}
+
+.m1 {
+    margin: 4px;}
+
+.b1 {
+    border: 2px solid var(--code-text);
+    border-color: #ffffff #444444 #444444 #ffffff;
+}
+
+.b2 {
+    border: 2px solid var(--code-text);
+}
+
+.b3 {
+    border: 2px solid var(--code-text);
+    border-color: #444444 #ffffff #ffffff #444444;
+}
+
+.header {
+    width: 180px;
+    height: 30px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.txt {
+    color: var(--code-text);
+    background-color: var(--code-bg);
+}
+
+.txt-i {
+    color: var(--code-bg);
+    background-color: var(--code-text);
+}
+
+.txt-ii {
+    color: var(--text-dark);
+    background-color: var(--bg-lilac);
+}
+
+.txt-iii {
+    color: var(--text-soft);
+    background-color: var(--bg-light);
+}
+
+
+
+.sub-header {
+    width: 180px;
+    height: 25px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.container-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    min-width: 180px;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        color: var(--code-text);
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--code-text);
+    }
+}
+
+.x-button {
+    width: 20px;
+    height: 20px;
+    background-color: var(--bg-lilac);
+    color: var(--text-dark);
+    font-family: "Pixelify Sans", sans-serif;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: var(--bg-indigo);
+        color: var(--text-soft);
+    }
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--link-hover);
+        text-decoration: underline;
+    }
+
+    &::first-letter {
+        text-decoration: underline;
+    }
+}
+::first-letter {
+    text-decoration: underline;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    display: flex;
+}
+.nav-el {
+    min-width: 100px;
+    padding: 5px 10px;
+    transition: border-color 120ms ease-in-out;
+
+    &:active {
+        border-color: #444444 #ffffff #ffffff #444444;
+
+    }
+
+}
+
+.pressed {
+    border-color: #444444 #ffffff #ffffff #444444;
+}
