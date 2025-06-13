@@ -99,6 +99,18 @@
             color: var(--annotation-green); /* Change color on hover */
         }
     }
+
+    button {
+        padding: 10px;
+        background-color:skyblue;
+        color: black;
+        border: none;
+
+        &:hover {
+            background-color: rgb(152, 215, 236);
+        }
+
+    }
   </style>
 </head>
 <body>
@@ -110,11 +122,12 @@
   </a>
   <div class="profile-container">
     
-    <h1>Lalitha —<span><ruby>Academic and Research Overview<rp>(</rp><rt>even stardust must submit assigment sometimes</rt><rp>)</rp> </ruby></span>.</h1>
+    <h1>Lalitha —<span><ruby>Resume<rp>(</rp><rt>too formal?</rt><rp>)</rp> </ruby></span>.</h1>
+<button onclick="toggleAnnotations()">I am too formal to read annotations</button>
     <div class="section">
-      <h2>Current Program</h2>
+      <h2>Current Focus</h2>
       <p>
-        Pursuing a Bachelor of Science (BS) in <span><ruby>Data Science and Applications at the Indian Institute of Technology, Madras<rp>(</rp><rt>cleverly disguised spellcraft at an elite mortal academy</rt><rp>)</rp> </ruby></span>.
+        Pursuing a Bachelor of Science (BS) in <span><ruby>Data Science and Applications at the Indian Institute of Technology, Madras<rp>(</rp><rt class="annt">cleverly disguised spellcraft at an elite mortal academy</rt><rp>)</rp> </ruby></span>.
       </p>
     </div>
 
@@ -159,12 +172,50 @@
 
       </p>
     </div>
-
+    <div id="resume">
+        <h3>Lalitha — <ruby>Professional Highlights<rp>(</rp><rt>as permitted by my babys</rt><rp>)</rp></ruby></h3>
+        <ul>
+          <li><strong>Current Role:</strong> Full-Time Divine Joy Distributor</li>
+          <li><strong>Skills:</strong> 
+            <ruby>Strategic Napping<rp>(</rp><rt>see: Kartikeya</rt><rp>)</rp></ruby>, 
+            <ruby>Aesthetic Optimization<rp>(</rp><rt>see: Kanhu's hair</rt><rp>)</rp></ruby>
+          </li>
+          <li><strong>Education:</strong> 
+            <ruby>Self-Taught<rp>(</rp><rt>with celestial tutors</rt><rp>)</rp></ruby>
+          </li>
+        </ul>
+        <p><em>References available upon <ruby>request<rp>(</rp><rt>approval by Trimurti</rt><rp>)</rp></ruby>.</em></p>
+      </div>
     <footer>
       This document serves as a professional overview.
       <span><ruby> Kindly read between the lines. <rp>(</rp><rt>the truth is always wrapped in sandalwood and poetry</rt><rp>)</rp> </ruby></span>. 
             </footer>
 
   </div>
+  <script>
+    function toggleAnnotations() {
+     // Toggle visibility of the annotation text (rt.annt)
+     const annotations = document.querySelectorAll('rt');
+     const rubiedTexts = document.querySelectorAll('ruby');
+      annotations.forEach(annotation => {
+        if (annotation.style.visibility === 'hidden') {
+          annotation.style.visibility = 'visible';
+        } else {
+          annotation.style.visibility = 'hidden';
+        }
+      });
+
+      rubiedTexts.forEach(rubyElement => {
+        if (rubyElement.style.textDecoration === 'none') {
+            rubyElement.style.textDecoration="underline"; 
+            rubyElement.style.textDecorationStyle="wavy";
+            rubyElement.style.textDecorationColor="purple";
+       
+        } else {
+          rubyElement.style.textDecoration = 'none';
+        }
+      });
+    }
+    </script>
 </body>
 </html>

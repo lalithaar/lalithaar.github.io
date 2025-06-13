@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lalitha Kanhu</title>
+    <style>
+        :root {
+        /* Define a more cohesive color palette */
+        --light-blue: #D6ECF0; /* A slightly softer light blue */
+        --dark-text: #2c3e50; /* A darker, softer black for main text */
+        --annotation-green: #4CAF50; /* A pleasant green for the highlight */
+        --annotation-text-color: #3b8d4f; /* A darker shade of green for annotation text */
+        --text-shadow-color: rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    }
+
+    body {
+        background-image: url(images/bgsmall.png);
+        background-size: 10%;
+        background-blend-mode: luminosity;
+        background-color: var(--light-blue);
+        /* set bg opacity to 0.3 */
+        background-attachment: fixed; /* Keeps the background fixed */
+        font-family: Arial, sans-serif; /* Added font family for better readability */
+        color: var(--dark-text); /* Set text color to dark text variable */
+    }
+
+    header {
+        background-image: url(images/banner.png);
+        margin-left: 15%;
+        width: 500px;
+        max-width: 70%;
+        height: 100px;
+    }
+
+
+    .box {
+        width: 100px;
+        height: 150px;
+        background-color: var(--light-blue);
+        position: sticky;
+        top: 0; /* Sticks to the top of the viewport */
+        margin-left: 15%;
+        margin-top: 20px; /* Added margin for spacing */
+        border: 1px solid var(--annotation-green);
+        border-style:groove;
+    }
+
+    .sticky {
+        margin-top: 10px;
+        margin-left: 50px;
+        z-index: 2;
+    }
+
+    .tape {
+        width:110px;
+        margin-top:-20px;
+        margin-left:-20px;
+        transform:rotate(5deg);
+    }
+
+    .sticky {
+        margin-top: -20px;
+        margin-left: -20px;
+        z-index: 2;
+    }
+
+
+    .heart-top-right {
+        width:110px;
+        margin-bottom:-85px;
+        margin-right: -35px;
+        transform:rotate(5deg);
+        }
+
+    .heart-top-left {
+        width:110px;
+        margin-top:-30px;
+        margin-left: -85px;
+        transform:rotate(5deg);
+    }
+
+    main {
+        max-width: 900px;
+        height: 80vh;
+        background-image: url(images/svg/bg-crosshatch-yellow.svg);
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="images/svg/heart-crosshatch-blue.svg" class="heart-top-left" alt="Heart Top Right">
+        <img src="images/svg/heart-crosshatch-blue.svg" class="heart-top-right" alt="Heart Top Right">
+    </header>
+    <main>
+
+    </main>
+</body>
+</html>
