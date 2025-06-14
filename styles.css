@@ -87,7 +87,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: url("images/icons/cursor-normal.cur") 4 4 auto;
+    cursor: url("images/icons/cursor-normal.png") 4 4, auto;
 
 }
 
@@ -184,9 +184,6 @@ body {
 }
 
 
-
-
-
 .sub-header {
     width: 100%;
     height: 25px;
@@ -206,28 +203,25 @@ body {
     align-items: center;
     justify-content: center; */
     height: 360px;
-    min-width: 180px;
+    /* min-width: 180px; */
     overflow-y: auto;
     overflow-x: hidden;
-
     &::-webkit-scrollbar {
-        background-color: var(--code-text);
+        color: var(--code-text);
         width: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
         background-color: var(--code-text);
-        width: 8px;
     }
 }
-
 .x-button {
     width: 20px;
     height: 20px;
     background-color: var(--bg-lilac);
     color: var(--text-dark);
     font-family: "Pixelify Sans", sans-serif;
-    cursor: url("images/icons/cursor-hover.png") 4 4 auto;
+    cursor: url("images/icons/cursor-normal.png") 4 4, auto;
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -238,15 +232,20 @@ body {
     &:hover {
         background-color: var(--bg-indigo);
         color: var(--text-soft);
+        cursor: url("images/icons/cursor-hover.cur") 4 4, auto;
     }
 }
 
 a, button {
     color: var(--link);
     text-decoration: none;
+    cursor: url("images/icons/cursor-normal.png") 4 4, auto;
+
 
     &:hover {
         text-decoration: underline;
+        cursor: url("images/icons/cursor-hover.cur") 4 4, auto;
+
     }
 
     &::first-letter {
@@ -356,3 +355,22 @@ rt {
     color: var(--text-soft)
     
 }
+
+h1, h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+p {
+    font-family: 'VT323', sans-serif;
+    font-size: 1.2rem;
+}
+
+img {
+    cursor: url("images/icons/cursor.cur") 4 4 , auto;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+

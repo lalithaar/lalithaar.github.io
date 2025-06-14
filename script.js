@@ -54,6 +54,19 @@ function changeSection() {
 
 }
    
+const daysLeft = document.querySelector('p.daysLeft');
+// a no of days left timer to 30 Dec 2025 and setting the value of daysLeft to it
+const targetDate = new Date('December 30, 2025');
+const updateDaysLeft = () => {
+  const currentDate = new Date();
+  const timeDifference = targetDate - currentDate;
+  const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+  daysLeft.textContent = `Days left: ${daysRemaining}`;
+};
+
+// Update the timer immediately and set an interval to update it daily
+updateDaysLeft();
+setInterval(updateDaysLeft, 24 * 60 * 60 * 1000);
 
 
 
