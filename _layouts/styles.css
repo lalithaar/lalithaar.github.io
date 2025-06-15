@@ -78,8 +78,8 @@ body {
   var(--bg-lilac),
   var(--bg-lavender),
   var(--bg-indigo)
-
-);
+)
+;
 
     background-attachment: fixed;
     font-family: 'Shadows into light',cursive;
@@ -88,7 +88,9 @@ body {
     justify-content: center;
     align-items: center;
     cursor: url("images/icons/cursor-normal.png") 4 4, auto;
-
+    background-color: #e4d9f0;
+    background-image: url(images/favicon.png);
+    background-blend-mode: overlay;
 }
 
 
