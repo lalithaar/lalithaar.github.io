@@ -1,0 +1,17 @@
+title: Lalitha A R
+description: A personal site with blog
+baseurl: ""
+url: "https://lalithaar.github.io"
+
+theme: null # you’re using your own custom styles, not a Jekyll theme
+
+permalink: /blog/:title/ # clean blog URLs like /blog/my-post/
+
+collections:
+  posts:
+    output: true
+
+# Optional markdown configuration
+markdown: kramdown
+kramdown:
+  input: GFM
