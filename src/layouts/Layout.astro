@@ -36,6 +36,9 @@ const {
 		--accent-soft: #e7cdb9;
 		--sage: #677654;
 		--border: #e9dfcd;
+		--font-serif: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Noto Serif', serif;
+		--font-sans:
+			ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 	}
 
 	html,
@@ -52,8 +55,10 @@ const {
 	body {
 		background: var(--bg);
 		color: var(--ink);
-		font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Noto Serif', serif;
-		line-height: 1.6;
+		font-family: var(--font-sans);
+		font-size: 17px;
+		line-height: 1.7;
+		-webkit-font-smoothing: antialiased;
 	}
 
 	a {
