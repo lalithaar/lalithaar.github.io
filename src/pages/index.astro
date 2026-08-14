@@ -1,11 +1,284 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const projects = [
+	{
+		name: 'exam-turtle',
+		description:
+			'Free & open-source, spaced repetition app for topic-based learning, with exam-based priority built in.',
+		href: 'https://github.com/lalithaar/exam-turtle',
+		tag: 'HTML',
+	},
+	{
+		name: 'learn-better',
+		description: 'Learn like you are 5.',
+		href: 'https://github.com/lalithaar/learn-better',
+		tag: 'Vue',
+	},
+	{
+		name: 'indian-exams-database',
+		description: "Find the exam you didn't know existed (but probably should take).",
+		href: 'https://github.com/lalithaar/indian-exams-database',
+		tag: 'Database',
+	},
+	{
+		name: 'cm-colors',
+		description: 'You pick the colors. We make them readable.',
+		href: 'https://github.com/lalithaar/cm-colors',
+		tag: 'Python',
+	},
+	{
+		name: 'ideabank',
+		description: 'A list of ideas I thought of, free for anyone to use and implement from.',
+		href: 'https://github.com/lalithaar/ideabank',
+		tag: 'Python',
+	},
+	{
+		name: 'safehome-blueprint',
+		description:
+			'An open design for a city-level home-services platform centered on dignity, safety, and trust.',
+		href: 'https://github.com/lalithaar/safehome-blueprint',
+		tag: 'Design',
+	},
+	{
+		name: 'idea-protocol',
+		description: 'Standard, plain-language licenses for sharing and discussing ideas without NDAs or awkwardness.',
+		href: 'https://github.com/lalithaar/idea-protocol',
+		tag: 'Docs',
+	},
+	{
+		name: 'Interdisciplinary Systems Research Lab',
+		description:
+			'Open-research repository investigating systemic gaps in human-centric design — robomorphic robotics, psychophysical UI scaling, adversarial loops in food informatics.',
+		href: 'https://github.com/lalithaar/Interdisciplinary-Systems-Research-Lab',
+		tag: 'Research',
+	},
+];
+
+const links = [
+	{ label: 'GitHub', href: 'https://github.com/lalithaar' },
+	{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/lalithaar/' },
+	{ label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=dEiBWT8AAAAJ&hl=en' },
+	{ label: 'ResearchGate', href: 'https://www.researchgate.net/profile/Lalitha-A-R' },
+	{ label: 'ORCID', href: 'https://orcid.org/0009-0001-7466-3531' },
+	{ label: 'iSRL Lab', href: 'https://isrl.in/' },
+];
 ---
 
 <Layout>
-	<Welcome />
+	<div id="container">
+		<header>
+			<span class="wordmark">Lalitha A R</span>
+			<nav>
+				{links.slice(0, 3).map((link) => (
+					<a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+				))}
+			</nav>
+		</header>
+
+		<main>
+			<section id="hero">
+				<h1>Lalitha A R</h1>
+				<p class="tagline">
+					I find the exact interaction costing your product activation, retention, or support
+					hours — then fix it. Research, code, design, copy, whatever the fix needs.
+				</p>
+				<p class="affiliation">
+					Researcher, <a href="https://isrl.in/" target="_blank" rel="noopener noreferrer"
+						>Interdisciplinary Systems Research Lab (iSRL)</a
+					>
+					&middot; BS Data Science, IIT Madras
+				</p>
+				<div class="hero-links">
+					{links.map((link) => (
+						<a class="pill" href={link.href} target="_blank" rel="noopener noreferrer">
+							{link.label}
+						</a>
+					))}
+				</div>
+			</section>
+
+			<section id="projects">
+				<h2>Projects &amp; research</h2>
+				<div class="grid">
+					{projects.map((project) => (
+						<a class="card" href={project.href} target="_blank" rel="noopener noreferrer">
+							<div class="card-head">
+								<h3>{project.name}</h3>
+								<span class="tag">{project.tag}</span>
+							</div>
+							<p>{project.description}</p>
+						</a>
+					))}
+				</div>
+			</section>
+		</main>
+
+		<footer>
+			<p>Based in India &middot; <a href="mailto:lalithaar@isrl.in">lalithaar@isrl.in</a></p>
+		</footer>
+	</div>
 </Layout>
+
+<style>
+	#container {
+		max-width: 880px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 4rem;
+	}
+
+	header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.5rem 0 3rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.wordmark {
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	nav {
+		display: flex;
+		gap: 1.25rem;
+	}
+
+	nav a {
+		text-decoration: none;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+
+	nav a:hover {
+		color: var(--accent);
+	}
+
+	#hero h1 {
+		font-size: clamp(2rem, 5vw, 2.75rem);
+		margin: 0 0 0.75rem;
+		letter-spacing: -0.02em;
+	}
+
+	.tagline {
+		font-size: 1.15rem;
+		color: var(--fg);
+		max-width: 60ch;
+		margin: 0 0 1rem;
+	}
+
+	.affiliation {
+		color: var(--muted);
+		margin: 0 0 1.75rem;
+	}
+
+	.affiliation a {
+		text-decoration: underline;
+		text-decoration-color: var(--border);
+		text-underline-offset: 3px;
+	}
+
+	.affiliation a:hover {
+		color: var(--accent);
+		text-decoration-color: var(--accent);
+	}
+
+	.hero-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.pill {
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		padding: 0.4rem 0.9rem;
+		font-size: 0.9rem;
+		text-decoration: none;
+		color: var(--fg);
+		transition: border-color 0.15s, color 0.15s;
+	}
+
+	.pill:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	#projects {
+		margin-top: 4rem;
+	}
+
+	#projects h2 {
+		font-size: 1.4rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 1rem;
+	}
+
+	.card {
+		display: block;
+		border: 1px solid var(--border);
+		background: var(--card-bg);
+		border-radius: 12px;
+		padding: 1.1rem 1.2rem;
+		text-decoration: none;
+		color: var(--fg);
+		transition: border-color 0.15s, transform 0.15s;
+	}
+
+	.card:hover {
+		border-color: var(--accent);
+		transform: translateY(-2px);
+	}
+
+	.card-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	.card h3 {
+		font-size: 1.02rem;
+		margin: 0 0 0.4rem;
+	}
+
+	.tag {
+		font-size: 0.72rem;
+		color: var(--muted);
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		padding: 0.1rem 0.5rem;
+		white-space: nowrap;
+	}
+
+	.card p {
+		margin: 0;
+		font-size: 0.92rem;
+		color: var(--muted);
+	}
+
+	footer {
+		margin-top: 4rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border);
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+
+	footer a {
+		text-decoration: underline;
+		text-decoration-color: var(--border);
+	}
+
+	footer a:hover {
+		color: var(--accent);
+	}
+</style>

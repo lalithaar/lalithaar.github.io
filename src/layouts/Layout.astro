@@ -1,23 +1,72 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Lalitha A R',
+	description = 'Lalitha A R — researcher at the Interdisciplinary Systems Research Lab (iSRL), BS Data Science student at IIT Madras. I find the exact interaction costing your product activation, retention, or support hours, then fix it.',
+} = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
 
-<style>
+<style is:global>
+	:root {
+		--bg: #fbfaf8;
+		--fg: #1a1a1a;
+		--muted: #5b5b5b;
+		--accent: #7a4de8;
+		--border: #e4e1da;
+		--card-bg: #ffffff;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--bg: #14131a;
+			--fg: #f2f1ee;
+			--muted: #a7a4b0;
+			--accent: #b39bff;
+			--border: #2b2933;
+			--card-bg: #1c1a24;
+		}
+	}
+
 	html,
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		background: var(--bg);
+		color: var(--fg);
+		font-family:
+			ui-sans-serif, system-ui, 'Inter', 'Helvetica Neue', Arial, sans-serif;
+		line-height: 1.5;
+	}
+
+	a {
+		color: inherit;
 	}
 </style>
