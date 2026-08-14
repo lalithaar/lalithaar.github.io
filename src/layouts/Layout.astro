@@ -28,23 +28,14 @@ const {
 
 <style is:global>
 	:root {
-		--bg: #fbfaf8;
-		--fg: #1a1a1a;
-		--muted: #5b5b5b;
-		--accent: #7a4de8;
-		--border: #e4e1da;
-		--card-bg: #ffffff;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--bg: #14131a;
-			--fg: #f2f1ee;
-			--muted: #a7a4b0;
-			--accent: #b39bff;
-			--border: #2b2933;
-			--card-bg: #1c1a24;
-		}
+		--bg: #faf5ec;
+		--paper: #fffdf8;
+		--ink: #35291f;
+		--muted: #7d6e5b;
+		--accent: #94401a;
+		--accent-soft: #e7cdb9;
+		--sage: #677654;
+		--border: #e9dfcd;
 	}
 
 	html,
@@ -60,10 +51,9 @@ const {
 
 	body {
 		background: var(--bg);
-		color: var(--fg);
-		font-family:
-			ui-sans-serif, system-ui, 'Inter', 'Helvetica Neue', Arial, sans-serif;
-		line-height: 1.5;
+		color: var(--ink);
+		font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Noto Serif', serif;
+		line-height: 1.6;
 	}
 
 	a {
