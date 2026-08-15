@@ -1,13 +1,27 @@
 ---
+import 'remark-github-alerts/styles/github-base.css';
+import 'remark-github-alerts/styles/github-colors-light.css';
+import 'remark-github-alerts/styles/github-colors-dark-media.css';
+
 interface Props {
 	title?: string;
 	description?: string;
+	frontmatter?: { title?: string; description?: string };
 }
 
-const {
-	title = 'Lalitha A R',
-	description = 'Lalitha A R — researcher at the Interdisciplinary Systems Research Lab (iSRL), BS Data Science student at IIT Madras. I find the exact interaction costing your product activation, retention, or support hours, then fix it.',
-} = Astro.props;
+const props = Astro.props;
+const title = props.title ?? props.frontmatter?.title ?? 'Lalitha A R';
+const description =
+	props.description ??
+	props.frontmatter?.description ??
+	'Lalitha A R — researcher at the Interdisciplinary Systems Research Lab (iSRL), BS Data Science student at IIT Madras. I find the exact interaction costing your product activation, retention, or support hours, then fix it.';
+
+const links = [
+	{ label: 'GitHub', href: 'https://github.com/lalithaar' },
+	{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/lalithaar/' },
+	{ label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=dEiBWT8AAAAJ&hl=en' },
+];
+
 ---
 
 <!doctype html>
@@ -22,7 +36,21 @@ const {
 		<title>{title}</title>
 	</head>
 	<body>
-		<slot />
+		{props.frontmatter ? (
+			<div class="md-content">
+				<header class="md-header">
+					<a class="wordmark" href="/">Lalitha A R</a>
+					<nav>
+						{links.map((link) => (
+							<a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+						))}
+					</nav>
+				</header>
+				<slot />
+			</div>
+		) : (
+			<slot />
+		)}
 	</body>
 </html>
 
@@ -58,5 +86,47 @@ const {
 
 	a {
 		color: inherit;
+	}
+
+
+</style>
+
+<style>
+	.md-content {
+		max-width: 760px;
+		margin: 0 auto;
+		padding: 2.5rem 1.5rem 4rem;
+		font-size: 1.1rem;
+	}
+
+	.md-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.5rem 0 3.5rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.md-header .wordmark {
+		font-style: italic;
+		font-size: 1.1rem;
+		color: var(--muted);
+		text-decoration: none;
+	}
+
+	.md-header nav {
+		display: flex;
+		gap: 1.25rem;
+	}
+
+	.md-header nav a {
+		text-decoration: none;
+		color: var(--muted);
+		font-size: 1rem;
+	}
+
+	.md-header nav a:hover {
+		color: var(--accent);
 	}
 </style>
