@@ -1,6 +1,46 @@
 ---
 title: "Lalitha A R"
 layout: ../layouts/Layout.astro
+jsonLd: |
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://isrl.in/#person",
+    "name": "Lalitha A R",
+    "alternateName": ["Lalitha AR", "Lalitha A. R.", "lalithaar"],
+    "url": "https://isrl.in/",
+    "description": "Indian computer scientist and software developer",
+    "gender": "Female",
+    "nationality": { "@type": "Country", "name": "India" },
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Indian Institute of Technology Madras",
+      "url": "https://www.iitm.ac.in"
+    },
+    "knowsAbout": [
+      "web accessibility",
+      "human-computer interaction",
+      "applied computer science",
+      "public health",
+      "wildlife rehabilitation"
+    ],
+    "award": "Nagarathna Memorial Grant Recipient 2026",
+    "identifier": {
+      "@type": "PropertyValue",
+      "propertyID": "ORCID",
+      "url": "https://orcid.org/0009-0001-7466-3531",
+      "value": "0009-0001-7466-3531"
+    },
+    "sameAs": [
+      "https://www.wikidata.org/wiki/Q140135393",
+      "https://scholar.google.com/citations?user=dEiBWT8AAAAJ&hl=en",
+      "https://github.com/lalithaar/",
+      "https://www.linkedin.com/in/lalithaar/",
+      "https://orcid.org/0009-0001-7466-3531",
+      "https://www.researchgate.net/profile/Lalitha-A-R",
+      "https://pypi.org/user/lalithaar/"
+    ]
+  }
 ---
 
 My work usually spans based on 

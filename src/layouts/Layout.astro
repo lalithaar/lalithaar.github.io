@@ -2,7 +2,7 @@
 interface Props {
 	title?: string;
 	description?: string;
-	frontmatter?: { title?: string; description?: string };
+	frontmatter?: { title?: string; description?: string; jsonLd?: string };
 }
 
 const props = Astro.props;
@@ -10,7 +10,7 @@ const title = props.title ?? props.frontmatter?.title ?? 'Lalitha A R';
 const description =
 	props.description ??
 	props.frontmatter?.description ??
-	'Lalitha A R — researcher at the Interdisciplinary Systems Research Lab (iSRL), BS Data Science student at IIT Madras. I find the exact interaction costing your product activation, retention, or support hours, then fix it.';
+	'Under construction whenever my brain cells decide to cooperate.';
 
 
 ---
@@ -25,6 +25,9 @@ const description =
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
+		{props.frontmatter?.jsonLd && (
+			<script is:inline type="application/ld+json" set:html={props.frontmatter.jsonLd} />
+		)}
 	</head>
 	<body>
 		{props.frontmatter ? (
