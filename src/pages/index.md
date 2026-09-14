@@ -10,10 +10,11 @@ My work usually spans based on
 
 See [timeline](/timeline) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
 
+This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
 
 
-
+<!-- 
 If you are in a regulated industry, you are probably looking for:
 
 - [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)
@@ -49,4 +50,4 @@ If you are in research, you are probably looking for:
 6. Preserve complete personal agency. The conditions cannot look absolute, like rules forcing her into a box. The work must reflect her command.
 7. Respect the reader. Do not state the obvious. If there are two bullets on the screen, do not waste the reader's time by adding the word "two."
 
----
+--- -->

@@ -5,9 +5,11 @@ import { defineConfig } from 'astro/config';
 // export default defineConfig({});
 
 import remarkGithubAlerts from 'remark-github-alerts';
+import { legacyRedirectsIntegration } from './scripts/legacy-redirects.mjs';
 
 export default defineConfig({
   markdown: {
     remarkPlugins: [remarkGithubAlerts],
   },
+  integrations: [legacyRedirectsIntegration()],
 });
