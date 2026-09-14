@@ -8,6 +8,7 @@ import remarkGithubAlerts from 'remark-github-alerts';
 import { legacyRedirectsIntegration } from './scripts/legacy-redirects.mjs';
 
 export default defineConfig({
+  site: 'https://isrl.in',
   markdown: {
     remarkPlugins: [remarkGithubAlerts],
   },
