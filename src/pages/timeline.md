@@ -25,4 +25,5 @@ How did this end? See [Decemeber 2025]().
 [^3]: But that doesn't mean making it accessible is a huge demonic task. The most impactful things you can be mindful of is suprisingly fast and easy. See [here]() for the core checklist.
 
 ---
-Work in progress..
+
+This page is a work in progress (gotta print context out of the brain). Expected time for it to be updated is: Uknown and depends on the universe.
