@@ -54,6 +54,7 @@ This site is currently a work in progress, pages will appear whenever my two rem
 
 
 
+[Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)
 <!-- 
 If you are in a regulated industry, you are probably looking for:
 
