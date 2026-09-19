@@ -41,108 +41,31 @@ const description =
 		) : (
 			<slot />
 		)}
-	<script>
-		(() => {
-			const footnotesSection = document.querySelector('section[data-footnotes]');
-			const container = document.querySelector('.md-content') ?? document.body;
-			if (!footnotesSection) return;
-			const refs = Array.from(document.querySelectorAll('a[data-footnote-ref]'));
-			if (refs.length === 0) return;
-
-			const WIDE = window.matchMedia('(min-width: 1024px)');
-			const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
-			const GAP = 24;
-
-			const items = [];
-
-			function build() {
+		<script is:inline>
+			(() => {
+				const refs = document.querySelectorAll('a[data-footnote-ref]');
+				if (!refs.length) return;
+				const wide = window.matchMedia('(min-width: 75rem)');
 				for (const ref of refs) {
-					if (ref.dataset.sidenote) continue;
-					const href = ref.getAttribute('href') || '';
-					const number = href.includes('fn-') ? href.split('fn-').pop() : '';
-					if (!number) continue;
-					const note = footnotesSection.querySelector(`li[id="user-content-fn-${number}"]`);
-					const sup = ref.closest('sup');
-					if (!note || !sup) continue;
-
-					const clone = note.cloneNode(true);
-					clone.removeAttribute('id');
-					clone.querySelectorAll('a[data-footnote-backref]').forEach((a) => a.remove());
-					clone.querySelectorAll('p').forEach((p) => {
-						if (!p.textContent.trim()) p.remove();
-					});
-
-					const sidenote = document.createElement('span');
-					sidenote.className = 'sidenote';
-					sidenote.dataset.note = number;
-					sidenote.id = `user-sidenote-${number}`;
-					while (clone.firstChild) sidenote.appendChild(clone.firstChild);
-
-					const anchor = document.createElement('span');
-					anchor.className = 'sidenote-anchor';
-					sup.replaceWith(anchor);
-					anchor.appendChild(sup);
-					anchor.appendChild(sidenote);
-
-					ref.dataset.sidenote = sidenote.id;
-					ref.setAttribute('aria-controls', sidenote.id);
 					ref.addEventListener('click', (event) => {
-						if (!document.body.classList.contains('sidenotes-on')) return;
+						if (!wide.matches) return;
+						const number = (ref.getAttribute('href') || '').split('fn-').pop();
+						const sidenote = document.getElementById(`sidenote-fn-${number}`);
+						if (!sidenote) return;
 						event.preventDefault();
-						sidenote.scrollIntoView({ behavior: REDUCED.matches ? 'auto' : 'smooth', block: 'nearest' });
+						sidenote.scrollIntoView({ block: 'nearest' });
 						sidenote.classList.remove('flash');
 						void sidenote.offsetWidth;
 						sidenote.classList.add('flash');
 						clearTimeout(sidenote._flashTimer);
-						sidenote._flashTimer = setTimeout(() => sidenote.classList.remove('flash'), 1100);
+						sidenote._flashTimer = setTimeout(
+							() => sidenote.classList.remove('flash'),
+							1100,
+						);
 					});
-
-					items.push({ ref, anchor, sidenote, number });
 				}
-			}
-
-			function position() {
-				const textRight = container.getBoundingClientRect().right;
-				let prevBottom = -Infinity;
-				for (const item of items) {
-					const anchorRect = item.anchor.getBoundingClientRect();
-					const left = textRight - anchorRect.right + GAP;
-					const width = Math.max(120, Math.min(window.innerWidth - textRight - GAP, 260));
-
-					item.sidenote.style.left = `${left}px`;
-					item.sidenote.style.width = `${width}px`;
-					item.sidenote.style.transform = 'translateY(0)';
-					const natural = item.sidenote.getBoundingClientRect();
-					let offset = 0;
-					if (natural.top < prevBottom + 10) offset = prevBottom + 10 - natural.top;
-					item.sidenote.style.transform = `translateY(${offset}px)`;
-					prevBottom = Math.max(natural.bottom, item.sidenote.getBoundingClientRect().bottom);
-				}
-			}
-
-			function apply() {
-				const wide = WIDE.matches && items.length > 0;
-				document.body.classList.toggle('sidenotes-on', wide);
-				if (wide) position();
-			}
-
-			build();
-			apply();
-
-			if (document.fonts?.ready) document.fonts.ready.then(apply);
-			window.addEventListener('load', apply);
-
-			let queued = false;
-			window.addEventListener('resize', () => {
-				if (queued) return;
-				queued = true;
-				requestAnimationFrame(() => {
-					queued = false;
-					apply();
-				});
-			});
-		})();
-	</script>
+			})();
+		</script>
 	</body>
 
 <style>
@@ -212,7 +135,6 @@ p {
   text-decoration: none;
   border-bottom: 1px dotted color-mix(in srgb, CanvasText 45%, transparent);
   border-radius: 2px;
-  transition: background-color 0.15s ease, border-bottom-color 0.15s ease;
 }
 
 :global(a[data-footnote-ref]:hover) {
@@ -220,38 +142,31 @@ p {
   border-bottom-color: CanvasText;
 }
 
-:global(.sidenote-anchor) {
-  position: relative;
-  display: inline;
-}
-
 :global(.sidenote) {
   display: none;
 }
 
-@media (min-width: 1024px) {
-  :global(body.sidenotes-on section[data-footnotes]) {
-    display: none;
+@media (min-width: 75rem) {
+  :global(body:has(.sidenote)) {
+    max-width: calc(70ch + 32.5rem);
+  }
+
+  :global(.md-content:has(.sidenote)) {
+    padding-inline-end: 30rem;
   }
 
   :global(.sidenote) {
     display: block;
-    position: absolute;
-    top: 0;
+    float: right;
+    clear: right;
+    width: 26rem;
+    margin-right: -28rem;
+    margin-top: 0.4rem;
+    margin-bottom: 1rem;
     font-size: 0.9rem;
     line-height: 1.45;
     color: rgba(120, 120, 120, 0.92);
     color: color-mix(in srgb, CanvasText 78%, transparent);
-    border-radius: 6px;
-    transition: box-shadow 0.4s ease;
-  }
-
-  :global(.sidenote::before) {
-    content: attr(data-note);
-    font-weight: 600;
-    font-size: 0.85em;
-    margin-inline-end: 0.3em;
-    opacity: 0.55;
   }
 
   :global(.sidenote p) {
@@ -264,6 +179,10 @@ p {
 
   :global(.sidenote.flash) {
     box-shadow: 0 0 0 3px color-mix(in srgb, CanvasText 30%, transparent);
+  }
+
+  :global(body:has(.sidenote) section[data-footnotes]) {
+    display: none;
   }
 }
 
