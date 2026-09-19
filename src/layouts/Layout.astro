@@ -41,6 +41,31 @@ const description =
 		) : (
 			<slot />
 		)}
+		<script is:inline>
+			(() => {
+				const refs = document.querySelectorAll('a[data-footnote-ref]');
+				if (!refs.length) return;
+				const wide = window.matchMedia('(min-width: 75rem)');
+				for (const ref of refs) {
+					ref.addEventListener('click', (event) => {
+						if (!wide.matches) return;
+						const number = (ref.getAttribute('href') || '').split('fn-').pop();
+						const sidenote = document.getElementById(`sidenote-fn-${number}`);
+						if (!sidenote) return;
+						event.preventDefault();
+						sidenote.scrollIntoView({ block: 'nearest' });
+						sidenote.classList.remove('flash');
+						void sidenote.offsetWidth;
+						sidenote.classList.add('flash');
+						clearTimeout(sidenote._flashTimer);
+						sidenote._flashTimer = setTimeout(
+							() => sidenote.classList.remove('flash'),
+							1100,
+						);
+					});
+				}
+			})();
+		</script>
 	</body>
 
 <style>
@@ -104,6 +129,61 @@ p {
   border-top: 1px solid currentColor;
   opacity: 0.2;
   margin: 2rem 0;
+}
+
+:global(a[data-footnote-ref]) {
+  text-decoration: none;
+  border-bottom: 1px dotted color-mix(in srgb, CanvasText 45%, transparent);
+  border-radius: 2px;
+}
+
+:global(a[data-footnote-ref]:hover) {
+  background: color-mix(in srgb, CanvasText 12%, transparent);
+  border-bottom-color: CanvasText;
+}
+
+:global(.sidenote) {
+  display: none;
+}
+
+@media (min-width: 75rem) {
+  :global(body:has(.sidenote)) {
+    max-width: calc(70ch + 32.5rem);
+  }
+
+  :global(.md-content:has(.sidenote)) {
+    padding-inline-end: 30rem;
+  }
+
+  :global(.sidenote) {
+    display: block;
+    float: right;
+    clear: right;
+    width: 26rem;
+    margin-right: -28rem;
+    margin-top: 0.4rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: rgba(120, 120, 120, 0.92);
+    color: color-mix(in srgb, CanvasText 78%, transparent);
+  }
+
+  :global(.sidenote p) {
+    margin: 0 0 0.5em;
+  }
+
+  :global(.sidenote > p:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.sidenote.flash) {
+    box-shadow: 0 0 0 3px color-mix(in srgb, CanvasText 30%, transparent);
+  }
+
+  :global(body:has(.sidenote) section[data-footnotes]) {
+    display: none;
+  }
 }
 
 
