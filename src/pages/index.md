@@ -55,6 +55,9 @@ This site is currently a work in progress, pages will appear whenever my two rem
 
 
 [Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)
+
+[A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)
+
 <!-- 
 If you are in a regulated industry, you are probably looking for:
 
