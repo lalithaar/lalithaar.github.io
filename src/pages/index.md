@@ -58,6 +58,7 @@ This site is currently a work in progress, pages will appear whenever my two rem
 
 [A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)
 
+[Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)
 <!-- 
 If you are in a regulated industry, you are probably looking for:
 

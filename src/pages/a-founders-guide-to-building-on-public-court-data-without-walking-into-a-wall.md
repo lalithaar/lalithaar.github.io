@@ -4,7 +4,7 @@ description: "A founder's guide to building on public court data without walking
 layout: ../layouts/Layout.astro
 ---
 
-### A founder's guide to building on public court data without walking into a wall
+# A founder's guide to building on public court data without walking into a wall
 
 This is for anyone building a product that takes public legal/court data and turns it into something structured, searchable, or scored — case outcome trackers, lawyer directories, litigation analytics, judge/bench insight tools, anything in that space.
 
