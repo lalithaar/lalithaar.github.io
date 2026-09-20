@@ -59,6 +59,8 @@ This site is currently a work in progress, pages will appear whenever my two rem
 [A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)
 
 [Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)
+
+[Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026.md)
 <!-- 
 If you are in a regulated industry, you are probably looking for:
 
