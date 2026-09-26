@@ -1,4 +1,6 @@
 ---
+import Pixel from '../components/Pixel.astro';
+
 interface Props {
 	title?: string;
 	description?: string;
@@ -41,103 +43,104 @@ const description =
 		) : (
 			<slot />
 		)}
+		<Pixel />
 	</body>
 
 <style>
-    :root {
+  :root {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color-scheme: light dark;
-}
-
-body {
-  background-color: Canvas;
-  color: CanvasText;
-
-
-  max-width: 70ch;
-  margin: 0 auto;
-  padding: 2rem 1.25rem;
-  line-height: 1.5;
-}
-
-header {
-    font-size: 1.2rem;
-    margin-bottom: 2.5rem;
-    opacity: 0.7;
-    > a {
-        text-decoration: none;
-        color: CanvasText;
-        font-weight: 600;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #121212; 
-    
-    color: #e0e0e0; 
   }
-}
+
+  body {
+    background-color: Canvas;
+    color: CanvasText;
 
 
-p {
-  margin-top: 0;
-  margin-bottom: 1.25rem;
+    max-width: 70ch;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    line-height: 1.5;
+  }
 
-}
+  header {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      opacity: 0.7;
+      > a {
+          text-decoration: none;
+          color: CanvasText;
+          font-weight: 600;
+      }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #121212; 
+      
+      color: #e0e0e0; 
+    }
+  }
 
 
-:global(blockquote) {
-  margin: 1.5rem 0;
-  padding-left: 1rem;
-  border-left: 2px solid currentColor;
-  opacity: 0.8;
-  font-style: italic; /* optional */
-}
+  p {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
 
-:global(blockquote > p) {
-  margin: 0;
-}
+  }
 
-:global(hr) {
-  border: none;
-  border-top: 1px solid currentColor;
-  opacity: 0.2;
-  margin: 2rem 0;
-}
 
-:global(.backlinks) {
-  margin-top: 2rem;
-}
+  :global(blockquote) {
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid currentColor;
+    opacity: 0.8;
+    font-style: italic; /* optional */
+  }
 
-:global(.backlinks h2) {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.6;
-}
+  :global(blockquote > p) {
+    margin: 0;
+  }
 
-:global(.backlinks ul) {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 0;
-}
+  :global(hr) {
+    border: none;
+    border-top: 1px solid currentColor;
+    opacity: 0.2;
+    margin: 2rem 0;
+  }
 
-:global(.backlinks li) {
-  margin-bottom: 1.25rem;
-}
+  :global(.backlinks) {
+    margin-top: 2rem;
+  }
 
-:global(.backlinks li:last-child) {
-  margin-bottom: 0;
-}
+  :global(.backlinks h2) {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+  }
 
-:global(.backlink-context) {
-  font-size: 0.9em;
-  opacity: 0.7;
-  line-height: 1.5;
-  margin-top: 0.25rem;
-  margin-bottom: 0;
-}
+  :global(.backlinks ul) {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  :global(.backlinks li) {
+    margin-bottom: 1.25rem;
+  }
+
+  :global(.backlinks li:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.backlink-context) {
+    font-size: 0.9em;
+    opacity: 0.7;
+    line-height: 1.5;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+  }
 
 
 </style>

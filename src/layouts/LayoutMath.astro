@@ -1,5 +1,6 @@
 ---
 import 'katex/dist/katex.min.css';
+import Pixel from '../components/Pixel.astro';
 
 interface Props {
 	title?: string;
@@ -43,6 +44,7 @@ const description =
 		) : (
 			<slot />
 		)}
+		<Pixel />
 	</body>
 
 <style>

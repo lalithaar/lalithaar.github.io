@@ -1,0 +1,31 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "isrl-pixel",
+	"main": "src/index.js",
+	"compatibility_date": "2026-09-26",
+	"workers_dev": false,
+	"routes": [
+		{ "pattern": "px.isrl.in", "custom_domain": true }
+	],
+	"analytics_engine_datasets": [
+		{ "binding": "READS", "dataset": "isrl_reads" }
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "isrl-reads",
+			"database_id": "REPLACE_WITH_D1_DATABASE_ID",
+			"migrations_dir": "migrations"
+		}
+	],
+	"vars": {
+		"CF_ACCOUNT_ID": "REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID",
+		"SELF_HOST": "isrl.in"
+	},
+	"triggers": {
+		"crons": ["17 3 * * *"]
+	},
+	"observability": {
+		"enabled": true
+	}
+}

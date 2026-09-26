@@ -1,0 +1,24 @@
+---
+const { endpoint = 'https://px.isrl.in/px.gif' } = Astro.props;
+const page = Astro.url.pathname;
+---
+
+<img
+	src={`${endpoint}?p=${encodeURIComponent(page)}`}
+	alt=""
+	width="1"
+	height="1"
+	aria-hidden="true"
+	decoding="async"
+	class="px"
+/>
+
+<style>
+	.px {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+</style>
