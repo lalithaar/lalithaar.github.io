@@ -29,6 +29,36 @@ function ranges() {
   }
 }
 
+// Reads are bucketed into UTC hours at write time, so the raw profile sits on
+// the UTC clock. Re-label each bucket with the matching hour on the viewer's
+// own clock and re-sort, which makes the chart read as local time.
+//
+// Doing this in the viewer's browser is deliberate: a stored timezone offset
+// would be a quasi-identifier, and the whole point of the no-fingerprint design
+// is that nothing about the reader is persisted. Nothing leaves the page here.
+//
+// A UTC bucket spans hh:00-hh:59, so its centre is hh:30. Adding 0.5 before
+// flooring puts half-hour zones (IST +5:30) on the correct hour rather than one
+// hour early, and leaves whole-hour zones untouched. Math.floor matters: a
+// bitwise |0 truncates toward zero, which lands western offsets an hour late.
+function hoursByLocalClock(rows) {
+  const offset = -new Date().getTimezoneOffset() / 60;
+  const byUtc = new Map((rows || []).map((r) => [r.hour, r]));
+  return Array.from({ length: 24 }, (_, h) => {
+    const local = (((Math.floor(h + offset + 0.5) % 24) + 24) % 24);
+    const row = byUtc.get(h) || {};
+    return { local, humans: row.humans || 0, bots: row.bots || 0 };
+  }).sort((a, b) => a.local - b.local);
+}
+
+function tzLabel() {
+  const mins = -new Date().getTimezoneOffset();
+  const h = Math.floor(Math.abs(mins) / 60);
+  const m = Math.abs(mins) % 60;
+  const zone = (Intl.DateTimeFormat().resolvedOptions().timeZone || 'local').split('/').pop();
+  return `(${zone}, UTC${mins < 0 ? '-' : '+'}${h}${m ? ':' + String(m).padStart(2, '0') : ''})`;
+}
+
 /** Render a value/key table. `spec` lists [heading, key, isNumeric] columns. */
 function table(el, rows, spec, { bar } = {}) {
   const host = $(el);
@@ -106,8 +136,8 @@ async function load() {
       { label: 'other bots', data: daily.map((r) => r.bots - r.ai), color: CSS.bot },
     ]);
 
-    const hrs = Array.from({ length: 24 }, (_, h) => (d.hours || []).find((r) => r.hour === h) || { humans: 0, bots: 0 });
-    chart('hours', hrs.map((_, h) => String(h).padStart(2, '0')), [
+    const hrs = hoursByLocalClock(d.hours);
+    chart('hours', hrs.map((r) => String(r.local).padStart(2, '0')), [
       { label: 'humans', data: hrs.map((r) => r.humans), color: CSS.human, fill: true },
       { label: 'bots', data: hrs.map((r) => r.bots), color: CSS.bot },
     ]);
@@ -131,5 +161,8 @@ async function load() {
     document.body.dataset.ready = '1';
   }
 }
+
+const tz = $('tzlabel');
+if (tz) tz.textContent = tzLabel();
 
 load();
