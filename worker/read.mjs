@@ -1,110 +1,132 @@
-import { queryAnalyticsEngine } from './src/rollup.js';
+/**
+ * Query the D1 read log. Plain SQLite via the D1 REST API, so any SQL works -
+ * pass a preset name as argv[2], or a full statement.
+ *
+ *   node read.mjs top
+ *   node read.mjs "SELECT page, sum(humans) FROM reads_daily GROUP BY page"
+ *
+ * Auth comes from the same wrangler login that deploys the Worker, so there is
+ * no second token to manage. Set D1_DATABASE_ID to override the default.
+ */
 
-const DATASET = 'isrl_reads';
-const RANGE = "timestamp >= now() - INTERVAL '90' DAY";
+const ACCOUNT_ID = '252fa1a6a585d7f784df3811dd3dc0ce';
+const DATABASE_ID = process.env.D1_DATABASE_ID ?? '6a9dce0c-6f06-4fcb-91b9-d96e79d40068';
+const API = 'https://api.cloudflare.com/client/v4';
 
 const PRESETS = {
-	top: `SELECT blob1 AS page, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY page ORDER BY reads DESC LIMIT 25`,
+	summary: `SELECT
+			sum(humans) AS humans,
+			sum(bots) AS bots,
+			sum(humans) + sum(bots) AS total,
+			count(DISTINCT day) AS days
+		FROM reads_daily`,
 
-	refs: `SELECT blob2 AS ref, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY ref ORDER BY reads DESC LIMIT 25`,
+	top: `SELECT page, sum(humans) AS humans, sum(bots) AS bots
+		FROM reads_daily GROUP BY page ORDER BY humans DESC, bots DESC LIMIT 25`,
 
-	countries: `SELECT blob3 AS country, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY country ORDER BY reads DESC LIMIT 30`,
+	refs: `SELECT ref, sum(humans) AS humans
+		FROM reads_daily WHERE ref != '' GROUP BY ref ORDER BY humans DESC LIMIT 25`,
 
-	devices: `SELECT blob5 AS device, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY device ORDER BY reads DESC`,
+	countries: `SELECT country, sum(humans) AS humans
+		FROM reads_daily GROUP BY country ORDER BY humans DESC LIMIT 30`,
 
-	os: `SELECT blob6 AS os, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY os ORDER BY reads DESC`,
+	devices: `SELECT device, sum(humans) AS humans
+		FROM reads_daily GROUP BY device ORDER BY humans DESC`,
 
-	browsers: `SELECT blob7 AS browser, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY browser ORDER BY reads DESC`,
+	os: `SELECT os, sum(humans) AS humans
+		FROM reads_env GROUP BY os ORDER BY humans DESC`,
 
-	bots: `SELECT blob8 AS kind, blob9 AS bot, count() AS hits
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 1
-		GROUP BY kind, bot ORDER BY hits DESC LIMIT 30`,
+	browsers: `SELECT browser, sum(humans) AS humans
+		FROM reads_env GROUP BY browser ORDER BY humans DESC`,
 
-	kinds: `SELECT blob8 AS kind,
-		sumIf(_sample_interval, double1 = 0) AS humans,
-		sumIf(_sample_interval, double2 = 1) AS ai,
-		sumIf(_sample_interval, double1 = 1) AS bots
-		FROM ${DATASET} WHERE ${RANGE}
-		GROUP BY kind ORDER BY humans DESC, ai DESC`,
+	regions: `SELECT country, region, sum(humans) AS humans
+		FROM reads_env WHERE region != ''
+		GROUP BY country, region ORDER BY humans DESC LIMIT 25`,
 
-	ai: `SELECT blob9 AS agent, blob1 AS page, blob2 AS ref, blob3 AS country,
-		count() AS fetches
-		FROM ${DATASET} WHERE ${RANGE} AND double2 = 1
-		GROUP BY agent, page, ref, country ORDER BY fetches DESC LIMIT 40`,
+	env: `SELECT country, os, browser, sum(humans) AS humans
+		FROM reads_env GROUP BY country, os, browser ORDER BY humans DESC LIMIT 30`,
 
-	ai_agents: `SELECT blob8 AS kind, blob9 AS agent, count() AS fetches,
-		count(DISTINCT blob1) AS pages
-		FROM ${DATASET} WHERE ${RANGE} AND double2 = 1
-		GROUP BY kind, agent ORDER BY fetches DESC`,
+	kinds: `SELECT kind, sum(reads) AS reads
+		FROM reads_kinds GROUP BY kind ORDER BY reads DESC`,
 
-	ai_pages: `SELECT blob1 AS page, count() AS fetches,
-		count(DISTINCT blob9) AS agents
-		FROM ${DATASET} WHERE ${RANGE} AND double2 = 1
+	daily: `SELECT day,
+			sum(humans) AS humans,
+			sum(bots) AS bots
+		FROM reads_daily GROUP BY day ORDER BY day DESC LIMIT 30`,
+
+	hours: `SELECT hour, sum(humans) AS humans, sum(bots) AS bots
+		FROM reads_by_hour GROUP BY hour ORDER BY hour`,
+
+	bots: `SELECT kind, bot, sum(reads) AS reads, count(DISTINCT page) AS pages
+		FROM reads_crawlers GROUP BY kind, bot ORDER BY reads DESC LIMIT 30`,
+
+	ai: `SELECT kind, bot AS agent, page, ref, sum(reads) AS fetches
+		FROM reads_crawlers WHERE kind IN ('ai', 'ai-user')
+		GROUP BY kind, bot, page, ref ORDER BY fetches DESC LIMIT 40`,
+
+	ai_pages: `SELECT page, sum(reads) AS fetches, count(DISTINCT bot) AS agents
+		FROM reads_crawlers WHERE kind IN ('ai', 'ai-user')
 		GROUP BY page ORDER BY fetches DESC LIMIT 25`,
 
-	regions: `SELECT blob3 AS country, blob4 AS region, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0 AND blob4 != ''
-		GROUP BY country, region ORDER BY reads DESC LIMIT 25`,
+	ai_refs: `SELECT kind, ref, sum(reads) AS fetches, count(DISTINCT bot) AS agents
+		FROM reads_crawlers WHERE kind IN ('ai', 'ai-user') AND ref != ''
+		GROUP BY kind, ref ORDER BY fetches DESC`,
 
-	hours: `SELECT toHour(timestamp) AS hour_utc, sum(_sample_interval) AS reads
-		FROM ${DATASET} WHERE ${RANGE} AND double1 = 0
-		GROUP BY hour_utc ORDER BY hour_utc`,
-
-	daily: `SELECT formatDateTime(timestamp, '%Y-%m-%d') AS day,
-		sumIf(_sample_interval, double1 = 1) AS bots,
-		sumIf(_sample_interval, double2 = 1) AS ai,
-		sumIf(_sample_interval, double1 = 0) AS humans
-		FROM ${DATASET} WHERE ${RANGE}
-		GROUP BY day ORDER BY day DESC LIMIT 30`,
-
-	split: `SELECT blob1 AS page, blob2 AS ref, blob3 AS country,
-		sumIf(_sample_interval, double1 = 1) AS bots,
-		sumIf(_sample_interval, double1 = 0) AS humans
-		FROM ${DATASET} WHERE ${RANGE}
-		GROUP BY page, ref, country ORDER BY humans DESC LIMIT 40`,
+	split: `SELECT page, ref, country,
+			sum(humans) AS humans,
+			sum(bots) AS bots
+		FROM reads_daily GROUP BY page, ref, country
+		ORDER BY humans DESC, bots DESC LIMIT 40`,
 };
 
+async function loadToken() {
+	const config =
+		process.env.WRANGLER_CONFIG ??
+		`${process.env.APPDATA ?? ''}${process.env.APPDATA ? '\\' : ''}xdg.config\\.wrangler\\config\\default.toml`;
+
+	const { readFile } = await import('node:fs/promises');
+	const text = await readFile(config, 'utf8');
+	const match = text.match(/^oauth_token\s*=\s*"(.+)"$/m);
+	if (!match) throw new Error(`no oauth_token in ${config} - run: npx wrangler login`);
+	return match[1];
+}
+
+async function query(sql) {
+	const token = await loadToken();
+	const response = await fetch(`${API}/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
+		method: 'POST',
+		headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+		body: JSON.stringify({ sql }),
+	});
+
+	const body = await response.json();
+	if (!response.ok || body.success === false) {
+		const detail = JSON.stringify(body.errors ?? body).slice(0, 400);
+		throw new Error(`D1 query ${response.status}: ${detail}`);
+	}
+	return body.result?.[0]?.results ?? [];
+}
+
 function render(rows) {
-	if (!rows.length) return console.log('(no rows in the last 90 days)');
+	if (!rows.length) return console.log('(no reads recorded yet)');
 	const columns = Object.keys(rows[0]);
-	const widths = columns.map((c) => Math.max(c.length, ...rows.map((r) => String(r[c] ?? '').length)));
-	const line = (cells) => cells.map((cell, i) => String(cell ?? '').padEnd(widths[i])).join('  ');
+	const cell = (row, key) => String(row[key] ?? '');
+	const widths = columns.map((c) => Math.max(c.length, ...rows.map((r) => cell(r, c).length)));
+	const line = (cells) => cells.map((v, i) => String(v ?? '').padEnd(widths[i])).join('  ');
 	console.log(line(columns));
 	console.log(widths.map((w) => '-'.repeat(w)).join('  '));
-	for (const row of rows) console.log(line(columns.map((c) => row[c])));
+	for (const row of rows) console.log(line(columns.map((c) => cell(row, c))));
 	console.log(`\n${rows.length} rows`);
 }
 
-const input = process.argv[2] ?? 'top';
-const accountId = process.env.CF_ACCOUNT_ID;
-const token = process.env.CF_API_TOKEN;
-
-if (!accountId || !token) {
-	console.error('Set CF_ACCOUNT_ID and CF_API_TOKEN (Account | Account Analytics | Read).');
-	console.error(`Presets: ${Object.keys(PRESETS).join(', ')}`);
-	process.exit(1);
-}
-
-const sql = PRESETS[input] ?? input;
-if (!PRESETS[input] && !/^\s*(select|show)\b/i.test(sql)) {
+const input = process.argv[2] ?? 'summary';
+if (!PRESETS[input] && !/^\s*(select|with)\b/i.test(input)) {
 	console.error(`Unknown preset "${input}". Try: ${Object.keys(PRESETS).join(', ')}`);
 	process.exit(1);
 }
 
 try {
-	render(await queryAnalyticsEngine(accountId, token, sql));
+	render(await query(PRESETS[input] ?? input));
 } catch (error) {
 	console.error(error.message);
 	process.exit(1);

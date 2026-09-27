@@ -7,23 +7,16 @@
 	"routes": [
 		{ "pattern": "px.isrl.in", "custom_domain": true }
 	],
-	"analytics_engine_datasets": [
-		{ "binding": "READS", "dataset": "isrl_reads" }
-	],
 	"d1_databases": [
 		{
 			"binding": "DB",
 			"database_name": "isrl-reads",
-			"database_id": "REPLACE_WITH_D1_DATABASE_ID",
+			"database_id": "6a9dce0c-6f06-4fcb-91b9-d96e79d40068",
 			"migrations_dir": "migrations"
 		}
 	],
 	"vars": {
-		"CF_ACCOUNT_ID": "REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID",
 		"SELF_HOST": "isrl.in"
-	},
-	"triggers": {
-		"crons": ["17 3 * * *"]
 	},
 	"observability": {
 		"enabled": true

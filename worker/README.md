@@ -10,164 +10,143 @@ page is an `<img>` tag rendered by `src/components/Pixel.astro`.
 ## How it works
 
 ```
-browser ──<img>──▶ px.isrl.in/px.gif?p=/the-post/     (Cloudflare Worker, ~42 byte reply)
-                        │
-                        ├─▶ Analytics Engine   hot, full fidelity, 90 day retention
-                        │
-                        └─▶ cron 03:17 UTC ─▶ D1   cold, permanent, small
+browser ──<img>──▶ px.isrl.in/px.gif?p=/the-post/   (Cloudflare Worker, 42 byte GIF reply)
+                         │
+                         └─▶ one D1 batch: 4 counter upserts, no API token, no cron
 ```
 
-Analytics Engine is the source of truth while data is fresh. A daily cron folds each
-finished UTC day into D1 so the long-term history outlives the 90 day window. Both tiers
-cost nothing at this site's traffic: Analytics Engine includes 100k writes/day on the free
-plan and is not currently billed at all, and D1 is a few hundred rows a year.
+Every hit is written straight to D1 as a counter increment, so a read is durable the moment
+it lands. There is no hot/cold split, no nightly rollup, and nothing to retry or
+double count. One pageview costs one row write per populated table — four for a reader,
+three for a bot — which puts the ceiling around 25k pageviews a day against D1's free
+100k rows written/day. For a personal blog that is a lot of headroom.
+
+`HEAD` is answered with headers only and is never recorded; link checkers and prefetchers
+are not readers.
 
 ## Setup
+
+**1. Install and create the database**
 
 ```bash
 cd worker
 npm install
-```
-
-**1. Create the D1 database and paste the id into `wrangler.jsonc`:**
-
-```bash
 npx wrangler d1 create isrl-reads
+```
+
+Paste the returned `database_id` into `wrangler.jsonc`, then:
+
+```bash
 npx wrangler d1 migrations apply isrl-reads --remote
+npx wrangler deploy
 ```
 
-**2. Create a read-only API token** at
-[dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
-→ Create Custom Token → permission **Account | Account Analytics | Read**. The cron needs
-it to read Analytics Engine back out. Store it as a secret, never in the repo:
+**2. Point `px.isrl.in` at the Worker.**
 
-```bash
-npx wrangler secret put CF_API_TOKEN
-```
+`isrl.in` is served from GitHub Pages and its DNS is on Zoho, so the pixel lives on its
+own Cloudflare zone delegated from the parent — the same trick `askbox.isrl.in` already
+uses (`askbox` is a Cloudflare Pages project with its own NS records inside a Zoho zone).
 
-**3. Set your account id** in `wrangler.jsonc` under `vars.CF_ACCOUNT_ID`.
+1. Add a `px.isrl.in` zone in the **same Cloudflare account as this Worker** and note the
+   two nameservers Cloudflare assigns it.
+2. At your Zoho DNS host, delegate `px.isrl.in` with those two nameservers.
+3. Wait for the zone to go active, then `npx wrangler deploy`. The `routes` entry in
+   `wrangler.jsonc` claims `px.isrl.in` as a Worker custom domain and the cert is issued
+   automatically.
 
-**4. Deploy.** `routes[].custom_domain` makes wrangler create the `px.isrl.in` DNS
-record and TLS certificate for you, so there is no separate DNS step:
+Nothing about the apex zone changes. If you would rather not do this, set
+`"workers_dev": true` and drop the `routes` block — the Worker will answer on a
+`*.workers.dev` hostname instead, and you can flip back later.
 
-```bash
-npm run deploy
-```
+## Secrets
 
-`isrl.in` itself stays on GitHub Pages — the pixel is a fully independent Worker.
+None. The pixel endpoint is deliberately unauthenticated, so there is no key to leak and
+no key to rotate. It is not an account: there is no cookie, no identifier, and no
+cross-site state, so a hit from someone else is just an anonymous count of one.
+
+`wrangler.jsonc` contains only resource **identifiers** (the D1 database id), which are
+not credentials and are fine in a public repo. Nothing here needs a GitHub secret unless
+you later add a CI deploy workflow — in that case put the token in a repository secret
+called `CLOUDFLARE_API_TOKEN`, never a variable or a file.
 
 ## Reading the data
 
-Live data, 90 days, full fidelity. Needs `CF_ACCOUNT_ID` and `CF_API_TOKEN` in your shell:
+`read.mjs` queries D1 over the REST API using the same `wrangler login` that deploys, so
+there is no second token to manage.
 
 ```bash
-node read.mjs top         # most-read pages (humans only)
-node read.mjs refs        # where readers came from
-node read.mjs countries   # reader geography
-node read.mjs devices     # mobile / desktop / tablet
-node read.mjs os
-node read.mjs browsers
-node read.mjs hours       # hour-of-day histogram, UTC
-node read.mjs daily       # humans vs bots vs ai per day
-node read.mjs kinds       # human / ai / ai-user / search / social / seo / tool
-node read.mjs bots        # every crawler, bucketed
-node read.mjs ai_agents   # which AI, how many fetches, how many pages
-node read.mjs ai          # AI fetches by agent x page x referrer x country
-node read.mjs ai_pages    # which posts AI agents keep fetching
-node read.mjs regions     # sub-country region (Business plan and up only)
-node read.mjs split       # page x referrer x country
+node read.mjs summary      # humans, bots, total, days
+node read.mjs top          # per page
+node read.mjs refs         # referrers
+node read.mjs countries    # edge geo
+node read.mjs devices      # desktop / mobile / bot
+node read.mjs os           # operating systems
+node read.mjs browsers     # browsers
+node read.mjs env          # country x os x browser
+node read.mjs regions      # region, when the plan reports it
+node read.mjs kinds        # human / ai / ai-user / search / social / seo / tool / other
+node read.mjs daily        # per day
+node read.mjs hours        # UTC hour of day
+node read.mjs bots         # every crawler, by agent
+node read.mjs ai           # AI fetches with page and referrer
+node read.mjs ai_pages     # which pages AI agents read
+node read.mjs ai_refs      # which surfaces sent AI traffic
+node read.mjs split        # page x referrer x country
 ```
 
-Any other input is treated as raw SQL. Human-only reads are `WHERE double1 = 0`,
-AI reads are `WHERE double2 = 1`.
-
-Permanent history lives in D1, reachable without any token:
+Anything else, pass SQL directly:
 
 ```bash
-npx wrangler d1 execute isrl-reads --remote --command \
-  "SELECT page, sum(humans) h, sum(bots) b FROM reads_daily GROUP BY page ORDER BY h DESC"
-
-npx wrangler d1 execute isrl-reads --remote --command \
-  "SELECT kind, bot, sum(reads) n FROM reads_crawlers WHERE kind IN ('ai','ai-user') GROUP BY kind, bot ORDER BY n DESC"
-
-npx wrangler d1 execute isrl-reads --remote --command \
-  "SELECT hour, sum(humans) h FROM reads_by_hour GROUP BY hour ORDER BY hour"
-```
-
-If a cron run is missed, backfill a day by hand — the rollup replaces rather than
-accumulates, so re-running the same day is safe:
-
-```bash
-curl "https://px.isrl.in/?rollup=2026-09-25"
+node read.mjs "SELECT page, sum(humans) FROM reads_daily GROUP BY page ORDER BY 2 DESC"
 ```
 
 ## Schema
 
-### Analytics Engine — dataset `isrl_reads`
-
-| Column | Dimension | Values |
+| table | key | holds |
 | --- | --- | --- |
-| `blob1` | page | pathname from `?p=`, or `?` if absent/malformed |
-| `blob2` | ref | referrer host, or `direct` / `self` / `unparsed` |
-| `blob3` | country | ISO-3166 alpha-2 from `request.cf.country`, else `??` |
-| `blob4` | region | `request.cf.region` — **empty on the free plan** |
-| `blob5` | device | `mobile` / `desktop` / `tablet` / `bot` / `other` |
-| `blob6` | os | `android` / `ios` / `windows` / `macos` / `linux` / `chromeos` / `bot` / `other` |
-| `blob7` | browser | `chrome` / `safari` / `firefox` / `edge` / `opera` / `bot` / `other` |
-| `blob8` | kind | `human` / `ai` / `ai-user` / `search` / `social` / `seo` / `tool` / `other` |
-| `blob9` | bot | matched agent token, or `''` for humans |
-| `double1` | is_bot | 1 or 0 |
-| `double2` | is_ai | 1 or 0 — true for both `ai` and `ai-user` |
+| `reads_daily` | day, page, ref, country, device | `humans`, `bots` |
+| `reads_by_hour` | day, hour | `humans`, `bots` |
+| `reads_kinds` | day, kind | `reads` |
+| `reads_crawlers` | day, kind, bot, page, ref | `reads` |
+| `reads_env` | day, country, os, browser, region | `humans` |
 
-Human counts must be `sumIf(_sample_interval, ...)` or `count()`, never bare `count(*)`,
-so the numbers stay correct if Analytics Engine ever samples.
+`ref` and `country` are part of the crawler and env keys rather than plain columns on
+purpose. Two AI fetches of the same page can arrive from different referrers, and
+`ai-user` traffic is exactly where the referrer carries the most signal — without it in
+the key the first referrer to land would stick and the rest would be miscounted.
 
-### D1
+## Human, AI, and bot
 
-| Table | Grain | Holds |
-| --- | --- | --- |
-| `reads_daily` | day x page x ref x country x device | `humans`, `bots` |
-| `reads_by_hour` | day x hour | `humans`, `bots` |
-| `reads_crawlers` | day x kind x bot x page | `reads` — permanent per-agent history |
+A read is classified into one `kind` at request time:
 
-`os`, `browser` and `region` deliberately stay in Analytics Engine only. Keeping them out
-of the permanent tables keeps row counts tiny and the cross-tabs that use them are short-
-lived questions anyway.
+| kind | what it is |
+| --- | --- |
+| `human` | a real browser, proven by Fetch Metadata |
+| `ai` | a model fetching to train or answer, e.g. GPTBot, ClaudeBot, PerplexityBot |
+| `ai-user` | an agent acting for a person, e.g. ChatGPT-User, Claude-User |
+| `search` | Googlebot, Bingbot, DuckDuckBot |
+| `social` | Twitterbot, facebookexternalhit, LinkedInBot |
+| `seo` | SEO crawlers like AhrefsBot and SemrushBot |
+| `tool` | link checkers and fetch APIs like curl and UptimeRobot |
+| `other` | everything unrecognised |
 
-## What counts as a human read
+`ai` and `ai-user` are kept apart because they mean different things. An `ai` fetch is a
+crawler costing you bandwidth. An `ai-user` fetch is a person who asked something and was
+shown your page, and it usually arrives carrying a real referrer like `chatgpt.com`. The
+edit is one list in `src/parse.js` if you want to move an agent between categories.
 
-`classify()` in `src/parse.js` marks a hit non-human if any of these hold:
-
-1. `request.cf.botManagement.verifiedBot` — authoritative, but only if the zone has Bot
-   Management (a paid add-on).
-2. The user-agent matches a known agent in the taxonomy — `ai`, `ai-user`, `search`,
-   `social`, `seo` or `tool`.
-3. The user-agent is empty.
-4. The user-agent contains `bot`/`crawler`/`spider` **and** has no browser signature. The
-   second half matters: it stops the CUBOT phone brand from being read as a bot.
-5. The user-agent has no browser signature at all (`Mozilla/5.0`, `Gecko/`, `Trident/`).
-6. The user-agent looks like a browser but the request carries no Fetch Metadata
-   (`Sec-Fetch-*`, `Sec-CH-UA`). Every current browser sends these when it loads an image;
-   a scraper replaying a copied Chrome string does not. Reported as `no-fetch-metadata` so
-   you can audit it rather than having to trust it.
-
-`ai` vs `ai-user`: `ai` is an agent acting on its own initiative (GPTBot, ClaudeBot,
-PerplexityBot, CCBot, Google-Extended, Bytespider…). `ai-user` is an agent fetching because
-a person asked it to (ChatGPT-User, Claude-User, Perplexity-User, MistralAI-User). The
-latter is the closer thing to a human read, and they usually arrive with a real referrer
-such as `chatgpt.com`, so `ref` tells you which one.
-
-**Known limit:** a scraper that sends a complete Chrome user-agent *and* plausible Fetch
-Metadata headers is indistinguishable at this layer. That is what Bot Management is for.
+Detection is a heuristic and always will be. Cloudflare's verified-bot data is used when
+the account has Bot Management, and a scraper spoofing a complete Chrome user agent is
+indistinguishable from a person without it. Treat the human/bot line as approximate.
 
 ## Privacy
 
-The IP address is never read, logged, or stored. Cloudflare resolves it to
-`request.cf.country` before the Worker runs and discards it. There is no cookie, no
-`localStorage`, and nothing that can follow a reader between sites. The pixel request
-crosses origins, so the browser applies the default `strict-origin-when-cross-origin`
-policy and sends only the referrer *origin*, never the full path — the exact page comes
-from `?p=` instead.
+Nothing identifying is stored. No IP (only the country and region Cloudflare derives from
+it), no user agent string (only the parsed `device` / `os` / `browser`), no referrer path
+(cross-origin referrers arrive as origin-only per the default
+`strict-origin-when-cross-origin` policy, and that is left alone deliberately).
 
-To stop counting a page, delete the `<Pixel />` line from
-`src/layouts/Layout.astro` and `src/layouts/LayoutMath.astro`. Nothing else to unwind.
+`region` is a column with a Business-plan caveat: `request.cf.region` has historically
+been gated behind a higher tier, so on a free account it will be an empty string and the
+`regions` preset returns nothing. `country` works on every plan. The column is wired up
+regardless, so it starts reporting if the account is ever upgraded.

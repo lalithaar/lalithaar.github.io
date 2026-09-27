@@ -235,7 +235,7 @@ export function referrerHost(referer, selfHost) {
 export function normalizePage(raw) {
 	if (!raw) return '?';
 	const page = raw.length > 200 ? raw.slice(0, 200) : raw;
-	return /^\/[^\s"<>\\^`{|}].*$/.test(page) && !page.startsWith('//') ? page : '?';
+	return /^\/(?:[^\s"<>\\^`{|}])*$/.test(page) && !page.startsWith('//') ? page : '?';
 }
 
 export function normalizeCountry(country) {

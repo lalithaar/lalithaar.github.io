@@ -1,0 +1,10 @@
+# Local-only overrides for `wrangler dev` and `read.mjs`. Copy to `.dev.vars`
+# and fill in. `.dev.vars` is gitignored and holds plaintext - never commit it.
+#
+# The pixel needs no credentials at all: it is deliberately unauthenticated, and
+# it writes straight to D1 through the binding. There is no API token in this
+# design, so there is nothing here you must set to run `npx wrangler dev`.
+#
+# Only useful if you want to point the local tooling at a different database.
+
+D1_DATABASE_ID = "6a9dce0c-6f06-4fcb-91b9-d96e79d40068"
