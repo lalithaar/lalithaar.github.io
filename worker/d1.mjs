@@ -34,9 +34,24 @@ function configPaths() {
 	].filter(Boolean);
 }
 
-/** A long-lived scoped token in .dev.vars (gitignored) wins when present. */
-function envToken() {
-	return process.env.D1_API_TOKEN || null;
+/**
+ * A long-lived scoped token in .dev.vars (gitignored) wins when present.
+ *
+ * `.dev.vars` is a wrangler convention, not a Node one, and these tools are
+ * plain node processes - so wrangler never loads it for us. Without reading it
+ * here, documenting `D1_API_TOKEN` in .dev.vars would be a promise the code
+ * never keeps.
+ */
+async function envVars() {
+	if (process.env.D1_API_TOKEN) return process.env.D1_API_TOKEN;
+	try {
+		const text = await readFile(new URL('./.dev.vars', import.meta.url), 'utf8');
+		const match = text.match(/^\s*D1_API_TOKEN\s*=\s*["']?([^"'\r\n#]+)["']?\s*$/m);
+		if (match && match[1].trim()) return match[1].trim();
+	} catch {
+		// no .dev.vars, which is the normal case
+	}
+	return null;
 }
 
 async function storedAuth() {
@@ -59,7 +74,7 @@ function isAuthFailure(error) {
 }
 
 async function viaRest(sql) {
-	const token = envToken() ?? (await storedAuth())?.token;
+	const token = (await envVars()) ?? (await storedAuth())?.token;
 	if (!token) throw new Error('no Cloudflare token available');
 
 	const response = await fetch(`${API}/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {

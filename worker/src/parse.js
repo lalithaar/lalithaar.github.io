@@ -181,13 +181,18 @@ export function classifyBrowser(ua) {
 }
 
 export function detectBot(ua, headers, cf) {
-	if (cf?.botManagement?.verifiedBot === true) return { kind: 'other', bot: 'bot-management' };
-
 	const lower = ua.toLowerCase();
+
+	// Known signatures first. Cloudflare's verified-bot flag is only a fallback,
+	// because it is true for GPTBot, ClaudeBot and Googlebot too - taking it
+	// first would collapse every one of them into 'other' and quietly destroy
+	// the AI and search breakdowns this whole thing exists to measure.
 	for (const { kind, tokens } of TAXONOMY) {
 		const token = matchToken(lower, tokens);
 		if (token) return { kind, bot: token };
 	}
+
+	if (cf?.botManagement?.verifiedBot === true) return { kind: 'other', bot: 'bot-management' };
 
 	if (!ua.trim()) return { kind: 'other', bot: 'no-user-agent' };
 

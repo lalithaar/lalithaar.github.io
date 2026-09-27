@@ -15,14 +15,25 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve, sep, extname } from 'node:path';
 
 import { query } from './d1.mjs';
 import { PRESETS, RANGES, preset } from './queries.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+const PUBLIC = join(HERE, 'public');
 const PORT = Number(process.env.DASH_PORT ?? 8787);
 const HOST = '127.0.0.1';
+
+const TYPES = {
+	'.html': 'text/html',
+	'.js': 'text/javascript',
+	'.css': 'text/css',
+	'.json': 'application/json',
+	'.svg': 'image/svg+xml',
+	'.png': 'image/png',
+	'.ico': 'image/x-icon',
+};
 
 // One round trip per view. These are the panels the dashboard renders.
 const PANELS = [
@@ -52,6 +63,13 @@ function send(res, status, body, type = 'application/json') {
 		// server but cannot read the response, which is what keeps a hostile
 		// page from exfiltrating anything.
 		'x-content-type-options': 'nosniff',
+		// Everything this page loads is served from here. The chart library is
+		// vendored rather than pulled from a CDN, because a third-party script
+		// would run with this page's origin and could read /api/overview - the
+		// whole readership record - and ship it anywhere. A CSP of 'self' means
+		// no injected or swapped asset can do that.
+		'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'",
+		'referrer-policy': 'no-referrer',
 	});
 	res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body));
 }
@@ -71,8 +89,25 @@ const server = createServer(async (req, res) => {
 
 	try {
 		if (url.pathname === '/' || url.pathname === '/index.html') {
-			const html = await readFile(join(HERE, 'public', 'index.html'));
+			const html = await readFile(join(PUBLIC, 'index.html'));
 			return send(res, 200, html, 'text/html');
+		}
+
+		// Static assets, served from public/. The chart library is vendored rather
+		// than pulled from a CDN precisely so this is the only origin involved.
+		if (!url.pathname.startsWith('/api/')) {
+			const rel = decodeURIComponent(url.pathname).replace(/^\/+/, '');
+			const target = resolve(PUBLIC, rel);
+			// Refuse anything that escapes public/ via .. or a symlink.
+			if (target !== PUBLIC && !target.startsWith(PUBLIC + sep)) {
+				return send(res, 403, { error: 'forbidden' });
+			}
+			try {
+				const body = await readFile(target);
+				return send(res, 200, body, TYPES[extname(target).toLowerCase()] ?? 'application/octet-stream');
+			} catch {
+				return send(res, 404, { error: 'not found' });
+			}
 		}
 
 		if (url.pathname === '/api/overview') {

@@ -105,8 +105,14 @@ automated traffic. Ranges are 7 / 14 / 30 / 90 days or all time.
 
 It binds to `127.0.0.1` only, so nothing on your network can reach it. It holds no data:
 every request is answered by querying D1 live. Nothing is cached to disk, so there is no
-local copy of your readership to protect or accidentally commit. A chart library is loaded
-from a CDN as a convenience; if that fails, every number is still in the tables.
+local copy of your readership to protect or accidentally commit.
+
+The chart library is **vendored** into `public/vendor/`, not loaded from a CDN. That is
+deliberate: a third-party script executes with this page's origin, so it could call
+`/api/overview`, read your entire readership record, and post it anywhere — which would
+defeat the point of keeping the dashboard local. The page is also served with
+`content-security-policy: default-src 'self'`, so no injected or swapped asset can do that
+either. If the library ever fails to load, every number is still present in the tables.
 
 It lives in `worker/`, **not** in `src/pages/`. Anything in `src/pages/` gets built into
 `dist/` and published to the open web, which would put your readership data on the internet.
@@ -197,9 +203,29 @@ crawler costing you bandwidth. An `ai-user` fetch is a person who asked somethin
 shown your page, and it usually arrives carrying a real referrer like `chatgpt.com`. The
 edit is one list in `src/parse.js` if you want to move an agent between categories.
 
-Detection is a heuristic and always will be. Cloudflare's verified-bot data is used when
-the account has Bot Management, and a scraper spoofing a complete Chrome user agent is
-indistinguishable from a person without it. Treat the human/bot line as approximate.
+Detection is a heuristic and always will be. A scraper spoofing a complete Chrome user agent is
+indistinguishable from a person without bot signals. Treat the human/bot line as approximate.
+
+Known agent signatures are matched **before** Cloudflare's verified-bot flag, which is only a
+fallback. The order matters: the flag is also true for GPTBot, ClaudeBot and Googlebot, so
+checking it first would quietly file every AI and search crawler under `other` and destroy the
+breakdowns this exists to produce. The flag is only consulted for traffic that matches no
+known signature.
+
+## Abuse and quota
+
+The pixel is unauthenticated by design, so anyone can request it. An isolated hit is harmless
+— it just counts as one read — but the endpoint has no rate limit of its own, and each request
+costs four D1 writes. Roughly 25k requests would exhaust the free 100k rows-written/day
+allowance, at which point *legitimate* reads stop recording and the analytics quietly go
+blank. That is the real failure mode here: not a leaked secret, but lost data.
+
+For a personal blog, natural traffic is orders of magnitude below that. If you want a hard
+floor anyway, add a rate-limit rule in the Cloudflare dashboard:
+
+**Security → WAF → Rate limiting rules**, matching host `isrl-pixel.arlalithablogs.workers.dev`,
+path `/px.gif`, e.g. 60 requests/minute per IP. Bot crawlers fetch in bursts, so pick a limit
+generous enough not to throw away the AI traffic the whole thing is for.
 
 ## Privacy
 

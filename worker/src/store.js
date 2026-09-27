@@ -5,9 +5,10 @@
  * rather than a nightly recompute, so a hit is durable the moment it lands and
  * there is no rollup step that can be missed, retried, or double counted.
  *
- * D1 free tier is 5M rows read / 100k rows written per day. A hit costs one
- * write per populated table (4 for a human, 3 for a bot), so the ceiling works
- * out to roughly 25k pageviews a day - far past anything a personal blog sees.
+ * D1 free tier is 5M rows read / 100k rows written per day. Every hit costs
+ * exactly four writes - the three shared statements below plus one of
+ * reads_crawlers / reads_env - for a reader and a bot alike, putting the
+ * ceiling near 25k pageviews a day.
  */
 
 const DAILY_COLUMNS = 'day, page, ref, country, device, humans, bots';

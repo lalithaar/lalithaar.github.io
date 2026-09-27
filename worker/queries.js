@@ -108,10 +108,12 @@ export const PRESETS = {
 export const RANGES = [7, 14, 30, 90];
 
 export function fillSince(sql, days) {
+	// `date('now', '-7 days')` is inclusive of both ends, which spans eight
+	// calendar dates - the UI says "7 days", so step back one less.
 	const bound =
 		days === 'all' || days === undefined || days === null
 			? "'1970-01-01'"
-			: `date('now', '-${Number(days)} days')`;
+			: `date('now', '-${Math.max(Number(days) - 1, 0)} days')`;
 	return sql.replaceAll('%SINCE%', bound);
 }
 
