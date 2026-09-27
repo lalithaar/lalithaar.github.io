@@ -1,0 +1,21 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "isrl-pixel",
+	"main": "src/index.js",
+	"compatibility_date": "2026-09-26",
+	"workers_dev": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "isrl-reads",
+			"database_id": "6a9dce0c-6f06-4fcb-91b9-d96e79d40068",
+			"migrations_dir": "migrations"
+		}
+	],
+	"vars": {
+		"SELF_HOST": "isrl.in"
+	},
+	"observability": {
+		"enabled": true
+	}
+}

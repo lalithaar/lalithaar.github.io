@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "dash": "npm --prefix worker run dash",
+    "read": "npm --prefix worker run read"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.2",

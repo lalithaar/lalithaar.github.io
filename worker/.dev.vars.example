@@ -1,0 +1,21 @@
+# Local-only overrides for `wrangler dev` and the reading tools. Copy to
+# `.dev.vars` and fill in. `.dev.vars` is gitignored and holds plaintext - never
+# commit it.
+#
+# The pixel needs no credentials at all: it is deliberately unauthenticated and
+# writes straight to D1 through the binding. There is no API token in that path,
+# so there is nothing here you must set to run `npx wrangler dev`.
+#
+# These are only for the *reading* side (read.mjs / dashboard.mjs), which query
+# D1 from your machine. By default that reuses the `npx wrangler login` session
+# that deploys the Worker, so you can leave all of this commented out.
+#
+# Set D1_API_TOKEN if you would rather use a dedicated, long-lived token scoped
+# to read-only on this one database. It survives wrangler OAuth expiry, and a
+# leak would be limited to a single analytics database. Token type "API Token",
+# permission "Workers D1 / Read", scoped to this account.
+
+# D1_API_TOKEN = "..."
+
+# Only needed to read a different database than the deployed one.
+D1_DATABASE_ID = "6a9dce0c-6f06-4fcb-91b9-d96e79d40068"
