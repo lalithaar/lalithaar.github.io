@@ -10,7 +10,7 @@ page is an `<img>` tag rendered by `src/components/Pixel.astro`.
 ## How it works
 
 ```
-browser ──<img>──▶ px.isrl.in/px.gif?p=/the-post/   (Cloudflare Worker, 42 byte GIF reply)
+browser ──<img>──▶ isrl-pixel.arlalithablogs.workers.dev/px.gif?p=/the-post/   (42 byte GIF)
                          │
                          └─▶ one D1 batch: 4 counter upserts, no API token, no cron
 ```
@@ -41,22 +41,39 @@ npx wrangler d1 migrations apply isrl-reads --remote
 npx wrangler deploy
 ```
 
-**2. Point `px.isrl.in` at the Worker.**
+## Hostname
 
-`isrl.in` is served from GitHub Pages and its DNS is on Zoho, so the pixel lives on its
-own Cloudflare zone delegated from the parent — the same trick `askbox.isrl.in` already
-uses (`askbox` is a Cloudflare Pages project with its own NS records inside a Zoho zone).
+The Worker answers on its `workers.dev` hostname:
 
-1. Add a `px.isrl.in` zone in the **same Cloudflare account as this Worker** and note the
-   two nameservers Cloudflare assigns it.
-2. At your Zoho DNS host, delegate `px.isrl.in` with those two nameservers.
-3. Wait for the zone to go active, then `npx wrangler deploy`. The `routes` entry in
-   `wrangler.jsonc` claims `px.isrl.in` as a Worker custom domain and the cert is issued
-   automatically.
+```
+https://isrl-pixel.arlalithablogs.workers.dev/px.gif
+```
 
-Nothing about the apex zone changes. If you would rather not do this, set
-`"workers_dev": true` and drop the `routes` block — the Worker will answer on a
-`*.workers.dev` hostname instead, and you can flip back later.
+That is what `Pixel.astro` points at, and it is the whole setup. There is no DNS work.
+
+The obvious upgrade is `px.isrl.in`, and it is worth knowing why it is not simply a
+CNAME. `isrl.in` is on GitHub Pages with DNS at Zoho, and a Worker custom domain must
+sit inside a Cloudflare zone in the same account as the Worker. So:
+
+- **Pages** allows an external CNAME for a subdomain explicitly, which is why
+  `askbox.isrl.in CNAME askbox-eyx.pages.dev` works from Zoho.
+- **Workers** does not. The docs are blunt: a custom domain cannot be created "on a
+  hostname with an existing CNAME DNS record or on a zone you do not own."
+- Delegating `px.isrl.in` as its own zone is **Enterprise-only**, and keeping the apex
+  elsewhere while proxying one subdomain is **Business+**. Neither is on a free plan.
+
+Two ways to get `px.isrl.in` later, in order of effort:
+
+1. **Move the apex `isrl.in` to Cloudflare** (free). Change the nameservers at Zoho,
+   import the existing records, then add a `routes` entry with `"custom_domain": true`
+   and deploy. Nothing else in the repo changes.
+2. Keep the `workers.dev` hostname. It works indefinitely and costs nothing.
+
+`Pixel.astro` takes the endpoint as a prop, so it can be overridden per-clone:
+
+```astro
+<Pixel endpoint="https://px.isrl.in/px.gif" />
+```
 
 ## Secrets
 

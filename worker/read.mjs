@@ -93,18 +93,34 @@ async function loadToken() {
 
 async function query(sql) {
 	const token = await loadToken();
-	const response = await fetch(`${API}/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
-		method: 'POST',
-		headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-		body: JSON.stringify({ sql }),
-	});
+	const body = JSON.stringify({ sql });
 
-	const body = await response.json();
-	if (!response.ok || body.success === false) {
-		const detail = JSON.stringify(body.errors ?? body).slice(0, 400);
-		throw new Error(`D1 query ${response.status}: ${detail}`);
+	// The D1 REST API occasionally drops a connection outright. A read is
+	// cheap and idempotent, so retry the transport rather than making the caller
+	// re-run the command. A rejected statement still fails immediately.
+	let lastError;
+	for (let attempt = 1; attempt <= 3; attempt++) {
+		try {
+			const response = await fetch(`${API}/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
+				method: 'POST',
+				headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+				body,
+			});
+
+			const parsed = await response.json();
+			if (!response.ok || parsed.success === false) {
+				throw Object.assign(new Error(JSON.stringify(parsed.errors ?? parsed).slice(0, 400)), {
+					fatal: true,
+				});
+			}
+			return parsed.result?.[0]?.results ?? [];
+		} catch (error) {
+			if (error.fatal) throw error;
+			lastError = error;
+			if (attempt < 3) await new Promise((done) => setTimeout(done, 400 * attempt));
+		}
 	}
-	return body.result?.[0]?.results ?? [];
+	throw new Error(`D1 query failed after 3 attempts: ${lastError?.message ?? lastError}`);
 }
 
 function render(rows) {
