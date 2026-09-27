@@ -17,8 +17,9 @@ browser ──<img>──▶ isrl-pixel.arlalithablogs.workers.dev/px.gif?p=/the
 
 Every hit is written straight to D1 as a counter increment, so a read is durable the moment
 it lands. There is no hot/cold split, no nightly rollup, and nothing to retry or
-double count. One pageview costs one row write per populated table — four for a reader,
-three for a bot — which puts the ceiling around 25k pageviews a day against D1's free
+double count. One pageview costs exactly four row writes, for a reader and a bot alike:
+`reads_daily`, `reads_by_hour`, `reads_kinds`, and then either `reads_crawlers` (bots) or
+`reads_env` (people). That puts the ceiling around 25k pageviews a day against D1's free
 100k rows written/day. For a personal blog that is a lot of headroom.
 
 `HEAD` is answered with headers only and is never recorded; link checkers and prefetchers
@@ -88,34 +89,78 @@ called `CLOUDFLARE_API_TOKEN`, never a variable or a file.
 
 ## Reading the data
 
-`read.mjs` queries D1 over the REST API using the same `wrangler login` that deploys, so
-there is no second token to manage.
+Two ways in, both read-only and both local to your machine. The SQL lives in
+`queries.js` and is shared by both, so a preset means the same thing in each.
+
+### Dashboard
 
 ```bash
-node read.mjs summary      # humans, bots, total, days
-node read.mjs top          # per page
+npm run dash        # http://127.0.0.1:8787
+```
+
+Opens a local analytics view with the shape you would expect from a hosted tool: headline
+totals, a reads-over-time chart, and per-dimension tables for pages, referrers, countries,
+devices, operating systems, browsers, regions, hour of day, AI agents, AI referrers, and all
+automated traffic. Ranges are 7 / 14 / 30 / 90 days or all time.
+
+It binds to `127.0.0.1` only, so nothing on your network can reach it. It holds no data:
+every request is answered by querying D1 live. Nothing is cached to disk, so there is no
+local copy of your readership to protect or accidentally commit. A chart library is loaded
+from a CDN as a convenience; if that fails, every number is still in the tables.
+
+It lives in `worker/`, **not** in `src/pages/`. Anything in `src/pages/` gets built into
+`dist/` and published to the open web, which would put your readership data on the internet.
+
+### Terminal
+
+```bash
+node read.mjs summary      # humans, ai, bots, total, days, avg/day
+node read.mjs pages        # per page
+node read.mjs uniques      # approximate unique readers, per day
 node read.mjs refs         # referrers
 node read.mjs countries    # edge geo
-node read.mjs devices      # desktop / mobile / bot
+node read.mjs devices      # desktop / mobile / tablet
 node read.mjs os           # operating systems
 node read.mjs browsers     # browsers
-node read.mjs env          # country x os x browser
 node read.mjs regions      # region, when the plan reports it
+node read.mjs hours        # UTC hour of day
 node read.mjs kinds        # human / ai / ai-user / search / social / seo / tool / other
 node read.mjs daily        # per day
-node read.mjs hours        # UTC hour of day
-node read.mjs bots         # every crawler, by agent
-node read.mjs ai           # AI fetches with page and referrer
-node read.mjs ai_pages     # which pages AI agents read
+node read.mjs ai_agents    # AI agents, by fetches
 node read.mjs ai_refs      # which surfaces sent AI traffic
+node read.mjs ai_pages     # which pages AI agents read
+node read.mjs crawlers     # every automated agent
 node read.mjs split        # page x referrer x country
 ```
 
-Anything else, pass SQL directly:
+Add a day count to limit any preset to a recent range, or pass SQL directly:
 
 ```bash
+node read.mjs pages 30
 node read.mjs "SELECT page, sum(humans) FROM reads_daily GROUP BY page ORDER BY 2 DESC"
 ```
+
+`read.mjs` accepts `SELECT`/`WITH` only, so it cannot be used to alter the data.
+
+### Credentials for reading
+
+None required. Both tools reuse the `npx wrangler login` session that deploys the Worker.
+The stored OAuth access token can go stale, because wrangler refreshes its own copy in
+memory and does not rewrite the file — so `d1.mjs` falls back automatically to shelling out
+to `wrangler d1 execute`, which refreshes for itself. If you ever see an authentication
+error, run `npx wrangler login`.
+
+To use a dedicated token instead, set `D1_API_TOKEN` in `.dev.vars` (gitignored): token type
+"API Token", permission read-only on D1, scoped to this account. That survives OAuth expiry,
+and a leak would be limited to this one analytics database.
+
+### A note on "unique" readers
+
+There is no true unique-visitor count, and adding one would mean storing a cookie, an IP, or
+a fingerprint — all of which this design deliberately refuses. The `uniques` query instead
+counts distinct client combinations (country x OS x browser x region) per day. Treat it as
+a shape, not a headcount: it under-counts one person reading on two devices, and over-counts
+two people on identical setups.
 
 ## Schema
 
