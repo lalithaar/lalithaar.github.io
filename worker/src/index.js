@@ -63,11 +63,24 @@ export default {
 		}
 
 		// Respond first, write after. A reader should never wait on the database,
-		// and a slow or failing write must not turn into a broken image.
+		// and a slow or failing write must not turn into a broken image - which
+		// is also why the daily budget refusing a write leaves the reader with
+		// their pixel either way. The cap exists because the endpoint is
+		// unauthenticated: without it, a loop against /px.gif exhausts the D1
+		// write allowance and takes the whole database, dashboard included, down
+		// until the 00:00 UTC reset.
 		ctx.waitUntil(
-			writeHit(env.DB, hitFrom(request, env, url)).catch((error) => {
-				console.error('write failed', error);
-			}),
+			writeHit(env.DB, hitFrom(request, env, url))
+				.then((result) => {
+					if (result && result.written === false) {
+						console.warn(
+							`daily cap reached (${result.used}/${result.cap}); hit not counted`,
+						);
+					}
+				})
+				.catch((error) => {
+					console.error('write failed', error);
+				}),
 		);
 
 		return pixel();
