@@ -238,8 +238,14 @@ export function referrerHost(referer, selfHost) {
 }
 
 export function normalizePage(raw) {
-	if (!raw) return '?';
-	const page = raw.length > 200 ? raw.slice(0, 200) : raw;
+	// A request with no `p` at all is overwhelmingly just the homepage view, so
+	// an absent or empty value resolves to '/' rather than being lumped in with
+	// genuinely malformed input. '?' stays reserved for a `p` that was supplied
+	// but rejected (traversal attempt, bad characters, or an over-long value).
+	if (raw === undefined || raw === null) return '/';
+	const trimmed = String(raw).trim();
+	if (!trimmed) return '/';
+	const page = trimmed.length > 200 ? trimmed.slice(0, 200) : trimmed;
 	return /^\/(?:[^\s"<>\\^`{|}])*$/.test(page) && !page.startsWith('//') ? page : '?';
 }
 
