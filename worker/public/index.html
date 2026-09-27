@@ -44,6 +44,7 @@
   .bar-cell span { position: relative; }
   .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
   .chart { height: 260px; }
+  .tzlabel { color: var(--text); opacity: .6; font-weight: 400; }
   .empty { color: var(--muted); padding: 18px 0; }
   #err { display: none; background: #3a1d22; border: 1px solid #6b2b33; color: #ffb4bc;
          padding: 12px 16px; border-radius: 10px; margin-bottom: 14px; white-space: pre-wrap; }
@@ -60,7 +61,7 @@
   <div class="grid">
     <section class="wide"><h2>Reads over time</h2><div class="chart"><canvas id="trend"></canvas></div></section>
     <section class="wide"><h2>Pages</h2><div id="pages"></div></section>
-    <section><h2>Hour of day (UTC)</h2><div class="chart"><canvas id="hours"></canvas></div></section>
+    <section><h2>Hour of day <span id="tzlabel" class="tzlabel"></span></h2><div class="chart"><canvas id="hours"></canvas></div></section>
     <section><h2>Where readers came from</h2><div id="refs"></div></section>
     <section><h2>Countries</h2><div id="countries"></div></section>
     <section><h2>Devices</h2><div id="devices"></div></section>
