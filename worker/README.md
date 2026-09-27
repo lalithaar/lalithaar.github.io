@@ -216,16 +216,43 @@ known signature.
 
 The pixel is unauthenticated by design, so anyone can request it. An isolated hit is harmless
 — it just counts as one read — but the endpoint has no rate limit of its own, and each request
-costs four D1 writes. Roughly 25k requests would exhaust the free 100k rows-written/day
-allowance, at which point *legitimate* reads stop recording and the analytics quietly go
-blank. That is the real failure mode here: not a leaked secret, but lost data.
+costs four D1 writes. D1's free tier allows 100k rows written per day, so roughly 25k requests
+would exhaust the allowance.
 
-For a personal blog, natural traffic is orders of magnitude below that. If you want a hard
-floor anyway, add a rate-limit rule in the Cloudflare dashboard:
+The failure mode is worse than lost data. Going over the write limit does not degrade the
+analytics, it stops D1 answering queries *at all*, so the dashboard breaks too and stays broken
+until the 00:00 UTC reset. A single loop against `/px.gif` is enough to cause it.
 
-**Security → WAF → Rate limiting rules**, matching host `isrl-pixel.arlalithablogs.workers.dev`,
-path `/px.gif`, e.g. 60 requests/minute per IP. Bot crawlers fetch in bursts, so pick a limit
-generous enough not to throw away the AI traffic the whole thing is for.
+### Daily write budget (enforced in the Worker)
+
+`write_budget` holds one row per UTC day: a day and a counter, no reader data. `writeHit`
+reads the counter before writing and skips the write once the day's cap is reached. The reader
+still receives their pixel — the image never breaks, it just stops being counted, which is the
+right thing to trade when the alternative is taking the database down.
+
+The cap is 18,000 hits (`DAILY_HIT_CAP` in `src/store.js`). At four writes per hit that is 72k
+rows, leaving ~28k rows of headroom against the 100k allowance.
+
+The read-then-write has a small race window, so concurrent requests can overshoot slightly.
+That is deliberate: making a soft limit exact costs a second round trip, and the headroom
+absorbs the overshoot. Over-budget traffic costs one row *read* instead of four row *writes*,
+and reads have 50x the allowance, which is what makes the trade worth making.
+
+To change the ceiling, edit `DAILY_HIT_CAP` and redeploy — no migration needed, since the
+counter is just a number.
+
+### Cloudflare rate limit (defence in depth, not quota protection)
+
+**Security → WAF → Rate limiting rules** is still worth setting, but on the free plan it
+cannot be the thing that protects the quota:
+
+- Only one rule, and the only match fields available are **path** and **verified bot** — there
+  is no host field.
+- The counting period is fixed at **10 seconds**, so "60 requests/minute" is not expressible.
+
+Match `http.request.uri.path eq "/px.gif"`, per-IP, with a threshold no real reader approaches.
+Host-matching is unnecessary in practice: `px.isrl.in` is the only proxied record, and the
+apex/www/askbox records are DNS-only, so this path only ever receives Worker traffic.
 
 ## Privacy
 

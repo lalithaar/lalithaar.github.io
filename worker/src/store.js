@@ -8,8 +8,26 @@
  * D1 free tier is 5M rows read / 100k rows written per day. Every hit costs
  * exactly four writes - the three shared statements below plus one of
  * reads_crawlers / reads_env - for a reader and a bot alike, putting the
- * ceiling near 25k pageviews a day.
+ * ceiling near 25k pageviews a day. The endpoint is unauthenticated, so that
+ * ceiling is reachable by anyone with a loop, and blowing it does not degrade
+ * gracefully: the database stops answering queries entirely, taking the
+ * dashboard down until the 00:00 UTC reset.
+ *
+ * So every hit passes the budget check first. Once the day's cap is reached
+ * the write is skipped and the reader still gets their pixel - the pixel has
+ * to keep working, it just stops being counted. Over-budget traffic then costs
+ * one row read instead of four row writes, and reads have 50x the headroom.
  */
+
+/**
+ * Ceiling on hits accepted per UTC day. Four writes per hit, so 18k leaves
+ * roughly 28k rows of the 100k daily write allowance as headroom.
+ */
+export const DAILY_HIT_CAP = 18000;
+
+const BUDGET_SELECT = 'SELECT hits FROM write_budget WHERE day = ?';
+const BUDGET_BUMP = `INSERT INTO write_budget (day, hits) VALUES (?, 1)
+ON CONFLICT (day) DO UPDATE SET hits = write_budget.hits + 1`;
 
 const DAILY_COLUMNS = 'day, page, ref, country, device, humans, bots';
 const BY_HOUR_COLUMNS = 'day, hour, humans, bots';
@@ -69,7 +87,27 @@ export function buildStatements(hit) {
 }
 
 export async function writeHit(db, hit) {
-	const statements = buildStatements(hit);
-	await db.batch(statements.map(({ sql, params }) => db.prepare(sql).bind(...params)));
-	return statements.length;
+	// Read first, then decide. These cannot share one batch: db.batch runs every
+	// statement in it unconditionally, so putting the budget SELECT alongside
+	// the upserts would measure the cap and spend the writes anyway.
+	//
+	// That leaves a small window between the read and the write, so concurrent
+	// requests can overshoot the cap slightly. Acceptable for a safety valve -
+	// the headroom below absorbs the overshoot, and the alternative is paying a
+	// round trip to make a soft limit exact.
+	const row = await db.prepare(BUDGET_SELECT).bind(hit.day).first();
+	const used = row?.hits ?? 0;
+
+	if (used >= DAILY_HIT_CAP) {
+		return { written: false, used, cap: DAILY_HIT_CAP };
+	}
+
+	// The bump rides in the same batch as the counters, so the budget and the
+	// analytics can never disagree about whether a hit was accepted.
+	await db.batch([
+		...buildStatements(hit).map(({ sql, params }) => db.prepare(sql).bind(...params)),
+		db.prepare(BUDGET_BUMP).bind(hit.day),
+	]);
+
+	return { written: true, used: used + 1, cap: DAILY_HIT_CAP };
 }
