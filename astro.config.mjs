@@ -10,13 +10,14 @@ import rehypeKatex from 'rehype-katex';
 import { legacyRedirectsIntegration } from './scripts/legacy-redirects.mjs';
 import remarkBacklinks from './scripts/remark-backlinks.mjs';
 import katexFontDiet from './scripts/katex-font-diet.mjs';
+import rehypeSidenotes from './scripts/rehype-sidenotes.mjs';
 
 export default defineConfig({
   site: 'https://isrl.in',
   integrations: [legacyRedirectsIntegration(), sitemap()],
   markdown: {
     remarkPlugins: [remarkBacklinks,remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeKatex, rehypeSidenotes],
 
   },
   vite: {

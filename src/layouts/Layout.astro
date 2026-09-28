@@ -1,5 +1,6 @@
 ---
 import Pixel from '../components/Pixel.astro';
+import Sidenotes from '../components/Sidenotes.astro';
 
 interface Props {
 	title?: string;
@@ -44,6 +45,7 @@ const description =
 			<slot />
 		)}
 		<Pixel />
+		<Sidenotes />
 	</body>
 
 <style>

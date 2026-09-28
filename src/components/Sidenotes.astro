@@ -1,0 +1,240 @@
+---
+/*
+	Sidenotes.
+
+	The build step (scripts/rehype-sidenotes.mjs) has already reshaped any page
+	with footnotes into:
+
+		<div class="md-unit">
+			<article class="prose">running text</article>
+			<aside class="notes">footnotes</aside>
+		</div>
+
+	What it cannot know at build time is where each note's paragraph actually
+	landed, because that depends on the rendered text. So the runtime does exactly
+	one job: measure every reference, then set every note's `top`.
+
+	Two rules matter and both were learned the hard way:
+
+	1. Read all, then write all. Interleaving a measurement and a style write per
+	   note costs one forced reflow per note. Batching costs two in total, whatever
+	   the note count. At 500 notes that is the difference between 10ms and
+	   something quadratic.
+
+	2. JS owns the breakpoint and publishes it to CSS as a class on <html>. There
+	   must be no @media query mirroring that width. When CSS and JS each decided
+	   "wide" independently, they disagreed at exactly one viewport width and the
+	   notes piled up at the top of the margin with no `top` at all.
+
+	No JavaScript is required for the notes to be readable: without it, `.notes`
+	never gets `has-sidenotes`, so it stays an ordinary footnote list after the
+	prose at every width.
+*/
+---
+
+<script is:inline>
+	(() => {
+		const unit = document.querySelector('.md-unit');
+		if (!unit) return;
+
+		const prose = unit.querySelector('.prose');
+		const notes = unit.querySelector('.notes');
+		const items = Array.from(notes.querySelectorAll('li'));
+		const root = document.documentElement;
+		// Cheap pre-filter so a phone does not measure on every resize. The real
+		// threshold is wider and is measured below.
+		const wide = matchMedia('(min-width: 66rem)');
+		const GAP = 10; // px between stacked notes
+		const GAP_REM = 24; // px between the prose column and the notes
+		const MAX_NOTE = 384; // 24rem, the widest a note ever gets
+		const MIN_NOTE = 240; // below this a margin note is not worth having
+
+		function layout() {
+			// The prose is centred, so the notes need room beside it — and how much
+			// depends on the font, since 70ch is the width of "0" in whatever loaded.
+			// Measure rather than trust a breakpoint, and take the column width from
+			// the space actually there: a fixed 24rem overflows the margin on a 1366px
+			// laptop and the page falls back to the stacked list. clientWidth, not
+			// innerWidth — a scrollbar makes the latter ~15px too generous.
+			const proseRight = prose.getBoundingClientRect().right;
+			const room = document.documentElement.clientWidth;
+			const avail = room - proseRight - GAP_REM;
+			if (!wide.matches || avail < MIN_NOTE) {
+				root.classList.remove('has-sidenotes');
+				for (const li of items) li.style.top = '';
+				return;
+			}
+			root.style.setProperty('--note-w', `${Math.min(MAX_NOTE, avail)}px`);
+			root.classList.add('has-sidenotes');
+
+			// Read pass: nothing is written until every value is known.
+			const base = notes.getBoundingClientRect().top;
+			const plan = items.map((li) => {
+				const ref = document.getElementById(
+					li.id.replace(/^user-content-fn-/, 'user-content-fnref-'),
+				);
+				return {
+					li,
+					want: ref ? ref.getBoundingClientRect().top - base : 0,
+					height: li.offsetHeight,
+				};
+			});
+
+			// Write pass: a note may never sit above its reference, and two notes
+			// referenced on the same line cannot both fit at it, so each is pushed
+			// clear of the one above it.
+			let floor = -Infinity;
+			for (const note of plan) {
+				const top = Math.max(note.want, floor);
+				note.li.style.top = `${top}px`;
+				floor = top + note.height + GAP;
+			}
+		}
+
+		layout();
+		wide.addEventListener('change', layout);
+		// Handles font load, content change and container resize without polling
+		// a resize listener.
+		new ResizeObserver(layout).observe(prose);
+	})();
+</script>
+
+<style>
+	/*
+		IMPORTANT: every selector in this file is wrapped in :global() *in full*.
+
+		Astro scopes styles by appending [data-astro-cid-xxx] to any selector it
+		writes, and the elements this stylesheet targets are produced by
+		scripts/rehype-sidenotes.mjs, so they carry no such attribute. A mixed
+		selector like `:global(html.has-sidenotes) .md-unit` compiles to
+		`html.has-sidenotes .md-unit[data-astro-cid-xxx]`, which matches nothing —
+		and the failure is silent, because the rule is simply dropped. Keep each
+		selector entirely inside one :global() or the layout quietly stops working.
+	*/
+
+	/* Narrow, and no-JS: an ordinary footnote list directly after the prose. The
+	   <ol> marker is suppressed so the underlined number is the only number. */
+	:global(.md-unit .notes ol) {
+		list-style: none;
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	:global(.md-unit .notes li) {
+		margin: 0 0 0.5rem;
+		font-size: 0.9375rem;
+	}
+
+	:global(.md-unit .notes p) {
+		margin: 0;
+	}
+
+	/* Visible where the notes are a list in the reading flow. Inside the margin
+	   column it would sit on top of the first note, so it is removed there. */
+	:global(.md-unit .notes .notes-heading) {
+		margin: 2.5rem 0 0.75rem;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		opacity: 0.6;
+	}
+
+	:global(.md-unit) {
+		display: grid;
+		grid-template-columns: 1fr;
+		column-gap: 1.5rem;
+		max-width: 70ch;
+		margin-inline: auto;
+	}
+
+	:global(.md-unit .prose) {
+		grid-column: 1;
+		max-width: 70ch;
+	}
+
+	/* The margin number runs inline with the note it labels, so a note reads as
+	   "1 See the overlay fact sheet…" rather than a bare number stranded above
+	   its own text. margin-inline-end rather than a gap so the spacing survives
+	   the space remark leaves between the <a> and the note body. */
+	:global(.note-num) {
+		margin-inline-end: 0.3em;
+	}
+	/* The note body is a <p>, so it is a block box by default and the number link
+	   above it is pushed onto a line of its own. Inline, so a note reads as
+	   "1 See the overlay fact sheet…" and wraps naturally after that. */
+	:global(.note-body) {
+		display: inline;
+		margin: 0;
+	}
+
+	/* remark's native backref, kept clickable for the mouse but hidden from the
+	   keyboard and assistive tech, because the numbered link above already does
+	   exactly this job and a screen reader would otherwise hear it twice. */
+	:global(.md-unit .notes a[data-footnote-backref]) {
+		text-decoration: none;
+		opacity: 0.55;
+		margin-inline-start: 0.25em;
+	}
+
+	/* A margin note is nowhere near the reference that sent you there, so landing
+	   on one has to be obvious. */
+	:global(.md-unit .notes :target),
+	:global(.md-unit .notes li:focus-within) {
+		background: color-mix(in srgb, CanvasText 8%, transparent);
+		box-shadow: 0 0 0 3px color-mix(in srgb, CanvasText 8%, transparent);
+		border-radius: 2px;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		:global(.md-unit .notes :target) {
+			transition:
+				background-color 220ms ease,
+				box-shadow 220ms ease;
+		}
+	}
+
+	/* --- wide: the notes hang in the margin beside a prose column that never moves ---
+
+	   The prose stays in the page's normal 70ch body, centred, exactly as it is on
+	   every other page. The notes are taken out of flow and placed in the margin to
+	   the right of it, so nothing about the reading column changes: same width, same
+	   centre line, same wrapping. Widening the body instead would push the prose off
+	   centre and leave slack beyond the notes, which is the opposite of what a margin
+	   note is for. */
+	:global(html.has-sidenotes .md-unit) {
+		grid-template-columns: 70ch;
+		max-width: 70ch;
+		position: relative;
+	}
+
+	:global(html.has-sidenotes .md-unit .notes) {
+		position: absolute;
+		top: 0;
+		left: calc(70ch + 1.5rem);
+		width: var(--note-w, 24rem);
+	}
+
+	:global(html.has-sidenotes .md-unit .notes ol) {
+		margin: 0;
+		padding: 0;
+	}
+
+	:global(html.has-sidenotes .md-unit .notes li) {
+		position: absolute;
+		right: 0;
+		width: var(--note-w, 24rem);
+		margin: 0;
+	}
+
+	/* Nothing at the top of the margin column: the first note belongs level with
+	   the paragraph that references it, and a heading there is a label floating
+	   next to unrelated prose. display:none rather than the usual clip trick,
+	   because the <aside> already carries aria-label="Notes" for assistive tech,
+	   so there is no accessible name to lose by dropping the element. */
+	:global(html.has-sidenotes .md-unit .notes .notes-heading) {
+		display: none;
+	}
+
+	:global(html.has-sidenotes .note-num) {
+		font-size: 0.9em;
+	}</style>
