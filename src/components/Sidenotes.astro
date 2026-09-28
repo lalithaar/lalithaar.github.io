@@ -41,20 +41,30 @@
 		const notes = unit.querySelector('.notes');
 		const items = Array.from(notes.querySelectorAll('li'));
 		const root = document.documentElement;
+		// Cheap pre-filter so a phone does not measure on every resize. The real
+		// threshold is wider and is measured below.
 		const wide = matchMedia('(min-width: 66rem)');
 		const GAP = 10; // px between stacked notes
+		const GAP_REM = 24; // px between the prose column and the notes
+		const MAX_NOTE = 384; // 24rem, the widest a note ever gets
+		const MIN_NOTE = 240; // below this a margin note is not worth having
 
 		function layout() {
-			// `ch` is the width of "0" in the current font, so the true width of the
-			// unit is not knowable from CSS alone. Measure it once and use that as the
-			// real threshold: if the two columns do not actually fit the viewport,
-			// stay with stacked footnotes rather than push the margin off-screen.
-			const fits = unit.scrollWidth <= window.innerWidth;
-			if (!wide.matches || !fits) {
+			// The prose is centred, so the notes need room beside it — and how much
+			// depends on the font, since 70ch is the width of "0" in whatever loaded.
+			// Measure rather than trust a breakpoint, and take the column width from
+			// the space actually there: a fixed 24rem overflows the margin on a 1366px
+			// laptop and the page falls back to the stacked list. clientWidth, not
+			// innerWidth — a scrollbar makes the latter ~15px too generous.
+			const proseRight = prose.getBoundingClientRect().right;
+			const room = document.documentElement.clientWidth;
+			const avail = room - proseRight - GAP_REM;
+			if (!wide.matches || avail < MIN_NOTE) {
 				root.classList.remove('has-sidenotes');
 				for (const li of items) li.style.top = '';
 				return;
 			}
+			root.style.setProperty('--note-w', `${Math.min(MAX_NOTE, avail)}px`);
 			root.classList.add('has-sidenotes');
 
 			// Read pass: nothing is written until every value is known.
@@ -183,20 +193,25 @@
 		}
 	}
 
-	/* --- wide: the text column and the margin, centred as one block --- */
+	/* --- wide: the notes hang in the margin beside a prose column that never moves ---
 
-	:global(html.has-sidenotes body) {
-		max-width: calc(70ch + 1.5rem + 24rem);
-	}
-
+	   The prose stays in the page's normal 70ch body, centred, exactly as it is on
+	   every other page. The notes are taken out of flow and placed in the margin to
+	   the right of it, so nothing about the reading column changes: same width, same
+	   centre line, same wrapping. Widening the body instead would push the prose off
+	   centre and leave slack beyond the notes, which is the opposite of what a margin
+	   note is for. */
 	:global(html.has-sidenotes .md-unit) {
-		grid-template-columns: 70ch 24rem;
-		max-width: calc(70ch + 1.5rem + 24rem);
+		grid-template-columns: 70ch;
+		max-width: 70ch;
+		position: relative;
 	}
 
 	:global(html.has-sidenotes .md-unit .notes) {
-		grid-column: 2;
-		position: relative;
+		position: absolute;
+		top: 0;
+		left: calc(70ch + 1.5rem);
+		width: var(--note-w, 24rem);
 	}
 
 	:global(html.has-sidenotes .md-unit .notes ol) {
@@ -207,7 +222,7 @@
 	:global(html.has-sidenotes .md-unit .notes li) {
 		position: absolute;
 		right: 0;
-		width: 24rem;
+		width: var(--note-w, 24rem);
 		margin: 0;
 	}
 

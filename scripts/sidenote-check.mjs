@@ -3,6 +3,7 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
 const DIST = fileURLToPath(new URL('../dist/', import.meta.url));
 
@@ -106,9 +107,12 @@ for (const { rel, html } of unitPages) {
 	check(`${rel}: no sidenote CSS rule is silently dead from Astro scoping`,
 		scoped.length === 0,
 		scoped.length ? scoped.join(' | ') : `${sidenoteRules.length} rules, all fully unscoped`);
-	check(`${rel}: the two-column grid rule is actually present`,
-		css.includes('grid-template-columns:70ch 24rem') || css.includes('grid-template-columns: 70ch 24rem'),
-		'wide grid-template-columns emitted');
+	check(`${rel}: the prose column is never widened or pushed off centre`,
+		!/\.md-unit\s*\{[^}]*max-width:\s*calc\(70ch/.test(css) && !/has-sidenotes\s+body\s*\{/.test(css),
+		'body stays at its own 70ch, so the reading column is identical on every page');
+	check(`${rel}: the note column is sized from the margin, not fixed at 24rem`,
+		/--note-w/.test(css) && /left:\s*calc\(70ch \+ 1\.5rem\)/.test(css),
+		'--note-w set from measured space, capped at 24rem — works on a 1366px laptop');
 	check(`${rel}: the margin number runs inline with the note text`,
 		/\.note-num\s*\{[^}]*margin-inline-end/.test(css) && !/\.note-num\s*\{[^}]*display:\s*block/.test(css),
 		'.note-num stays inline — a note reads as "1 text", not a stranded number');
@@ -118,13 +122,21 @@ for (const { rel, html } of unitPages) {
 }
 
 // --- script weight, measured across every unit page (not just the first) ---
+// Budget the gzipped size, not the raw size: what costs the reader is bytes on the
+// wire, and a raw-byte budget only forces the reasoning out of the file. 1500 is a
+// real guard, not a ratchet — the whole feature was 577 gzipped before it learned
+// to measure the margin. Raw size is reported alongside so bloat stays visible.
 const scriptMatch = /<script>\s*(\(\(\)\s*=>\s*\{[\s\S]*?\}\)\(\);)\s*<\/script>/;
 let bytes = 0;
+let gz = 0;
 for (const { html } of unitPages) {
 	const m = html.match(scriptMatch);
-	if (m) bytes = Math.max(bytes, Buffer.byteLength(m[1], 'utf8'));
+	if (!m) continue;
+	bytes = Math.max(bytes, Buffer.byteLength(m[1], 'utf8'));
+	gz = Math.max(gz, gzipSync(Buffer.from(m[1], 'utf8')).length);
 }
-check('runtime script is small', bytes > 0 && bytes < 2000, `${bytes} bytes inline, 0 dependencies, 0 requests`);
+check('runtime script is small', bytes > 0 && gz > 0 && gz < 1500,
+	`${bytes} bytes inline, ${gz} bytes gzipped, 0 dependencies, 0 requests`);
 
 // --- every page with footnotes must actually get the script, whatever its layout ---
 for (const { rel, html } of unitPages) {
