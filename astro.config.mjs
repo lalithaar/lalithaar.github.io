@@ -9,6 +9,7 @@ import rehypeKatex from 'rehype-katex';
 
 import { legacyRedirectsIntegration } from './scripts/legacy-redirects.mjs';
 import remarkBacklinks from './scripts/remark-backlinks.mjs';
+import katexFontDiet from './scripts/katex-font-diet.mjs';
 
 export default defineConfig({
   site: 'https://isrl.in',
@@ -17,5 +18,8 @@ export default defineConfig({
     remarkPlugins: [remarkBacklinks,remarkMath],
     rehypePlugins: [rehypeKatex],
 
+  },
+  vite: {
+    plugins: [katexFontDiet()],
   },
 });

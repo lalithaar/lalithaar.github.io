@@ -1,0 +1,28 @@
+# Normalise line endings in the repository, and check them out as LF on every
+# platform, Windows included.
+#
+# Why this is not optional here: with only core.autocrlf=true and no
+# .gitattributes, a Windows clone checks out CRLF, and Astro's build silently
+# drops ALL CSS on such a checkout. The culprit is the CSS emitted for the
+# katex.min.css import in src/layouts/LayoutMath.astro - Vite inlines a
+# JavaScript parser for it, the CRLF breaks it, and the build completes with
+# exit code 0 and unstyled pages. The only symptom is pages with no <style> and
+# no .css assets, which is easy to miss because nothing errors.
+#
+# eol=lf is safe for every platform: macOS and Linux already use LF, so their
+# working trees are unaffected. Editors that prefer CRLF are overridden at
+# checkout, which is the point.
+
+* text=auto eol=lf
+
+# Binary assets must never be line-ending normalised.
+*.woff2 binary
+*.woff  binary
+*.ttf   binary
+*.ico   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.zip   binary

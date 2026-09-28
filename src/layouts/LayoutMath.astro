@@ -1,5 +1,5 @@
 ---
-import 'katex/dist/katex.min.css';
+import katexCss from 'katex/dist/katex.min.css?url';
 import Pixel from '../components/Pixel.astro';
 
 interface Props {
@@ -28,6 +28,19 @@ const description =
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
+		{/*
+			KaTeX is the only stylesheet this page needs beyond the base layout, and
+			it is dead weight on the other 26. Importing it with `?url` keeps it out
+			of Astro's automatic <head> injection so it can be loaded without
+			blocking the first paint: preload at high priority, then promote to a
+			real stylesheet once it lands. The <noscript> keeps the math styled for
+			the no-JS case. Only the woff2 fonts survive the build
+			(scripts/katex-font-diet.mjs).
+		*/}
+		<link rel="preload" href={katexCss} as="style" onload="this.onload=null;this.rel='stylesheet'" />
+		<noscript>
+			<link rel="stylesheet" href={katexCss} />
+		</noscript>
 		{props.frontmatter?.jsonLd && (
 			<script is:inline type="application/ld+json" set:html={props.frontmatter.jsonLd} />
 		)}
