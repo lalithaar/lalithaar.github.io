@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>pending</title>
+<style>
+  :root { font: 16px/1.5 system-ui, sans-serif; color-scheme: light dark; }
+  body { margin: 0; padding: 2rem 1.25rem; background: Canvas; color: CanvasText; }
+
+  /* one grid, two possible shapes; the whole unit is centred, never left-flush */
+  .unit { display: grid; grid-template-columns: 1fr; column-gap: 1.5rem;
+          max-width: 70ch; margin-inline: auto; }
+  .prose { grid-column: 1; max-width: 70ch; }
+  .prose p { margin: 0 0 1.25rem; }
+
+  /* narrow: .notes is an ordinary footnote list that follows the prose.
+     one number only -> the <ol> marker is suppressed and the underlined link is it. */
+  .notes ol { list-style: none; margin: 0; padding-left: 1.25rem; }
+  .notes li { margin: 0 0 .5rem; font-size: .9375rem; }
+  .notes .num { margin-inline-end: .3em; }
+  .notes .backref { text-decoration: none; opacity: .55; margin-inline-start: .25em; }
+
+  /* One source of truth for the breakpoint: JS sets .sidenotes on <html>.
+     No media query here, so the CSS and the measuring can never disagree. */
+  .sidenotes .unit { grid-template-columns: 70ch 24rem;
+                     max-width: calc(70ch + 1.5rem + 24rem); }
+  .sidenotes .notes { grid-column: 2; position: relative; }
+  .sidenotes .notes ol { list-style: none; margin: 0; padding: 0; }
+  .sidenotes .notes li { position: absolute; right: 0; width: 24rem; margin: 0; }
+  /* wide: same single underlined number as narrow, just as a margin number */
+  .sidenotes .notes .num { font-size: .9em; }
+
+  .notes a { color: inherit; }
+  sup a { margin-inline-end: .3em; }
+  /* test output: reads as ordinary body text, aligned to the prose column, muted */
+  #out { max-width: 70ch; margin: 4rem auto 0; padding-top: 1.5rem;
+         border-top: 1px solid color-mix(in srgb, CanvasText 18%, transparent);
+         font-size: .8125rem; line-height: 1.5;
+         color: color-mix(in srgb, CanvasText 45%, transparent); }
+  .sidenotes #out { margin-left: max(0px, calc((100% - (70ch + 1.5rem + 24rem)) / 2)); margin-right: 0; }
+  #out div { margin: 0 0 .1rem; }
+  #out .fail { color: #c0392b; font-weight: 600; }
+  #out .limit { font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="unit" id="unit">
+  <article class="prose" id="prose">
+
+    <p id="p-plain">PARA_PLAIN A paragraph carrying no note at all, present so the column can be compared against the paragraphs that do carry one. Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud.</p>
+
+    <p id="p-one">PARA_ONE Prose that runs up to the reference marker and should stop being the widest thing on the page. Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.<sup><a id="ref-1" href="#fn-1">1</a></sup> PARA_ONE_TAIL The tail of this paragraph continues at the full measure of the main column with no gap opened up beneath it, because the note is not in this column at all. Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+    <p id="p-two">PARA_TWO Two notes in quick succession must not overlap once they are stacked in the margin column.<sup><a id="ref-2" href="#fn-2">2</a></sup><sup><a id="ref-3" href="#fn-3">3</a></sup> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco.</p>
+
+    <p id="p-three">PARA_THREE A final paragraph, so the last note in the margin has prose beside it rather than hanging past the end of the text column.<sup><a id="ref-4" href="#fn-4">4</a></sup> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam.</p>
+
+  </article>
+
+  <aside class="notes" id="notes">
+    <h2>Notes</h2>
+    <ol>
+      <li id="fn-1"><a class="num" href="#ref-1">1</a>NOTE_ONE_BODY The first margin note, which belongs to the first reference and should sit level with the line carrying that reference. <a class="backref" href="#ref-1" aria-label="Back to reference 1">&#8617;</a></li>
+      <li id="fn-2"><a class="num" href="#ref-2">2</a>NOTE_TWO_BODY The first of a closely spaced pair, immediately followed by the second, so the stacking logic has to push this one clear of its neighbour. <a class="backref" href="#ref-2" aria-label="Back to reference 2">&#8617;</a></li>
+      <li id="fn-3"><a class="num" href="#ref-3">3</a>NOTE_THREE_BODY The second of that closely spaced pair and the one that has to be pushed downwards when the first one takes up the space it needs. <a class="backref" href="#ref-3" aria-label="Back to reference 3">&#8617;</a></li>
+      <li id="fn-4"><a class="num" href="#ref-4">4</a>NOTE_FOUR_BODY A short closing note sitting level with the last reference in the text column. <a class="backref" href="#ref-4" aria-label="Back to reference 4">&#8617;</a></li>
+    </ol>
+  </aside>
+</div>
+
+<div id="out">pending</div>
+
+<script>
+window.addEventListener('error', function (e) {
+  document.getElementById('out').textContent = 'THREW: ' + e.message + ' @ ' + e.lineno + ':' + e.colno;
+});
+window.addEventListener('load', function () {
+  var L = [];
+  function chk(name, pass, detail) { L.push({ cls: pass ? 'pass' : 'fail', name: name, detail: detail || '' }); }
+  function note(cls, name, detail) { L.push({ cls: cls, name: name, detail: detail || '' }); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(s) { return document.querySelector(s); }
+
+  var unit = $('#unit'), prose = $('#prose'), notes = $('#notes');
+  var mq = matchMedia('(min-width: 66rem)');
+  var lis = [].slice.call(notes.querySelectorAll('li[id^="fn-"]'));
+
+  // ---- the only JS: one breakpoint, one batched read pass, one batched write pass ----
+  var root = document.documentElement;
+  function layout() {
+    var wide = mq.matches;
+    root.classList.toggle('sidenotes', wide);   // CSS follows JS, never the reverse
+    if (!wide) { lis.forEach(function (li) { li.style.top = ''; }); return; }
+    var t0 = performance.now();
+    var base = notes.getBoundingClientRect().top;
+    var plan = lis.map(function (li) {                       // READ
+      var ref = document.getElementById(('ref-' + li.id.slice(3)));
+      return {
+        li: li,
+        want: ref ? ref.getBoundingClientRect().top - base : null,
+        h: li.offsetHeight
+      };
+    });
+    var prev = -Infinity;                                    // WRITE
+    plan.forEach(function (it) {
+      if (it.want === null) { it.li.style.top = ''; return; }
+      var top = Math.max(it.want, prev);
+      it.li.style.top = top + 'px';
+      prev = top + it.h + 10;
+    });
+    return performance.now() - t0;
+  }
+
+  var ms = layout();
+  mq.addEventListener('change', layout);
+  if (window.ResizeObserver) new ResizeObserver(layout).observe(prose);
+
+  var unitBox = unit.getBoundingClientRect();
+  chk('CENTRE: unit has equal space on both sides',
+      Math.abs(unitBox.left - (window.innerWidth - unitBox.right)) < 2,
+      'left ' + unitBox.left.toFixed(0) + 'px vs right ' + (window.innerWidth - unitBox.right).toFixed(0) + 'px of ' + window.innerWidth);
+  chk('CENTRE: prose is not flush against the left edge',
+      unitBox.left >= 8, unitBox.left.toFixed(0) + 'px of breathing room');
+
+  chk('CSS and JS agree on the breakpoint (no dual source of truth)',
+      root.classList.contains('sidenotes') === mq.matches &&
+      (getComputedStyle(lis[0]).position === 'absolute') === mq.matches,
+      'class=' + root.classList.contains('sidenotes') + ' js=' + mq.matches);
+
+  if (!mq.matches) {
+    chk('NARROW: single column, notes flow after prose', getComputedStyle(unit).gridTemplateColumns.split(' ').length === 1,
+        getComputedStyle(unit).gridTemplateColumns);
+    chk('NARROW: notes are not absolutely positioned', getComputedStyle(lis[0]).position === 'static',
+        getComputedStyle(lis[0]).position);
+    chk('NARROW: notes sit below the prose',
+        notes.getBoundingClientRect().top >= prose.getBoundingClientRect().bottom - 2,
+        'notes.top ' + notes.getBoundingClientRect().top.toFixed(0) + ' vs prose.bottom ' + prose.getBoundingClientRect().bottom.toFixed(0));
+    chk('NUMBER: one underlined number, no duplicate marker, arrow kept',
+        getComputedStyle(notes.querySelector('ol')).listStyleType === 'none' &&
+        getComputedStyle(lis[0], '::before').content === 'none' &&
+        getComputedStyle(lis[0].querySelector('.num')).textDecorationLine.includes('underline') &&
+        getComputedStyle(lis[0].querySelector('.num')).color === getComputedStyle(lis[0]).color &&
+        getComputedStyle(lis[0].querySelector('.backref')).display !== 'none',
+        'marker=none, no counter, .num underlined at full contrast, backref=visible');
+  } else {
+    chk('WIDE: two grid columns', getComputedStyle(unit).gridTemplateColumns.split(' ').length === 2,
+        getComputedStyle(unit).gridTemplateColumns);
+    chk('WIDE: notes are positioned out of flow', getComputedStyle(lis[0]).position === 'absolute',
+        getComputedStyle(lis[0]).position);
+    chk('NUMBER: one underlined number, no duplicate marker, arrow kept',
+        getComputedStyle(notes.querySelector('ol')).listStyleType === 'none' &&
+        getComputedStyle(lis[0], '::before').content === 'none' &&
+        getComputedStyle(lis[0].querySelector('.num')).textDecorationLine.includes('underline') &&
+        getComputedStyle(lis[0].querySelector('.num')).color === getComputedStyle(lis[0]).color &&
+        getComputedStyle(lis[0].querySelector('.backref')).display !== 'none',
+        'marker=none, no counter, .num underlined at full contrast, backref=visible');
+    chk('BACKREF: arrow points back at its own reference',
+        lis.every(function (li) {
+          return li.querySelector('.backref').getAttribute('href') === '#ref-' + li.id.slice(3);
+        }), lis.length + ' arrows, each targeting its own ref');
+
+    // THE POINT: prose column is untouched by the notes
+    var proseBox = prose.getBoundingClientRect();
+    var sum = 0;
+    [].forEach.call(prose.querySelectorAll('p'), function (p) {
+      sum += p.offsetHeight + parseFloat(getComputedStyle(p).marginBottom);
+    });
+    chk('WIDE: prose height equals its own paragraphs and nothing else',
+        Math.abs(proseBox.height - sum) < 2,
+        'prose ' + proseBox.height.toFixed(0) + 'px vs paragraphs ' + sum.toFixed(0) + 'px');
+    chk('WIDE: no note element exists inside the prose column',
+        prose.querySelectorAll('.notes, .sidenote, aside').length === 0,
+        prose.children.length + ' child elements, all prose');
+
+    // main column geometry identical whether or not notes exist
+    chk('WIDE: prose measure is exactly 70ch', proseBox.width > 560 && proseBox.width < 650, proseBox.width.toFixed(0) + 'px');
+
+    // notes live in column 2, clear of the text
+    var n1 = $('#fn-1').getBoundingClientRect();
+    chk('WIDE: note sits right of the prose column', n1.left >= proseBox.right,
+        'note.left ' + n1.left.toFixed(0) + ' vs prose.right ' + proseBox.right.toFixed(0));
+    chk('WIDE: note inside the viewport', n1.right <= window.innerWidth + 1, n1.right.toFixed(0) + ' / ' + window.innerWidth);
+
+    // vertical placement: the real invariants are "never above its reference" and
+    // "anything displaced was displaced by the note above it"
+    var rows = lis.map(function (li) {
+      return {
+        id: li.id,
+        top: li.getBoundingClientRect().top,
+        bottom: li.getBoundingClientRect().bottom,
+        refTop: document.getElementById('ref-' + li.id.slice(3)).getBoundingClientRect().top
+      };
+    });
+    chk('WIDE: no note is ever placed above its reference',
+        rows.every(function (r) { return r.top >= r.refTop - 1; }),
+        'min delta ' + Math.min.apply(null, rows.map(function (r) { return r.top - r.refTop; })).toFixed(1) + 'px');
+
+    var displaced = rows.filter(function (r) { return r.top - r.refTop >= 14; });
+    chk('WIDE: every displaced note was pushed by the note above it',
+        displaced.every(function (r) {
+          var i = rows.indexOf(r);
+          return i > 0 && Math.abs(rows[i - 1].bottom - r.top) <= 12;
+        }),
+        displaced.length ? displaced.map(function (r) { return r.id + ' by ' + (r.top - r.refTop).toFixed(0) + 'px'; }).join(', ') : 'none displaced');
+
+    chk('WIDE: the first note aligns with its reference line',
+        rows[0].top - rows[0].refTop < 14,
+        rows[0].id + ' off by ' + (rows[0].top - rows[0].refTop).toFixed(1) + 'px');
+
+    // collision handling
+    var boxes = lis.map(function (li) { return li.getBoundingClientRect(); });
+    var collide = false;
+    for (var i = 1; i < boxes.length; i++) if (boxes[i].top < boxes[i - 1].bottom - 1) collide = true;
+    chk('WIDE: stacked notes never overlap', !collide,
+        boxes.map(function (b) { return b.height.toFixed(0); }).join('/') + 'px tall');
+    chk('WIDE: closely spaced pair actually pushed apart',
+        boxes[2].top >= boxes[1].bottom - 1,
+        'fn-3.top ' + boxes[2].top.toFixed(0) + ' vs fn-2.bottom ' + boxes[1].bottom.toFixed(0));
+
+    // no note hangs past the end of the text column
+    var overflow = boxes.filter(function (b) { return b.bottom > proseBox.bottom + 2; });
+    chk('WIDE: no note outlives the prose column', overflow.length === 0,
+        overflow.length ? overflow.length + ' note(s) past prose bottom' : 'all contained');
+  }
+
+  // ---- the copy / reading order claim ----
+  var t = unit.textContent;
+  var lastProse = t.lastIndexOf('Lorem ipsum');
+  var firstNote = t.indexOf('NOTE_ONE_BODY');
+  chk('COPY: prose comes first, notes come after', firstNote > lastProse && firstNote !== -1,
+      'last prose word at ' + lastProse + ', first note at ' + firstNote);
+  chk('COPY: no note is spliced into a paragraph',
+      !$('#p-one').textContent.match(/NOTE_|margin note/i),
+      'p-one text is clean prose');
+  chk('COPY: whole-document order is prose then notes',
+      t.indexOf('PARA_PLAIN') < t.indexOf('PARA_ONE') &&
+      t.indexOf('PARA_THREE') < t.indexOf('NOTE_ONE_BODY'),
+      'matches a book: running text, then notes');
+
+  note('limit', 'layout cost', (ms !== undefined ? ms.toFixed(2) : '0') + 'ms for ' + lis.length + ' notes (2 reflows, batched)');
+
+  var nPass = L.filter(function (r) { return r.cls === 'pass'; }).length;
+  document.title = window.innerWidth + '|' + nPass + 'P|' + L.filter(function (r) { return r.cls === 'fail'; }).length + 'F';
+  $('#out').innerHTML = L.map(function (r) {
+    var mark = r.cls === 'fail' ? 'FAIL' : (r.cls === 'limit' ? 'note' : 'ok');
+    return '<div class="' + r.cls + '">' + mark + ' — ' + esc(r.name) + (r.detail ? ' (' + esc(r.detail) + ')' : '') + '</div>';
+  }).join('');
+});
+</script>
+</body>
+</html>

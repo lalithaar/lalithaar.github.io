@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>pending</title>
+<style>
+  :root { font: 16px/1.5 system-ui, sans-serif; color-scheme: light dark; }
+  body { margin: 0; background: Canvas; color: CanvasText; }
+  .unit { max-width: calc(70ch + 24rem); margin: 0 auto; padding: 2rem 1.25rem; }
+  .text { max-width: 70ch; }
+  p { margin: 0 0 1.25rem; }
+  /* a float does not expand its containing block unless that block is a BFC.
+     flow-root contains it without clipping, so the note can still hang into the gutter. */
+  p:has(.sidenote) { display: flow-root; }
+  .sidenote {
+    float: right;
+    clear: right;
+    width: 22.5rem;
+    margin-left: 1.5rem;
+    margin-right: -24rem;
+    margin-top: .3rem;
+    font-size: .875rem;
+  }
+  .sidenote .num { font-weight: 600; margin-right: .4em; }
+  .ref { margin-inline-end: .3em; }
+  .sidenote:target { outline: 3px solid currentColor; outline-offset: 3px; }
+  @media (max-width: 63.99rem) {
+    .sidenote { display: block; float: none; clear: none; width: auto; margin: .5rem 0 1rem; padding-inline-start: 1rem; border-inline-start: 2px solid currentColor; }
+  }
+  #out { margin-top: 1.5rem; }
+  #out div { margin: 0 0 .1rem; }
+  #out .fail { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="unit">
+  <div class="text">
+
+    <p id="p-plain">PARA_PLAIN A paragraph with no sidenote at all, used to prove the text column does not move between pages that do and do not have margin notes. Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+    <p id="p-before">PARA_BEFORE Text before the reference marker which should be set at the full seventy character measure of the column, lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore.<sup><a id="ref-1" class="ref" href="#sn-1">1</a></sup><span class="sidenote" id="sn-1"><a class="num" href="#ref-1">1</a>NOTE_ONE_BODY This is the body of the margin note and it is deliberately constrained to the narrow gutter so that it cannot be confused with the running text of the paragraph.</span>PARA_AFTER The measure must not change after the float, so this trailing run of text should also reach the full seventy character width of the column. Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco.</p>
+
+    <p id="p-stack">PARA_STACK Two notes in quick succession must not overlap.<sup><a id="ref-2" class="ref" href="#sn-2">2</a></sup><span class="sidenote" id="sn-2"><a class="num" href="#ref-2">2</a>First of a closely spaced pair of margin notes used to verify that the clear property stacks them rather than letting them collide.</span><sup><a id="ref-3" class="ref" href="#sn-3">3</a></sup><span class="sidenote" id="sn-3"><a class="num" href="#ref-3">3</a>Second of the closely spaced pair, immediately following the first, which must be pushed below it by the clear property with no scripting at all.</span></p>
+
+    <p id="p-long">PARA_LONG A paragraph whose note is far too tall for the margin, to document the known overflow limit.<sup><a id="ref-4" class="ref" href="#sn-4">4</a></sup><span class="sidenote" id="sn-4"><a class="num" href="#ref-4">4</a>NOTE_FOUR_BODY Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem ut enim ad minima veniam quis nostrum exercitationem ullam corporis suscipit laboriosam nisi ut aliquid ex ea commodi consequatur quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur vel illum qui dolorem eum fugiat quo voluptas nulla pariatur at vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident sed ut perspiciatis unde omnis iste natus error similique sunt in culpa qui officia deserunt mollitia animi id est laborum et dolorum fuga et harum quidem rerum facilis est et expedita distinctio nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus maxime placeat facere possimus omnis voluptas assumenda est omnis dolor repellendus temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae itaque earum rerum hic tenetur a sapiente delectus ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</span></p>
+
+    <div id="out">pending</div>
+
+  </div>
+</div>
+
+<script>
+window.addEventListener('error', function (e) {
+  document.getElementById('out').textContent = 'THREW: ' + e.message + ' @ line ' + e.lineno + ':' + e.colno;
+});
+window.addEventListener('load', function () {
+  var L = [];
+  function chk(name, pass, detail) { L.push({ cls: pass ? 'pass' : 'fail', name: name, detail: detail || '' }); }
+  function note(level, name, detail) { L.push({ cls: level, name: name, detail: detail || '' }); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function $(s) { return document.querySelector(s); }
+  function txt(s) { return ($(s).textContent || '').indexOf(s) !== -1; }
+
+  // 1. every marker survived
+  ['PARA_PLAIN','PARA_BEFORE','PARA_AFTER','PARA_STACK'].forEach(function (m) {
+    chk('marker present: ' + m, txt('#p-plain, #p-before, #p-stack') || document.body.textContent.indexOf(m) !== -1);
+  });
+
+  // 2. THE LOAD-BEARING CLAIM: measure is not shortened by the float
+  var p = $('#p-before');
+  var pBox = p.getBoundingClientRect();
+  var after = [];
+  (function walk(n) {
+    for (var i = 0; i < n.childNodes.length; i++) {
+      var c = n.childNodes[i];
+      if (c.nodeType === 3 && /PARA_AFTER/.test(c.nodeValue)) { after.push(c); }
+      else if (c.nodeType === 1) walk(c);
+    }
+  })(p);
+  var range = document.createRange();
+  var widest = 0;
+  after.forEach(function (t) {
+    range.selectNodeContents(t);
+    Array.prototype.forEach.call(range.getClientRects(), function (r) { widest = Math.max(widest, r.width); });
+  });
+  var full = p.clientWidth;
+  chk('measure NOT shortened by float', widest > full * 0.97,
+      'widest trailing line ' + widest.toFixed(1) + 'px vs paragraph width ' + full + 'px (' + (widest / full * 100).toFixed(1) + '%)');
+  chk('paragraph width is the 70ch measure', full > 400 && full < 900, full + 'px');
+
+  // 3-5. gutter placement, gutter width and float stacking: wide viewport only
+  var sn = document.getElementById('sn-1');
+  var ref = document.getElementById('ref-1');
+  if (window.innerWidth >= 1024) {
+    var snBox = sn.getBoundingClientRect();
+    chk('note starts right of text column', snBox.left >= pBox.right - 1,
+        'note.left ' + snBox.left.toFixed(1) + ' vs text right ' + pBox.right.toFixed(1));
+    chk('note stays inside viewport', snBox.right <= window.innerWidth + 1,
+        'note.right ' + snBox.right.toFixed(1) + ' vs viewport ' + window.innerWidth);
+    chk('note width is the gutter', Math.abs(snBox.width - 22.5 * 16) < 2, snBox.width.toFixed(1) + 'px');
+
+    var refBox = ref.getBoundingClientRect();
+    chk('note top tracks the reference line', Math.abs(snBox.top - refBox.top) < 12,
+        'note.top ' + snBox.top.toFixed(1) + ' vs ref.top ' + refBox.top.toFixed(1));
+
+    var a = document.getElementById('sn-2').getBoundingClientRect();
+    var b = document.getElementById('sn-3').getBoundingClientRect();
+    chk('closely spaced notes do not overlap', b.top >= a.bottom - 1,
+        'sn-2.bottom ' + a.bottom.toFixed(1) + ' vs sn-3.top ' + b.top.toFixed(1));
+  } else {
+    var snBox = sn.getBoundingClientRect();
+  }
+
+  // 6. NO LAYOUT SHIFT: plain paragraph and sidenote paragraph share a left edge
+  var plain = $('#p-plain').getBoundingClientRect();
+  chk('text left edge identical with and without notes', Math.abs(plain.left - pBox.left) < 0.5,
+      plain.left.toFixed(2) + ' vs ' + pBox.left.toFixed(2));
+
+  // 7. numbering present on both sides and identical
+  var refGap = parseFloat(getComputedStyle(ref).marginInlineEnd || getComputedStyle(ref).marginRight);
+  chk('reference has a gap before the text resumes', refGap > 0, refGap + 'em');
+  chk('margin note is numbered', !!$('#sn-1 .num'), '');
+  chk('number matches the reference', $('#sn-1 .num').textContent.trim() === ref.textContent.trim(),
+      'note "' + $('#sn-1 .num').textContent.trim() + '" ref "' + ref.textContent.trim() + '"');
+  chk('margin number links back to the reference', $('#sn-1 .num').getAttribute('href') === '#ref-1',
+      $('#sn-1 .num').getAttribute('href'));
+
+  // 8. :target highlight, no JS involved
+  window.location.hash = '#sn-1';
+  chk(':target matches the note', sn.matches(':target'), 'hash=' + window.location.hash);
+
+  // 9. mobile fallback: same DOM, no float, no horizontal overflow
+  var narrow = window.innerWidth < 1024;
+  if (narrow) {
+    chk('MOBILE: sidenote is not floated', getComputedStyle(sn).float === 'none', getComputedStyle(sn).float);
+    chk('MOBILE: no horizontal overflow', snBox.left >= -1 && snBox.right <= window.innerWidth + 1,
+        'left ' + snBox.left.toFixed(1) + ' right ' + snBox.right.toFixed(1) + ' vw ' + window.innerWidth);
+    chk('MOBILE: no layout shift either', Math.abs(plain.left - pBox.left) < 0.5,
+        plain.left.toFixed(2) + ' vs ' + pBox.left.toFixed(2));
+  }
+
+  // 10. KNOWN LIMIT: an over-tall note has nowhere to go, measure the overflow
+  var lg = document.getElementById('sn-4').getBoundingClientRect();
+  var overflows = lg.bottom > window.innerHeight;
+  note(overflows ? 'limit' : 'pass', 'over-tall note vs viewport',
+       'note height ' + lg.height.toFixed(0) + 'px, bottom ' + lg.bottom.toFixed(0) +
+       'px vs viewport ' + window.innerHeight + 'px' + (overflows ? '  (overflows, needs a cap)' : ''));
+
+  // 11. does an over-tall float overflow its paragraph and collide with content below?
+  var pLong = document.getElementById('p-long').getBoundingClientRect();
+  var outBox = document.getElementById('out').getBoundingClientRect();
+  chk('tall note stays inside its own paragraph', lg.bottom <= pLong.bottom + 2,
+      'note.bottom ' + lg.bottom.toFixed(0) + ' vs para.bottom ' + pLong.bottom.toFixed(0));
+  chk('tall note does not collide with the block below', lg.bottom <= outBox.top + 2,
+      'note.bottom ' + lg.bottom.toFixed(0) + ' vs out.top ' + outBox.top.toFixed(0));
+
+  // 12. how much dead space flow-root leaves under each paragraph
+  ['p-plain', 'p-before', 'p-stack', 'p-long'].forEach(function (id) {
+    var el = document.getElementById(id);
+    var cs = getComputedStyle(el);
+    var last = null;
+    for (var i = el.childNodes.length - 1; i >= 0; i--) {
+      var c = el.childNodes[i];
+      if (c.nodeType === 1 && c.className === 'sidenote') { last = c.getBoundingClientRect(); break; }
+    }
+    var paraBottom = el.getBoundingClientRect().bottom;
+    var slack = last ? paraBottom - last.bottom : 0;
+    note('limit', 'slack under #' + id,
+         'para ' + el.getBoundingClientRect().height.toFixed(0) + 'px, lowest note ends ' +
+         (last ? (paraBottom - last.bottom).toFixed(0) + 'px above para bottom' : 'none') +
+         ', margin ' + cs.marginBottom);
+  });
+
+  var nPass = L.filter(function (r) { return r.cls === 'pass'; }).length;
+  var nFail = L.filter(function (r) { return r.cls === 'fail'; }).length;
+  document.title = window.innerWidth + '|' + nPass + 'P|' + nFail + 'F|' +
+    L.map(function (r) { return r.name + (r.detail ? ' :: ' + r.detail : ''); }).join(' ~ ');
+  document.querySelector('#out').innerHTML = L.map(function (r) {
+    var mark = r.cls === 'fail' ? 'FAIL' : (r.cls === 'limit' ? 'note' : 'ok');
+    return '<div class="' + r.cls + '">' + mark + ' — ' + esc(r.name) +
+           (r.detail ? ' (' + esc(r.detail) + ')' : '') + '</div>';
+  }).join('');
+});
+</script>
+</body>
+</html>

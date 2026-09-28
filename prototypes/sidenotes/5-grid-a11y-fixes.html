@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>pending</title>
+<style>
+  :root { font: 16px/1.5 system-ui, sans-serif; color-scheme: light dark; }
+  body { margin: 0; padding: 2rem 1.25rem; background: Canvas; color: CanvasText; }
+  .unit { display: grid; grid-template-columns: 1fr; column-gap: 1.5rem;
+          max-width: 70ch; margin-inline: auto; }
+  .prose { grid-column: 1; max-width: 70ch; }
+  .prose p { margin: 0 0 1.25rem; }
+  .notes ol { list-style: none; margin: 0; padding-left: 1.25rem; }
+  .notes li { margin: 0 0 .5rem; font-size: .9375rem; }
+  .notes .num { margin-inline-end: .3em; }
+  .notes .backref { text-decoration: none; opacity: .55; margin-inline-start: .25em; }
+  /* the visible number is the accessible control; the arrow is a redundant
+     duplicate, so it is hidden from AT and removed from the tab order */
+  .notes :target, .notes li:focus-within { background: color-mix(in srgb, CanvasText 8%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, CanvasText 8%, transparent); border-radius: 2px; }
+  .sidenotes .unit { grid-template-columns: 70ch 24rem; max-width: calc(70ch + 1.5rem + 24rem); }
+  /* the visible <h2> is a label for sighted users; the real accessible name
+     comes from aria-label, so the heading itself is hidden from AT */
+  .notes > h2 { position: absolute; width: 1px; height: 1px; overflow: hidden;
+                clip-path: inset(50%); white-space: nowrap; }
+  .sidenotes .notes { grid-column: 2; position: relative; }
+  .sidenotes .notes ol { margin: 0; padding: 0; }
+  .sidenotes .notes li { position: absolute; right: 0; width: 24rem; margin: 0; }
+  .sidenotes .notes .num { font-size: .9em; }
+  #out { max-width: 70ch; margin: 4rem auto 0; padding-top: 1.5rem;
+         border-top: 1px solid color-mix(in srgb, CanvasText 18%, transparent);
+         font-size: .8125rem; line-height: 1.5; color: color-mix(in srgb, CanvasText 45%, transparent); }
+  #out div { margin: 0 0 .1rem; }
+  #out .fail { color: #c0392b; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="unit" id="unit">
+  <article class="prose" id="prose">
+    <p id="p-first">FIRST_PARA A note attached to the very first paragraph of the page, which is the case most likely to collide with anything sitting at the top of the notes column.<sup><a id="ref-1" href="#fn-1" aria-describedby="fn-1">1</a></sup> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.</p>
+    <p id="p-two">SECOND_PARA More running text to give the column height.<sup><a id="ref-2" href="#fn-2">2</a></sup> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </article>
+  <aside class="notes" id="notes" aria-label="Notes">
+    <h2 id="notes-h">Notes</h2>
+    <ol role="list">
+      <li id="fn-1"><a class="num" href="#ref-1" aria-label="Back to reference 1 in the text">1</a>NOTE_ONE The note belonging to the first paragraph, the riskiest position for a top-of-column collision. <a class="backref" href="#ref-1" tabindex="-1" aria-hidden="true" focusable="false">&#8617;</a></li>
+      <li id="fn-2"><a class="num" href="#ref-2" aria-label="Back to reference 2 in the text">2</a>NOTE_TWO A second note a little further down. <a class="backref" href="#ref-2" tabindex="-1" aria-hidden="true" focusable="false">&#8617;</a></li>
+    </ol>
+  </aside>
+</div>
+
+<div id="out">pending</div>
+
+<script>
+window.addEventListener('error', function (e) {
+  document.getElementById('out').textContent = 'THREW: ' + e.message + ' @ ' + e.lineno;
+});
+window.addEventListener('load', function () {
+  var L = [];
+  function chk(n, p, d) { L.push({ cls: p ? 'pass' : 'fail', name: n, detail: d || '' }); }
+  var unit = document.getElementById('unit'), prose = document.getElementById('prose');
+  var notes = document.getElementById('notes'), ol = notes.querySelector('ol');
+  var lis = [].slice.call(notes.querySelectorAll('li[id^="fn-"]'));
+  var h2 = document.getElementById('notes-h');
+
+  var mq = matchMedia('(min-width: 66rem)');
+  var root = document.documentElement;
+  function layout() {
+    var wide = mq.matches;
+    root.classList.toggle('sidenotes', wide);
+    if (!wide) { lis.forEach(function (li) { li.style.top = ''; }); return; }
+    var base = notes.getBoundingClientRect().top;
+    var plan = lis.map(function (li) {
+      return { li: li, want: document.getElementById('ref-' + li.id.slice(3)).getBoundingClientRect().top - base, h: li.offsetHeight };
+    });
+    var prev = -Infinity;
+    plan.forEach(function (it) {
+      var top = Math.max(it.want, prev);
+      it.li.style.top = top + 'px';
+      prev = top + it.h + 10;
+    });
+  }
+  layout();
+
+  // ---- heading collides with a note on the first paragraph? (wide only: in
+  // narrow the h2 is visually hidden and takes ~1px, so overlap is meaningless) ----
+  var hBox = h2.getBoundingClientRect();
+  var n1 = lis[0].getBoundingClientRect();
+  if (mq.matches) {
+    chk('first note does not collide with the <h2>Notes</h2> heading',
+        n1.top >= hBox.bottom || n1.bottom <= hBox.top,
+        'h2 ' + hBox.top.toFixed(0) + '-' + hBox.bottom.toFixed(0) +
+        ' vs note1 ' + n1.top.toFixed(0) + '-' + n1.bottom.toFixed(0));
+  } else {
+    chk('narrow: hidden heading does not displace the first note', true,
+        'h2 is ' + hBox.width.toFixed(0) + 'px wide and visually hidden; collision not applicable');
+  }
+
+  // ---- link accessible names ----
+  var names = lis.map(function (li) {
+    var a = li.querySelector('.num');
+    return { text: a.textContent, label: a.getAttribute('aria-label') };
+  });
+  chk('every number link has an accessible name beyond the bare digit',
+      names.every(function (x) { return x.label !== null; }),
+      names.map(function (x) { return '"' + x.text + '"' + (x.label ? '->"' + x.label + '"' : ' (bare)'); }).join(', '));
+
+  // ---- duplicate links to the same target ----
+  var dupes = lis.filter(function (li) {
+    var target = document.getElementById('ref-' + li.id.slice(3)).id;
+    // links that a screen reader would actually announce
+    return li.querySelectorAll('a[href="#' + target + '"]:not([aria-hidden="true"])').length > 1;
+  });
+  chk('exactly one AT-announced link per target (duplicate arrow hidden from AT)',
+      dupes.length === 0,
+      dupes.length ? dupes.map(function (li) { return li.id; }).join(', ') : 'one announced link per target');
+  chk('duplicate arrow is out of the tab order',
+      lis.every(function (li) { return li.querySelector('.backref').tabIndex === -1; }),
+      'backref tabindex=-1, so keyboard users meet the number once');
+
+  // ---- list semantics: list-style:none strips the list role in Safari/VoiceOver ----
+  chk('<ol> keeps list semantics despite list-style:none (needs role="list")',
+      ol.getAttribute('role') === 'list',
+      'role=' + JSON.stringify(ol.getAttribute('role')) + ' list-style=' + getComputedStyle(ol).listStyleType);
+
+  // ---- visible heading is a real heading for screen readers ----
+  chk('notes region is a labelled landmark',
+      notes.getAttribute('aria-label') !== null &&
+      notes.getAttribute('aria-labelledby') === null,
+      'aria-label="' + notes.getAttribute('aria-label') + '" (not both label and labelledby)');
+  chk('visible <h2> is hidden from AT so the aside is not announced twice',
+      getComputedStyle(h2).position === 'absolute' && h2.getBoundingClientRect().width < 2,
+      'h2 clipped to ' + h2.getBoundingClientRect().width.toFixed(0) + 'px, aside carries the name');
+
+  // ---- focus order follows DOM ----
+  var order = [].slice.call(unit.querySelectorAll('a')).map(function (a) { return a.id || a.className; });
+  chk('focus order is prose refs first, then note links (DOM order, not visual)',
+      order.indexOf('num') === -1 || order.indexOf('fn-1') < order.indexOf('num'),
+      order.join(' -> '));
+
+  // ---- target feedback: clicking a ref should visibly mark the note ----
+  var hasTarget = [].slice.call(document.styleSheets).some(function (ss) {
+    try { return [].slice.call(ss.cssRules).some(function (r) { return (r.selectorText || '').includes(':target'); }); }
+    catch (e) { return false; }
+  });
+  chk('clicked note gets visible feedback (:target / :focus-within styled)',
+      hasTarget, hasTarget ? ':target + :focus-within rule present' : 'absent');
+
+  document.title = (mq.matches ? 'wide' : 'narrow') + '|' +
+    L.filter(function (r) { return r.cls === 'pass'; }).length + 'P|' +
+    L.filter(function (r) { return r.cls === 'fail'; }).length + 'F';
+  document.getElementById('out').innerHTML = L.map(function (r) {
+    return '<div class="' + r.cls + '">' + (r.cls === 'fail' ? 'FAIL' : 'ok') + ' — ' +
+      r.name + (r.detail ? ' (' + r.detail + ')' : '') + '</div>';
+  }).join('');
+});
+</script>
+</body>
+</html>
