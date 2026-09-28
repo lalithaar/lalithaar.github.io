@@ -97,4 +97,25 @@ If you are in research, you are probably looking for:
 6. Preserve complete personal agency. The conditions cannot look absolute, like rules forcing her into a box. The work must reflect her command.
 7. Respect the reader. Do not state the obvious. If there are two bullets on the screen, do not waste the reader's time by adding the word "two."
 
+---
+
+Design Heuristics
+1. Default-before-derive
+Start from what the platform already decided (system font stack, Canvas/CanvasText, UA margins). Only write a declaration when the default actively hurts the reading experience — never to re-state what's already there.
+1. Override only for accessibility, not taste
+Dark-mode #121212 exists because the system default (#000/stark white) is an a11y problem (halation, contrast extremes) — not because black "looked bad." Every override must answer: what harm does the default cause?
+1. One channel for hierarchy
+De-emphasize by reducing the same color's opacity, never by introducing a new hue. Emphasis = full opacity; demotion = lower opacity. The palette stays at 1 (or 2, if dark mode forces it) colors total.
+1. Opacity + size are knobs, contrast is the floor
+- Size and opacity can reinforce hierarchy but never be the emphasis mechanism alone.
+- Every resulting fg/bg pair must pass WCAG AA (4.5:1) — verify with cm-colors contrast FG BG --json, fix failures with cm-colors fix FG BG --json (e.g. #777/#fff → 4.48 FAIL → #757575 → 4.61 AA).
+- Minimum 16px for every text node. 0.9rem/0.9em demotions are only allowed if the computed size stays ≥16px and contrast still passes — otherwise demote via opacity alone, not size.
+1. Box only with a job
+A card/border/background needs a functional reason: isolating interactive state, grouping form controls, containing a popover. "Separation" and "it looks tidy" are not jobs — use whitespace and hairlines (currentColor rules) instead. If you can't name the function, remove the box.
+1. Semantic HTML is the styling contract
+Style p, hr, blockquote, header, lists — not div-soup with classes. CSS should confirm document structure, not invent a parallel one. Classes exist only for genuine cross-cutting roles (.backlinks), not for appearance.
+1. Structure = hairlines + rhythm, not chrome
+Separation via 1px currentColor at low opacity and a single spacing base (e.g. 1.25rem). No shadows, no elevation, no decorative frames.
+Rule of thumb: If the browser or OS already gives you an accessible answer, ship it. If you override, prove it's an a11y fix, keep it in one color channel, and verify contrast + 16px before merging.
+
 --- -->
