@@ -112,6 +112,9 @@ for (const { rel, html } of unitPages) {
 	check(`${rel}: the margin number runs inline with the note text`,
 		/\.note-num\s*\{[^}]*margin-inline-end/.test(css) && !/\.note-num\s*\{[^}]*display:\s*block/.test(css),
 		'.note-num stays inline — a note reads as "1 text", not a stranded number');
+	check(`${rel}: the note body is inline so it does not force a line break`,
+		/\.note-body\s*\{[^}]*display:\s*inline/.test(css) && /<p class="note-body">/.test(html),
+		'note body <p> is tagged and set inline — number and text share a line');
 }
 
 // --- script weight, measured across every unit page (not just the first) ---

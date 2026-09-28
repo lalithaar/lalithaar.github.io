@@ -60,6 +60,18 @@ export default function rehypeSidenotes() {
 						tabIndex: -1,
 					};
 				});
+				// remark wraps the note body in a <p>. A <p> is a block box, so the
+				// number and the text it labels land on separate lines even though
+				// the number is an inline <a> — a bare "1" above its own note. Tag
+				// the body so the stylesheet can flow it in beside the number.
+				for (const child of li.children) {
+					if (child.type !== 'element' || child.tagName !== 'p') continue;
+					const existing = child.properties?.className ?? [];
+					child.properties = {
+						...child.properties,
+						className: [...existing, 'note-body'],
+					};
+				}
 				// The single real control: underlined, full contrast, named.
 				li.children.unshift({
 					type: 'element',

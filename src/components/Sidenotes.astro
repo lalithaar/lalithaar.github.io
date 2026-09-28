@@ -149,6 +149,13 @@
 	:global(.note-num) {
 		margin-inline-end: 0.3em;
 	}
+	/* The note body is a <p>, so it is a block box by default and the number link
+	   above it is pushed onto a line of its own. Inline, so a note reads as
+	   "1 See the overlay fact sheet…" and wraps naturally after that. */
+	:global(.note-body) {
+		display: inline;
+		margin: 0;
+	}
 
 	/* remark's native backref, kept clickable for the mouse but hidden from the
 	   keyboard and assistive tech, because the numbered link above already does
