@@ -1,0 +1,191 @@
+---
+/*
+	Sidenotes.
+
+	The build step (scripts/rehype-sidenotes.mjs) has already reshaped any page
+	with footnotes into:
+
+		<div class="md-unit">
+			<article class="prose">running text</article>
+			<aside class="notes">footnotes</aside>
+		</div>
+
+	What it cannot know at build time is where each note's paragraph actually
+	landed, because that depends on the rendered text. So the runtime does exactly
+	one job: measure every reference, then set every note's `top`.
+
+	Two rules matter and both were learned the hard way:
+
+	1. Read all, then write all. Interleaving a measurement and a style write per
+	   note costs one forced reflow per note. Batching costs two in total, whatever
+	   the note count. At 500 notes that is the difference between 10ms and
+	   something quadratic.
+
+	2. JS owns the breakpoint and publishes it to CSS as a class on <html>. There
+	   must be no @media query mirroring that width. When CSS and JS each decided
+	   "wide" independently, they disagreed at exactly one viewport width and the
+	   notes piled up at the top of the margin with no `top` at all.
+
+	No JavaScript is required for the notes to be readable: without it, `.notes`
+	never gets `has-sidenotes`, so it stays an ordinary footnote list after the
+	prose at every width.
+*/
+---
+
+<script is:inline>
+	(() => {
+		const unit = document.querySelector('.md-unit');
+		if (!unit) return;
+
+		const prose = unit.querySelector('.prose');
+		const notes = unit.querySelector('.notes');
+		const items = Array.from(notes.querySelectorAll('li'));
+		const root = document.documentElement;
+		const wide = matchMedia('(min-width: 66rem)');
+		const GAP = 10; // px between stacked notes
+
+		function layout() {
+			if (!wide.matches) {
+				root.classList.remove('has-sidenotes');
+				for (const li of items) li.style.top = '';
+				return;
+			}
+			root.classList.add('has-sidenotes');
+
+			// Read pass: nothing is written until every value is known.
+			const base = notes.getBoundingClientRect().top;
+			const plan = items.map((li) => {
+				const ref = document.getElementById(
+					li.id.replace(/^user-content-fn-/, 'user-content-fnref-'),
+				);
+				return {
+					li,
+					want: ref ? ref.getBoundingClientRect().top - base : 0,
+					height: li.offsetHeight,
+				};
+			});
+
+			// Write pass: a note may never sit above its reference, and two notes
+			// referenced on the same line cannot both fit at it, so each is pushed
+			// clear of the one above it.
+			let floor = -Infinity;
+			for (const note of plan) {
+				const top = Math.max(note.want, floor);
+				note.li.style.top = `${top}px`;
+				floor = top + note.height + GAP;
+			}
+		}
+
+		layout();
+		wide.addEventListener('change', layout);
+		// Handles font load, content change and container resize without polling
+		// a resize listener.
+		new ResizeObserver(layout).observe(prose);
+	})();
+</script>
+
+<style>
+	/*
+		The 70ch text column never changes width. On wide viewports the whole unit
+		(text + margin) is centred as one block, so the page stays symmetric instead
+		of being lopsided with a void on the right.
+	*/
+	:global(html.has-sidenotes) body {
+		max-width: calc(70ch + 1.5rem + 24rem);
+	}
+
+	:global(.md-unit) {
+		display: grid;
+		grid-template-columns: 1fr;
+		column-gap: 1.5rem;
+		max-width: 70ch;
+		margin-inline: auto;
+	}
+
+	:global(.md-unit .prose) {
+		grid-column: 1;
+		max-width: 70ch;
+	}
+
+	:global(.visually-hidden) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* Narrow, and no-JS: an ordinary footnote list directly after the prose. The
+	   <ol> marker is suppressed so the underlined number is the only number. */
+	:global(.md-unit .notes ol) {
+		list-style: none;
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	:global(.md-unit .notes li) {
+		margin: 0 0 0.5rem;
+		font-size: 0.9375rem;
+	}
+
+	:global(.md-unit .notes p) {
+		margin: 0;
+	}
+
+	:global(.note-num) {
+		margin-inline-end: 0.3em;
+	}
+
+	/* remark's native backref, kept clickable for the mouse but hidden from the
+	   keyboard and assistive tech, because the numbered link above already does
+	   exactly this job and a screen reader would otherwise hear it twice. */
+	:global(.md-unit .notes a[data-footnote-backref]) {
+		text-decoration: none;
+		opacity: 0.55;
+		margin-inline-start: 0.25em;
+	}
+
+	/* A margin note is nowhere near the reference that sent you there, so landing
+	   on one has to be obvious. */
+	:global(.md-unit .notes :target),
+	:global(.md-unit .notes li:focus-within) {
+		background: color-mix(in srgb, CanvasText 8%, transparent);
+		box-shadow: 0 0 0 3px color-mix(in srgb, CanvasText 8%, transparent);
+		border-radius: 2px;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		:global(.md-unit .notes :target) {
+			transition:
+				background-color 220ms ease,
+				box-shadow 220ms ease;
+		}
+	}
+
+	:global(html.has-sidenotes) .md-unit {
+		grid-template-columns: 70ch 24rem;
+		max-width: calc(70ch + 1.5rem + 24rem);
+	}
+
+	:global(html.has-sidenotes) .md-unit .notes {
+		grid-column: 2;
+		position: relative;
+	}
+
+	:global(html.has-sidenotes) .md-unit .notes ol {
+		margin: 0;
+		padding: 0;
+	}
+
+	:global(html.has-sidenotes) .md-unit .notes li {
+		position: absolute;
+		right: 0;
+		width: 24rem;
+		margin: 0;
+	}
+
+	:global(html.has-sidenotes) .note-num {
+		font-size: 0.9em;
+	}
+</style>
