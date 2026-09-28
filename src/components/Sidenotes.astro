@@ -45,7 +45,12 @@
 		const GAP = 10; // px between stacked notes
 
 		function layout() {
-			if (!wide.matches) {
+			// `ch` is the width of "0" in the current font, so the true width of the
+			// unit is not knowable from CSS alone. Measure it once and use that as the
+			// real threshold: if the two columns do not actually fit the viewport,
+			// stay with stacked footnotes rather than push the margin off-screen.
+			const fits = unit.scrollWidth <= window.innerWidth;
+			if (!wide.matches || !fits) {
 				root.classList.remove('has-sidenotes');
 				for (const li of items) li.style.top = '';
 				return;
@@ -86,35 +91,16 @@
 
 <style>
 	/*
-		The 70ch text column never changes width. On wide viewports the whole unit
-		(text + margin) is centred as one block, so the page stays symmetric instead
-		of being lopsided with a void on the right.
+		IMPORTANT: every selector in this file is wrapped in :global() *in full*.
+
+		Astro scopes styles by appending [data-astro-cid-xxx] to any selector it
+		writes, and the elements this stylesheet targets are produced by
+		scripts/rehype-sidenotes.mjs, so they carry no such attribute. A mixed
+		selector like `:global(html.has-sidenotes) .md-unit` compiles to
+		`html.has-sidenotes .md-unit[data-astro-cid-xxx]`, which matches nothing —
+		and the failure is silent, because the rule is simply dropped. Keep each
+		selector entirely inside one :global() or the layout quietly stops working.
 	*/
-	:global(html.has-sidenotes) body {
-		max-width: calc(70ch + 1.5rem + 24rem);
-	}
-
-	:global(.md-unit) {
-		display: grid;
-		grid-template-columns: 1fr;
-		column-gap: 1.5rem;
-		max-width: 70ch;
-		margin-inline: auto;
-	}
-
-	:global(.md-unit .prose) {
-		grid-column: 1;
-		max-width: 70ch;
-	}
-
-	:global(.visually-hidden) {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-	}
 
 	/* Narrow, and no-JS: an ordinary footnote list directly after the prose. The
 	   <ol> marker is suppressed so the underlined number is the only number. */
@@ -133,6 +119,33 @@
 		margin: 0;
 	}
 
+	/* Visible where the notes are a list in the reading flow. Inside the margin
+	   column it would sit on top of the first note, so it is removed there. */
+	:global(.md-unit .notes .notes-heading) {
+		margin: 2.5rem 0 0.75rem;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		opacity: 0.6;
+	}
+
+	:global(.md-unit) {
+		display: grid;
+		grid-template-columns: 1fr;
+		column-gap: 1.5rem;
+		max-width: 70ch;
+		margin-inline: auto;
+	}
+
+	:global(.md-unit .prose) {
+		grid-column: 1;
+		max-width: 70ch;
+	}
+
+	/* The margin number runs inline with the note it labels, so a note reads as
+	   "1 See the overlay fact sheet…" rather than a bare number stranded above
+	   its own text. margin-inline-end rather than a gap so the spacing survives
+	   the space remark leaves between the <a> and the note body. */
 	:global(.note-num) {
 		margin-inline-end: 0.3em;
 	}
@@ -163,29 +176,43 @@
 		}
 	}
 
-	:global(html.has-sidenotes) .md-unit {
+	/* --- wide: the text column and the margin, centred as one block --- */
+
+	:global(html.has-sidenotes body) {
+		max-width: calc(70ch + 1.5rem + 24rem);
+	}
+
+	:global(html.has-sidenotes .md-unit) {
 		grid-template-columns: 70ch 24rem;
 		max-width: calc(70ch + 1.5rem + 24rem);
 	}
 
-	:global(html.has-sidenotes) .md-unit .notes {
+	:global(html.has-sidenotes .md-unit .notes) {
 		grid-column: 2;
 		position: relative;
 	}
 
-	:global(html.has-sidenotes) .md-unit .notes ol {
+	:global(html.has-sidenotes .md-unit .notes ol) {
 		margin: 0;
 		padding: 0;
 	}
 
-	:global(html.has-sidenotes) .md-unit .notes li {
+	:global(html.has-sidenotes .md-unit .notes li) {
 		position: absolute;
 		right: 0;
 		width: 24rem;
 		margin: 0;
 	}
 
-	:global(html.has-sidenotes) .note-num {
-		font-size: 0.9em;
+	/* Nothing at the top of the margin column: the first note belongs level with
+	   the paragraph that references it, and a heading there is a label floating
+	   next to unrelated prose. display:none rather than the usual clip trick,
+	   because the <aside> already carries aria-label="Notes" for assistive tech,
+	   so there is no accessible name to lose by dropping the element. */
+	:global(html.has-sidenotes .md-unit .notes .notes-heading) {
+		display: none;
 	}
-</style>
+
+	:global(html.has-sidenotes .note-num) {
+		font-size: 0.9em;
+	}</style>

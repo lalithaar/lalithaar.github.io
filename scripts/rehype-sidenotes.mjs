@@ -74,11 +74,15 @@ export default function rehypeSidenotes() {
 			});
 		}
 
-		// The heading is for sighted readers. The <aside> carries the real
-		// accessible name, so this is hidden from AT to avoid announcing it twice.
+		// The heading is visible where the notes are a list in the reading flow,
+		// because a bare run of numbered notes at the bottom of a page gives the
+		// reader no signal that this is the footnotes section at all. The stylesheet
+		// removes it inside the margin column, where the first note has to sit at
+		// the top. The <aside> carries the real accessible name either way, so the
+		// heading is not duplicated for assistive tech.
 		walk(section, (node) => {
 			if (node.tagName !== 'h2') return;
-			node.properties = { ...node.properties, className: ['visually-hidden'] };
+			node.properties = { ...node.properties, className: ['notes-heading'] };
 		});
 
 		tree.children = [

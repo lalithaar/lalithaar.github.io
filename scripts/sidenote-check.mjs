@@ -57,8 +57,9 @@ for (const { rel, html } of unitPages) {
 		/<ol role="list">/.test(html), 'role="list" present');
 	check(`${label}: notes aside has an accessible name`,
 		/class="notes" aria-label="Notes"/.test(html), 'aria-label="Notes"');
-	check(`${label}: visible heading hidden from AT`,
-		/<h2 class="visually-hidden"/.test(html), 'h2 clipped, aside carries the name');
+	check(`${rel}: notes heading is a real visible heading in the reading flow`,
+		/<h2 class="notes-heading"/.test(html),
+		'visible where the notes are a list; the stylesheet removes it inside the margin column');
 	// Only real anchor elements — the same string also appears in the page's own
 	// inlined <style> as a selector, which is not markup.
 	const backs = html.match(/<a [^>]*data-footnote-backref[^>]*>/g) ?? [];
@@ -87,6 +88,30 @@ for (const { rel, html } of unitPages) {
 	check(`${label}: no CSS media query duplicates the breakpoint`,
 		!/@media \(min-width: 66rem\)/.test(html),
 		'breakpoint defined once, in JS only — nothing to drift');
+}
+
+// --- the scoped-CSS trap ---
+// Astro appends [data-astro-cid-*] to any selector it writes. The elements this
+// stylesheet targets are produced by the rehype step and carry no such attribute,
+// so a mixed selector like `:global(html.has-sidenotes) .md-unit` compiles to
+// `html.has-sidenotes .md-unit[data-astro-cid-*]`, matches nothing, and fails
+// silently. Assert every emitted sidenote rule is fully unscoped.
+for (const { rel, html } of unitPages) {
+	const blocks = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]);
+	const css = blocks.join('\n');
+	const sidenoteRules = [...css.matchAll(/([^{}]*(?:md-unit|has-sidenotes|note-num)[^{}]*)\{/g)]
+		.map((m) => m[1].trim())
+		.filter((s) => !s.startsWith('@') && !s.includes('color-mix'));
+	const scoped = sidenoteRules.filter((s) => s.includes('data-astro-cid'));
+	check(`${rel}: no sidenote CSS rule is silently dead from Astro scoping`,
+		scoped.length === 0,
+		scoped.length ? scoped.join(' | ') : `${sidenoteRules.length} rules, all fully unscoped`);
+	check(`${rel}: the two-column grid rule is actually present`,
+		css.includes('grid-template-columns:70ch 24rem') || css.includes('grid-template-columns: 70ch 24rem'),
+		'wide grid-template-columns emitted');
+	check(`${rel}: the margin number runs inline with the note text`,
+		/\.note-num\s*\{[^}]*margin-inline-end/.test(css) && !/\.note-num\s*\{[^}]*display:\s*block/.test(css),
+		'.note-num stays inline — a note reads as "1 text", not a stranded number');
 }
 
 // --- script weight, measured across every unit page (not just the first) ---
