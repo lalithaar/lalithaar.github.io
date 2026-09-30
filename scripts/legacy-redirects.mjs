@@ -24,7 +24,10 @@ const PAGES_DIR = path.join(ROOT, 'src', 'pages');
 export const LEGACY_ORIGIN = 'https://isrl.in';
 export const REDIRECT_BASE = 'https://isrl-research.github.io';
 
-/** Canonical URL of an old site path so it can be compared with new routes. */
+/**
+ * @param {string} pathname
+ * @returns {string}
+ */
 function oldPathCanonical(pathname) {
 	if (pathname === '/' || pathname === '') return '/';
 	let p = pathname;
@@ -56,7 +59,9 @@ export function collectLegacyRedirects() {
 	const locations = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1].trim());
 
 	const newSite = newSiteCanonical();
+	/** @type {Array<[string, string]>} */
 	const redirects = [];
+	/** @type {Array<{ from: string, overlaps: string }>} */
 	const skipped = [];
 
 	for (const loc of locations) {
@@ -72,6 +77,9 @@ export function collectLegacyRedirects() {
 	return { redirects, skipped };
 }
 
+/**
+ * @param {{ redirects: Array<[string, string]>, skipped: Array<{ from: string, overlaps: string }> }} result
+ */
 function report({ redirects, skipped }) {
 	if (skipped.length > 0) {
 		console.warn(
@@ -86,6 +94,11 @@ function report({ redirects, skipped }) {
 	);
 }
 
+/**
+ * @param {string} from
+ * @param {string} to
+ * @returns {string}
+ */
 function stubHtml(from, to) {
 	return (
 		`<!doctype html><title>Redirecting to: ${to}</title>` +
@@ -103,6 +116,9 @@ export function legacyRedirectsIntegration() {
 			'astro:config:setup'() {
 				report(collectLegacyRedirects());
 			},
+			/**
+			 * @param {{ dir: URL }} args
+			 */
 			'astro:build:done'({ dir }) {
 				const { redirects } = collectLegacyRedirects();
 				for (const [from, to] of redirects) {

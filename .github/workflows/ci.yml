@@ -1,13 +1,21 @@
 name: Check
 
-# scripts/sidenote-check.mjs asserts against the BUILT site, so it needs a build
-# first. It is the only test in the repo, and until now it ran by hand, which is
-# the same as not running it.
+# What is checked, and why each part needs something different:
 #
-# main is deliberately excluded: deploy.yml builds, checks and deploys there, and
-# listing it here too would build the same site twice on every merge. A push to a
-# branch with no PR open is still covered, so a broken commit is caught on the
-# branch and not only when somebody opens a PR against it.
+#   astro check        type and template checking over src/. No build needed.
+#   npm run check:site assertions against dist/, so it needs the build first.
+#                     sidenote-check covers the margin-note runtime, katex-check
+#                     covers the maths stylesheet and its fonts. Both read the
+#                     BUILT site, because the failure they exist to catch is a
+#                     build that exits 0 while silently dropping a stylesheet.
+#   npm run check:worker bundles the Cloudflare worker with --dry-run, which
+#                     resolves the D1 binding and the entry point without
+#                     credentials or a network call.
+#
+# main is deliberately excluded: deploy.yml builds and runs check:site there,
+# and listing main here too would build the same site twice on every merge. A
+# push to a branch with no PR open is still covered, so a broken commit is caught
+# on the branch and not only when somebody opens a PR against it.
 
 on:
   push:
@@ -23,7 +31,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check:
+  site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,8 +46,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Before the build, so a type error is reported on its own instead of
+      # buried in build output.
+      - name: Type and template check
+        run: npx astro check
+
       - name: Build site
         run: npm run build
 
       - name: Check the built site
-        run: npm run check
+        run: npm run check:site
+
+  worker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Install worker dependencies
+        run: npm ci --prefix worker
+
+      - name: Bundle the worker
+        run: npm run check:worker

@@ -9,7 +9,8 @@
 		"db:init": "wrangler d1 migrations apply isrl-reads --remote",
 		"db:local": "wrangler d1 migrations apply isrl-reads --local",
 		"read": "node read.mjs",
-		"dash": "node dashboard.mjs"
+		"dash": "node dashboard.mjs",
+		"check": "wrangler deploy --dry-run"
 	},
 	"devDependencies": {
 		"wrangler": "^4.0.0"

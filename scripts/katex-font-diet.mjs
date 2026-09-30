@@ -64,7 +64,9 @@ export default function katexFontDiet() {
 				const next = source.replace(
 					/url\((?:\.\/)?fonts\/(KaTeX_[A-Za-z0-9_-]+\.woff2)\)/g,
 					(match, name) => {
-						const hit = [...emitted].find((f) => f.startsWith('_astro/') && f.endsWith(`/${name}`));
+						const hit = [...emitted].find(
+						(f) => f?.startsWith('_astro/') && f.endsWith(`/${name}`),
+					);
 						if (!hit) return match;
 						rewrote++;
 						return `url(/${hit})`;

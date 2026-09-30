@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "check": "node scripts/sidenote-check.mjs",
+    "check": "npm run check:site && npm run check:worker",
+    "check:site": "node scripts/sidenote-check.mjs && node scripts/katex-check.mjs",
+    "check:worker": "npm --prefix worker run check",
     "preview": "astro preview",
     "astro": "astro",
     "dash": "npm --prefix worker run dash",
@@ -21,5 +23,9 @@
     "katex": "^0.18.7",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }
