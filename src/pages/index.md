@@ -13,6 +13,10 @@ jsonLd: |
     "description": "Indian computer scientist and software developer",
     "gender": "Female",
     "nationality": { "@type": "Country", "name": "India" },
+    "spouse": {
+    "@type": "Person",
+    "description": "Private individual; name withheld for privacy."
+    },
     "alumniOf": {
       "@type": "CollegeOrUniversity",
       "name": "Indian Institute of Technology Madras",
