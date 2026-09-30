@@ -41,12 +41,16 @@
 		const notes = unit.querySelector('.notes');
 		const items = Array.from(notes.querySelectorAll('li'));
 		const root = document.documentElement;
+		// The gap and the widest note are written in rem by the stylesheet, so read
+		// the root size and convert. For a reader who raised their default font size
+		// 24 is not 24px, and JS would promise more room than CSS actually leaves.
+		const REM = parseFloat(getComputedStyle(root).fontSize) || 16;
 		// Cheap pre-filter so a phone does not measure on every resize. The real
 		// threshold is wider and is measured below.
-		const wide = matchMedia('(min-width: 66rem)');
+		const wide = matchMedia(`(min-width: ${66 * REM}px)`);
 		const GAP = 10; // px between stacked notes
-		const GAP_REM = 24; // px between the prose column and the notes
-		const MAX_NOTE = 384; // 24rem, the widest a note ever gets
+		const GAP_REM = 1.5 * REM; // the stylesheet's 1.5rem
+		const MAX_NOTE = 24 * REM; // the stylesheet's 24rem
 		const MIN_NOTE = 240; // below this a margin note is not worth having
 
 		function layout() {
