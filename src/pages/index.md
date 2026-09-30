@@ -8,6 +8,7 @@ jsonLd: |
     "@id": "https://isrl.in/#person",
     "name": "Lalitha A R",
     "alternateName": ["Lalitha AR", "Lalitha A. R.", "lalithaar"],
+    "jobTitle": "Computer Scientist",
     "url": "https://isrl.in/",
     "description": "Indian computer scientist and software developer",
     "gender": "Female",
@@ -32,6 +33,7 @@ jsonLd: |
       "value": "0009-0001-7466-3531"
     },
     "sameAs": [
+      "https://share.google/g4ltN2DroN1x7YEEW",
       "https://www.wikidata.org/wiki/Q140135393",
       "https://scholar.google.com/citations?user=dEiBWT8AAAAJ&hl=en",
       "https://github.com/lalithaar/",
@@ -42,7 +44,6 @@ jsonLd: |
     ]
   }
 ---
-
 My work usually spans based on 
 1. **Is my perspective and toolset a good fit for this problem?**
 2. **Does my work ethics align with the kind of people tackling the problem? Is there a fit on collaborators too?**
