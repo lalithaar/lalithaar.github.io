@@ -37,7 +37,7 @@ jsonLd: |
       "value": "0009-0001-7466-3531"
     },
     "sameAs": [
-      "https://share.google/g4ltN2DroN1x7YEEW",
+      "https://www.google.com/search?q=Lalitha+A+R&kgmid=/g/11zfnrkv81W",
       "https://www.wikidata.org/wiki/Q140135393",
       "https://scholar.google.com/citations?user=dEiBWT8AAAAJ&hl=en",
       "https://github.com/lalithaar/",
@@ -53,7 +53,7 @@ My work usually spans based on
 2. **Does my work ethics align with the kind of people tackling the problem? Is there a fit on collaborators too?**
 3. **Do I find this fascinating enough?**
 
-See [timeline](/timeline) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
+See [timeline](/timeline/) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
 
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
