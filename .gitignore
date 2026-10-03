@@ -31,3 +31,6 @@ scripts/logs/
 
 # jetbrains setting folder
 .idea/
+src/pages/.obsidian
+src/pages/ideas.md
+src/pages/templates
