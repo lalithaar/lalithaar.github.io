@@ -55,9 +55,10 @@ My work usually spans based on
 
 See [timeline](/timeline/) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
 
+TL;DR: 
+I have worked across [web accessibility](), [perceptual color science](), [wildlife rehabiliation](), [data science/ml](), [computational law]() and [nutrition](), [immunology - food allergens](), [nutrition science](),  [product design](),... 
+
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
-
-
 
 [Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)
 
