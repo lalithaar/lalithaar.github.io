@@ -5,7 +5,7 @@ layout: ../layouts/LayoutMath.astro
 
 # Maximising variance in dimensionality reduction (PCA) and chettinad paneer gravy
 
-Okay, image you are a spy and you are looking to find more information about your target. But you have far too many files at hand and need to scope it down so you can actually find the person.
+Okay, imagine you are a spy and you are looking to find more information about your target. But you have far too many files at hand and need to scope it down so you can actually find the person.
 
 You have clue 
 
