@@ -27,6 +27,7 @@ const description =
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
+		<link rel="alternate" type="application/rss+xml" title={title} href="/rss.xml" />
 		<title>{title}</title>
 		{props.frontmatter?.jsonLd && (
 			<script is:inline type="application/ld+json" set:html={props.frontmatter.jsonLd} />
