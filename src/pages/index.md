@@ -1,6 +1,6 @@
 ---
 title: "Lalitha A R"
-layout: ../layouts/Layout.astro
+layout: ../layouts/LayoutIndex.astro
 jsonLd: |
   {
     "@context": "https://schema.org",
@@ -53,7 +53,7 @@ My work usually spans based on
 2. **Does my work ethics align with the kind of people tackling the problem? Is there a fit on collaborators too?**
 3. **Do I find this fascinating enough?**
 
-See [timeline](/timeline/) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
+See [timeline](/timeline/) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out through lalithaar.research@gmail.com [^1]if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
 
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
@@ -66,6 +66,9 @@ This site is currently a work in progress, pages will appear whenever my two rem
 [Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)
 
 [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)
+
+
+
 <!-- 
 If you are in a regulated industry, you are probably looking for:
 
@@ -103,3 +106,5 @@ If you are in research, you are probably looking for:
 7. Respect the reader. Do not state the obvious. If there are two bullets on the screen, do not waste the reader's time by adding the word "two."
 
 --- -->
+
+[^1]: Yes, I do have lalithaar@isrl.in, but I don't check it that often lol.

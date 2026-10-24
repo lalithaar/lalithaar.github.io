@@ -2,6 +2,7 @@
 import katexCss from 'katex/dist/katex.min.css?url';
 import Pixel from '../components/Pixel.astro';
 import Sidenotes from '../components/Sidenotes.astro';
+import Wordmark from '../components/Wordmark.astro';
 
 interface Props {
 	title?: string;
@@ -48,10 +49,7 @@ const description =
 	<body>
 		{props.frontmatter ? (
 			<div class="md-content">
-				<header class="md-header">
-					<a class="wordmark" href="/">Lalitha A R</a>
-
-				</header>
+				<Wordmark />
 				<slot />
 			</div>
 		) : (
@@ -76,17 +74,6 @@ body {
   margin: 0 auto;
   padding: 2rem 1.25rem;
   line-height: 1.5;
-}
-
-header {
-    font-size: 1.2rem;
-    margin-bottom: 2.5rem;
-    opacity: 0.7;
-    > a {
-        text-decoration: none;
-        color: CanvasText;
-        font-weight: 600;
-    }
 }
 
 @media (prefers-color-scheme: dark) {

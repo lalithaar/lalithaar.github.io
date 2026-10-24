@@ -1,0 +1,143 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const notes = (await getCollection('notes'))
+  .filter((note) => !note.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const rendered = await Promise.all(
+  notes.map(async (note) => {
+    const { Content } = await render(note);
+    return { note, Content };
+  }),
+);
+
+// Notes come newest-first, so consecutive notes on the same date collapse
+// into one group and the date is listed only once per day.
+const groups = [];
+for (const item of rendered) {
+  const key = item.note.data.date.toISOString().slice(0, 10);
+  const last = groups[groups.length - 1];
+  if (last && last.key === key) {
+    last.items.push(item);
+  } else {
+    groups.push({ key, date: item.note.data.date, items: [item] });
+  }
+}
+---
+
+<section class="notes-feed">
+  {groups.length === 0 ? (
+    <p>No notes yet.</p>
+  ) : (
+    <ul>
+      {groups.map(({ date, items }) => (
+        <li class="note-day">
+          <time datetime={date.toISOString()}>
+            {date.toLocaleDateString('en-GB', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </time>
+          <div class="day-notes">
+            {items.map(({ note, Content }) => (
+              <div class="note" id={`note-${note.id}`}>
+                <div class="note-body">
+                  <Content />
+                </div>
+                <a class="note-link" href={`/notes/${note.id}/`}>permalink</a>
+              </div>
+            ))}
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+<style>
+  .notes-feed {
+    margin-top: 2rem;
+  }
+  .notes-feed ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  /* Timeline: a hairline runs down the left, each date is a node on it, and
+     the cards sit indented beside it. The line bridges the gap between day
+     groups so it reads as one continuous rail. */
+  .notes-feed li {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-left: 1.75rem;
+  }
+  .notes-feed li::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem;
+    top: 0.55rem;
+    bottom: -1.5rem;
+    width: 1px;
+    background: color-mix(in srgb, currentColor 25%, transparent);
+  }
+  .notes-feed li:last-child::before {
+    bottom: 0;
+  }
+  .notes-feed time {
+    position: relative;
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-bottom: 0.35rem;
+  }
+  .notes-feed time::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.35rem - 3px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .day-notes .note {
+    position: relative;
+    border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    padding: 0.65rem 0.9rem;
+    background: color-mix(in srgb, currentColor 3%, transparent);
+    transition: background-color 120ms ease;
+  }
+  .day-notes .note:hover {
+    background: color-mix(in srgb, currentColor 6%, transparent);
+  }
+  /* The whole card is the link to the note; its "permalink" label exists for
+     keyboards and screen readers only. */
+  .note-link {
+    position: absolute;
+    inset: 0;
+    font-size: 0;
+    color: transparent;
+  }
+  .day-notes .note:has(.note-link:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  /* Links inside the note's own prose keep their own target above the
+     card-wide hit area. */
+  .note-body :global(a) {
+    position: relative;
+    z-index: 1;
+  }
+  .day-notes .note + .note {
+    margin-top: 0.75rem;
+  }
+  .note-body :global(p) {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  .note-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

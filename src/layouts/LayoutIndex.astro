@@ -1,0 +1,9 @@
+---
+import Layout from './Layout.astro';
+import NotesFeed from '../components/NotesFeed.astro';
+---
+
+<Layout {...Astro.props}>
+  <slot />
+  <NotesFeed />
+</Layout>

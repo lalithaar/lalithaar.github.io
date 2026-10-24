@@ -1,0 +1,44 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Wordmark from '../../components/Wordmark.astro';
+import { noteTitle } from '../../lib/note-title';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes
+    .filter((note) => !note.data.draft)
+    .map((note) => ({
+      params: { slug: note.id },
+      props: { note },
+    }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+const title = noteTitle(note);
+---
+
+<Layout title={title} description={note.data.description}>
+  <div class="md-content">
+    <Wordmark />
+    <article class="note-page">
+      {/* No visible title on purpose: notes are a frictionless microblog. The
+          derived title only serves SEO via the <title> tag above. */}
+      <time datetime={note.data.date.toISOString()}>
+        {note.data.date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      <Content />
+    </article>
+    <p><a href="/">← home</a></p>
+  </div>
+</Layout>
+
+<style>
+  .note-page time {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+</style>
