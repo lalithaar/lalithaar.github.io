@@ -1,0 +1,38 @@
+---
+/*
+	WorkNotes — the margin column for google-scholar-if-it-worked.astro.
+
+	Astro only runs the markdown/rehype pipeline on .md files, so
+	scripts/rehype-sidenotes.mjs never sees this .astro page. This component
+	hands back the exact DOM that plugin emits, which is what the runtime in
+	Sidenotes.astro (already shipped by LayoutMath) measures and positions:
+	`has-sidenotes` on <html>, each <li> set level with its reference.
+
+	This file must keep NO <style> block. A component with styles gets
+	data-astro-cid-* stamped on every element it writes, and two assertions in
+	scripts/sidenote-check.mjs match the literal strings `<ol role="list">` and
+	<p class="note-body">, which the stamp silently breaks. Sidenote styling
+	lives in Sidenotes.astro and is fully :global(), so it applies here.
+
+	`notes` are HTML bodies — links allowed — one per reference, in the order
+	the references are numbered in the prose (ref(1) pairs with notes[0]).
+	Each note is rendered as a single paragraph, matching the margin-note CSS.
+*/
+interface Props {
+	notes: string[];
+}
+const { notes } = Astro.props;
+---
+<aside class="notes" aria-label="Notes">
+	<section data-footnotes="" class="footnotes">
+		<h2 class="notes-heading" id="footnote-label">Footnotes</h2>
+		<ol role="list">
+			{notes.map((note, i) => (
+				<li id={`user-content-fn-${i + 1}`}>
+					<a class="note-num" href={`#user-content-fnref-${i + 1}`} aria-label={`Back to reference ${i + 1} in the text`}>{i + 1}</a>
+					<p class="note-body" set:html={`${note} <a href="#user-content-fnref-${i + 1}" data-footnote-backref="" aria-label="Back to reference ${i + 1}" class="data-footnote-backref" aria-hidden="true" tabindex="-1">↩</a>`} />
+				</li>
+			))}
+		</ol>
+	</section>
+</aside>

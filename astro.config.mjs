@@ -15,6 +15,12 @@ import rehypeSidenotes from './scripts/rehype-sidenotes.mjs';
 export default defineConfig({
   site: 'https://isrl.in',
   integrations: [legacyRedirectsIntegration(), sitemap()],
+  // Markdown ![]() images get a srcset of resized variants plus the matching
+  // responsive CSS, instead of a single full-size file.
+  image: {
+    layout: 'constrained',
+    responsiveStyles: true,
+  },
   markdown: {
     remarkPlugins: [remarkBacklinks,remarkMath],
     rehypePlugins: [rehypeKatex, rehypeSidenotes],

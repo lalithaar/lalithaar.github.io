@@ -1,0 +1,410 @@
+---
+import { Image } from 'astro:assets';
+import katex from 'katex';
+// This page renders KaTeX maths inside abstracts, so it needs the layout that
+// ships the katex stylesheet (Layout.astro deliberately does not). LayoutMath
+// renders Wordmark/Pixel/Sidenotes itself, so the page does not.
+import Layout from '../layouts/LayoutMath.astro';
+import Wordmark from '../components/Wordmark.astro';
+import WorkNotes from '../components/WorkNotes.astro';
+import avatar from '../attachments/circle-logo.png';
+
+const escapeHtml = (text: string) =>
+	text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// Abstracts were pulled once from the Zenodo API (records' metadata.description)
+// and hardcoded here, so the build still never touches the network. They are
+// plain text with blank-line paragraph breaks: escape everything, turn single
+// line breaks into <br>, and let KaTeX render any $...$ maths they contain.
+function renderAbstract(abstract: string): string[] {
+	return abstract
+		.split(/\n{2,}/)
+		.map((block) =>
+			escapeHtml(block)
+				.replace(/\n/g, '<br />')
+				.replace(/\$([^$]+)\$/g, (_match, tex: string) =>
+					katex.renderToString(tex, { throwOnError: false })
+				)
+		);
+}
+
+// Sidenotes. Astro never runs rehype-sidenotes.mjs (markdown pipeline only),
+// so the two halves are written by hand: `ref(n)` is the reference anchor that
+// hangs off a work below, and `notes` are the margin-note bodies, in the same
+// order — ref(1) pairs with notes[0]. WorkNotes renders the matching ids,
+// number links and backrefs, so only the numbering has to stay in sync.
+const ref = (n: number) =>
+	`<sup><a href="#user-content-fn-${n}" id="user-content-fnref-${n}" data-footnote-ref="" aria-describedby="footnote-label">${n}</a></sup>`;
+
+const notes: string[] = [
+	`While this preprint proposes two primary architectural interventions, I wish to provide a critical update regarding the first: tiered, implementation-focused documentation. Upon attempting to implement this documentation pre-release, I realized a fundamental flaw in its practical application. Unlike standard developer documentation that assists in the primary goal of learning a tool, this approach inadvertently raised a conflict of timing: was I writing a real-time implementation guide to be read before coding, or a guide for fixing code later? It became clear that it was primarily serving the latter. By focusing on \"how to fix\" or \"how to apply accessibility\" after the fact, the documentation merely reinforces the \"accessibility-as-an-add-on\" cycle that the Care Framework aims to break. This leads to a deeper systemic question: why do tutorials not teach accessibility as an intrinsic part of the primary language? Just as we learn type=\"email\" as a standard part of HTML forms, accessibility should be baked into the initial learning path of any framework. While I do not yet have a definitive answer on how to bridge that specific pedagogical gap, I believe the second intervention—framework-level accessible defaults—remains highly cascadable and impactful. I am sharing this work-in-progress to invite further dialogue on these evolving insights.`,
+	`The library has 12k downloads as of 25-10-2026, along with a js version <a href="https://www.npmjs.com/package/cm-colors?activeTab=readme">https://www.npmjs.com/package/cm-colors?activeTab=readme</a> and supported the mechanism used by Inherent.css - Write plain HTML without adding a single class: get automatic light/dark mode, 1-token color branding, and responsive layouts out of the box.`,
+	`The implementation proposed in this paper is to be considered BS, here's why - <a href="https://isrl.in/timeline/">See June 2025</a>. But the underlying principle: 'The complaince to make the web usable to people by what law mandates is the floor' still stands and is something I believe to this day.`,
+	`This was inspired by, when I saw this robot cleaning a window glass the way humans do (a tremendous feat by the team!), that made me think but wouldn't there be a better and efficient way if this was designed in the form machines do it natively? (Instead of one hand holding the cloth, and sprayer in other)`,
+];
+
+---
+
+<Layout title="Research works by Lalitha A R">		<div class="md-content">
+		<Wordmark />
+		<div class="md-unit">
+			<article class="prose">
+
+
+		<header class="profile">
+			<Image class="avatar" src={avatar} alt="Lalitha A R" width={110} height={110} />
+			<div class="profile-text">
+				<h1>Lalitha A R</h1>
+				<!--<p class="affiliation"></p>-->
+				<p class="stats">
+					<span><strong>3,813</strong> reads</span>
+					<span aria-hidden="true">·</span>
+					<span><strong>1,780</strong> full-text reads</span>
+				</p>
+				<p class="links">
+					<a href="https://orcid.org/0009-0001-7466-3531">ORCID</a>
+					<span aria-hidden="true">·</span>
+					<a href="https://scholar.google.com/citations?user=dEiBWT8AAAAJ&hl=en">Scholar</a>
+				</p>
+			</div>
+		</header>
+
+		<h2 class="section-heading">If Google Scholar were accurate:</h2>
+
+		{/*
+			Entries from the ISRL Zenodo community (https://zenodo.org/communities/isrl),
+			newest first. Written out one by one instead of mapped from an array so a
+			sidenote can be attached to a single paper. Abstracts were fetched from the
+			Zenodo API once and hardcoded here, so the build never touches the network.
+		*/}
+		<ol class="works">
+			<li class="work">
+				<!-- local file: encyclopedia.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/20556807">Encyclopedia of Indian Food Ingredients</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Book</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.20556807">DOI: 10.5281/zenodo.20556807</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`The Encyclopedia of Indian Food Ingredients is a foundational component of the Indian Food Informatics Data (IFID) project, conceived as Digital Public Infrastructure (DPI) for the Indian food ecosystem. This initiative provides a standardized taxonomy and multi-format dataset (JSON, Markdown, LaTeX) covering 600+ food components, spanning traditional Ayurvedic botanicals to modern industrial additives. By bridging traditional culinary knowledge systems with contemporary global food standards (such as Open Food Facts and INS/FSSAI classifications), the project establishes a machine-readable framework for food informatics in India. The work focuses on nomenclature normalization, hierarchical categorization, and interoperable data structuring to enable API integrations, research applications, and community-driven refinement over time.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: iSRL-2026-04-Allergen.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/19877561">Food Allergens in India: Evidence, Regulation, and the State of Current Knowledge</a>
+				<div class="work-authors">Lalitha A R, Mahesh P A</div>
+				<div class="work-meta">
+					<span class="work-type">Report</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.19877561">DOI: 10.5281/zenodo.19877561</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`Food allergy prevalence in India is among the lowest documented in the Asia-Pacific: 0.14% in children and 1.2% in adults, from the largest systematic study conducted on Indian soil. The same study found IgE sensitisation in 19.1% of the children tested — a 136-fold gap between immune sensitisation and clinical allergy. That gap runs through the Indian food allergy literature consistently, across foods, across study types, across populations. This review documents what the evidence shows and the conditions that made it the shape it is. Three domains are examined: the clinical and epidemiological literature, the molecular characterisation of India-specific allergens, and the FSSAI mandatory allergen declaration framework. Each domain is reviewed against its own evidentiary standard. Where the literature and the regulation converge, that convergence is noted. Where they do not, the reasons are examined. The review closes with an extended allergen recognition list for Indian food systems — seventeen foods across two evidence tiers, and three foods the current data cannot place.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: isrl-2026-04-r-variants.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/19454090">Data Acquisition and Ingredient Extraction: Building a Vocabulary of What India&#39;s Packaged Food Labels Actually Say</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Report</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.19454090">DOI: 10.5281/zenodo.19454090</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`Indian packaged food labels do not share a common ingredient vocabulary. The same substance appears under regional names, transliterations, INS (International Numbering System) codes, and brand-specific terms — sometimes across labels from the same manufacturer. No reference layer exists that maps these expressions to shared identities. This report documents the construction of a first ingredient variant corpus from two sources: 896 directly sampled products collected from verified Indian market listings, and English ingredient strings from OpenFoodFacts filtered to rows with a traceable Indian product name. Both sets were processed through a constrained parsing pipeline — one atomic operation per API call, temperature set to 0, explicit failure rather than approximation when data was unavailable. After combining both sources and iterative cleaning, the corpus contains 2,291 unique ingredient variant strings. These variants are not noise to eliminate. They are documentation of how ingredient identity is expressed in practice across Indian commercial food labels. The question of which variants refer to the same ingredient — and by what logic — is addressed in the EMF Model.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: law_as_source.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/18741725">Regulatory Texts and Case Law as Ground Truth in Emerging Domains</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Technical note</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.18741725">DOI: 10.5281/zenodo.18741725</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`In domains where no unified academic theory has yet consolidated, practitioners face a calibration problem: against what baseline does one evaluate a classification framework, a taxonomy, or a data model? This note argues that enacted law and judicial decisions constitute a practically available, historically grounded source of ground truth for such domains. We describe an approach — regulatory delta analysis — that examines how legislation and case law shift across time, with the aim of surfacing friction points, coordination patterns, and the constraints under which each version of a rule was written. The approach is not a critique of legislative bodies or courts; it is a method for reading the record they have already produced. Limitations are considered throughout. The note is grounded in applied work from the Indian Food Informatics Data (IFID) project but the reasoning is intended to transfer to other domains with similar structural properties.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: fssai_2011_vs_2020-v2.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/18719394">Regulatory Delta of Food Labelling Laws in India: A Comparative Analysis of the FSSAI 2011 and 2020 Regulations</a>
+				<div class="work-authors">Sai Nikhil Vukka, Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Report</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.18719394">DOI: 10.5281/zenodo.18719394</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`This short report summarises the regulatory "delta" between the Food Safety and Standards (Packaging and Labelling) Regulations, 2011 and the Food Safety and Standards (Labelling and Display) Regulations, 2020. The focus is on the transition toward prescriptive naming, structured allergen declarations, and risk-aware warnings. These shifts directly inform the selection of specific data fields in digital ingredient identity layers such as IFID.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: EMF_Classification_IFID-v0.4.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/18714527">Identity, Transformation, and Function: A Tri-Axial Model for the Classification of Food Ingredient Identity</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Report</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.18714527">DOI: 10.5281/zenodo.18714527</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`Food ingredient classification in India confronts a structural problem that neither label standardisation nor taxonomy alone resolves: the same substance appears under dozens of names across regulatory filings, procurement systems, and consumer labels, while substances that share a name may differ in ways that determine their legal status, tax bracket, and nutritional profile. This report proposes the E-M-F Tri-Axial Identity Model as a principled, evidence-grounded framework for assigning a determinate identity position to any food ingredient. The three axes measure, respectively, the invasiveness of the transformation pathway (Anthropogenic Energy, $E$), the degree of departure from the original biological matrix (Matter, $M$), and the degree to which technological function governs regulatory naming and trade classification rather than biological origin (Function, $F$). From these three coordinates, a composite Divorce Score ($D$) is derived that partitions ingredients into three operationally meaningful zones: variants of a biological source, independent canonical entities, and functional tools whose identity is defined by role rather than origin. The framework is grounded in existing Indian regulatory instruments — the FSSAI Labelling and Display Regulations 2020, the Food Products Standards and Food Additives Regulations 2011, and the Indian Trade Classification (Harmonised System) — and validated against judicial reasoning from the Supreme Court of India and the Delhi High Court. A 35-item benchmark tests the discriminatory power of the model and provides a replicable standard for future refinements. The model provides the deterministic ingredient-level substrate on which product-level food classification frameworks can operate with greater precision and consistency.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: justification-companion-emf-scoring.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/18713318">Justification Companion to EMF-Scoring Model (IFID Project)</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Data paper</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.18713318">DOI: 10.5281/zenodo.18713318</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`This technical companion establishes the evidentiary framework for the EMF-Scoring Model, providing a tri-axial classification of food ingredients based on Anthropogenic Energy (E), Matter State (M), and Functional Identity (F). It synthesizes chemical justification, FSSAI/Codex regulatory standards, and ITC-HS trade nomenclature to document the 'Identity Shift' that occurs during food processing. By mapping covalent molecular changes against statutory naming conventions, this report provides a high-rigour, defensible logic for food informatics systems. It specifically codifies the transition from primary commodities to complex additives, ensuring that scoring assignments — ranging from minimally processed cooling to synthetic chemical synthesis — are anchored in global trade classification and Indian food safety law rather than subjective interpretation.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: ingredientsv.csv -->
+				<a class="work-title" href="https://zenodo.org/records/18659901">Indian Food Ingredients &amp; Label Variants</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Dataset</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.34740/KAGGLE/DSV/14783287">DOI: 10.34740/KAGGLE/DSV/14783287</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`A mapping of 2500+ regional ingredient variations as observed in Indian labels`)} />
+				<p class="work-abstract" set:html={renderAbstract(`This dataset provides a structured mapping of the diverse ways ingredients are named on Indian food packaging. It links "variants" (the actual text found on labels) to a "canon" (a standardized, clean category).`)} />
+				<p class="work-abstract" set:html={renderAbstract(`Example Mapping:\n- Canon: Acetic Acid (INS 260)\n- Variants: acidity regulator 260, vinegar, ins 260, acetic acid (260)`)} />
+				<p class="work-abstract" set:html={renderAbstract(`This establishes the ground truth required to calibrate Machine Learning models and Large Language Models (LLMs), providing the foundational data architecture necessary to adapt global food-scoring frameworks for the unique complexities of the Indian market.`)} />
+			</li>
+			<li class="work">
+				<!-- local file: Indian_Supreme_Court_Defines_Hierarchical_Classification_for_Food_Products__Overruling_Common_Parlance_Precedents.pdf -->
+				<a class="work-title" href="https://zenodo.org/records/18651646">Indian Supreme Court Defines Hierarchical Classification for Food Products, Overruling Common Parlance Precedents</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Report</span>
+					<span aria-hidden="true">·</span>
+					<span>2026</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.18651646">DOI: 10.5281/zenodo.18651646</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`This report synthesizes landmark judicial decisions in Indian food classification law, documenting the transition from common parlance-based interpretation to a hierarchical technical classification framework. The January 6, 2026 Supreme Court judgment in Commissioner of Customs Import v. Ms Welkin Foods formally established a precedential hierarchy that prioritizes statutory interpretation over lay understanding, marking a departure from pre-HSN era jurisprudence. This analysis examines four domains (GST/Tax, Food Safety, Customs, and Dietary Labels) where technical definitions now supersede common parlance, with significant implications for food informatics, regulatory compliance, and ingredient classification systems.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://zenodo.org/records/18651817">Making Accessibility Accessible, Part II: Systems, Psychology, and Infrastructure for Lasting Change</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Report</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.5281/zenodo.18651817">DOI: 10.5281/zenodo.18651817</a>
+					<span set:html={ref(1)}></span>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`In Making Accessibility Accessible, Part I, we diagnosed the persistent web accessibility gap as a fundamental mismatch between enterprise-focused tooling and the resource-constrained realities of most web developers, proposing the Care Framework as a corrective lens. This sequel transforms diagnosis into a prescription.`)} />
+				<p class="work-abstract" set:html={renderAbstract(`We demonstrate that sustainable progress requires understanding accessibility implementation not as isolated technical problems but as symptoms of interconnected systemic failures. Through analysis of the causal mechanisms sustaining the implementation gap, we reveal how architectural constraints create cognitive burdens, cognitive burdens undermine effective learning, impaired learning stifles adoption, and failed adoption reinforces the perception of accessibility as impossible — completing a self-reinforcing cycle.`)} />
+				<p class="work-abstract" set:html={renderAbstract(`Breaking this cycle requires coordinated intervention at leverage points where small changes produce cascading effects. We propose two high-impact architectural interventions: (1) tiered, implementation-focused documentation that mirrors WCAG's compliance criteria with scaffolded, task-oriented guidance for builders, and (2) framework-level accessible defaults that shift responsibility upstream, making accessible implementation easier than inaccessible implementation.`)} />
+				<p class="work-abstract" set:html={renderAbstract(`These interventions, grounded in behavioral science and validated by successful infrastructure transformations, address some of the most common WCAG errors, which are present on a significant proportion of homepages through changes requiring minimal ongoing developer effort.`)} />
+				<p class="work-abstract" set:html={renderAbstract(`This work provides the actionable blueprint to operationalize care, demonstrating that the path to an accessible web requires not educating developers to overcome systemic barriers, but redesigning systems to eliminate those barriers entirely.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://doi.org/10.13140/RG.2.2.19130.25285">Making Accessibility Accessible, Part I: A Care Framework for Developer-Centered Tooling Infrastructure</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Preprint</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.13140/RG.2.2.19130.25285">DOI: 10.13140/RG.2.2.19130.25285</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`Web accessibility guidelines provide clear compliance criteria, yet the majority of websites remain inaccessible. We argue this persistence reflects not developer indifference but a fundamental mismatch between accessibility tooling and developer contexts. Current tools optimize for enterprise environments with dedicated accessibility teams, legal departments, and substantial resources. This leaves the majority of web developers-individuals, students, nonprofits, and small teams building 80% of the web-without practical pathways to implementation. We introduce the Care Framework, which reframes accessibility tooling design around three principles: (1) accessibility of accessibility-tools must be adoptable by developers with limited time and expertise; (2) context-awareness-tools must adapt to varied resource constraints rather than assuming enterprise capacity; and (3) empowerment over enforcement-tools must guide and educate rather than merely audit and block. Through systematic ecosystem analysis and a case study demonstrating 5.7× adoption growth after developer-centered redesign, we show that accessibility tooling can and must prioritize developer experience as integral to accessibility outcomes. We identify critical boundaries between safe and unsafe automation, propose a composable utility infrastructure model, and establish research directions for building care-centered accessibility tools that serve all web creators, not only the well-resourced few.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://arxiv.org/abs/2512.07623">Context-Adaptive Color Optimization for Web Accessibility: Balancing Perceptual Fidelity and Functional Requirements</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Preprint</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.48550/arXiv.2512.07623">DOI: 10.48550/arXiv.2512.07623</a>
+					<span set:html={ref(2)}></span>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`We extend our OKLCH-based accessibility optimization with context-adaptive constraint strategies that achieve near-universal success rates across diverse use cases. Our original strict algorithm reached 66-77% success by prioritizing minimal perceptual change (ΔE ≤ 5.0), optimizing for enterprise contexts where brand fidelity is paramount. However, this one-size-fits-all approach fails to serve the broader ecosystem of web developers who need accessible solutions even when strict perceptual constraints cannot be satisfied. We introduce recursive optimization (Mode 1) that compounds small adjustments across iterations, achieving 93.68% success on all color pairs and 100% success on reasonable pairs (contrast ratio > 2.0), representing a +27.23 percentage point improvement. A relaxed fallback mode (Mode 2) handles pathological edge cases, reaching 98.73% overall success. Evaluation on 10,000 realistic web color pairs demonstrates that context-aware constraint relaxation, combined with absolute hue preservation, enables practical accessibility compliance while maintaining brand color identity. The median perceptual change remains zero across all modes (most pairs already comply), while the 90th percentile reaches ΔE2000 = 15.55 in Mode 1 — perceptually acceptable when hue invariance preserves the essential character of the original color. The approach is deployed in CM-Colors v0.5.0 (800+ monthly downloads), providing developers with explicit control over the accessibility-fidelity trade-off appropriate to their context.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://arxiv.org/abs/2512.05067">Perceptually-Minimal Color Optimization for Web Accessibility: A Multi-Phase Constrained Approach</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Preprint</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.48550/arXiv.2512.05067">DOI: 10.48550/arXiv.2512.05067</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`Web accessibility guidelines require sufficient color contrast between text and backgrounds; yet, manually adjusting colors often necessitates significant visual deviation, compromising vital brand aesthetics. We present a novel, multi-phase optimization approach for automatically generating WCAG-compliant colors while minimizing perceptual change to original design choices. Our method treats the problem as a constrained optimization task in OKLCH perceptual color space, prioritizing lightness adjustments and employing hue-preserving strategies with carefully bounded chroma modifications. The algorithm proceeds through three phases: (1) a gradient-free global search over feasible OKLCH parameters to find candidates near the original color, (2) local refinement using numerical optimization to satisfy contrast ratios while minimizing ΔE2000 perceptual distance, and (3) a fallback strategy that allows controlled hue shifts only when necessary to achieve compliance with minimal overall perceptual impact. We evaluate on synthetic and real-world web palettes, demonstrating that our approach achieves WCAG AA/AAA compliance for previously non-compliant pairs with substantially smaller perceptual deviations than naive approaches (e.g., pure lightness scaling). By operating in a perceptually uniform space and explicitly minimizing ΔE2000, the method preserves brand identity more effectively while ensuring functional accessibility. The proposed framework is practical for integration into design tools and automated accessibility remediation pipelines.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://arxiv.org/abs/2506.10324">Beyond Compliance: A User-Autonomy Framework for Inclusive and Customizable Web Accessibility</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Preprint</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.48550/arXiv.2506.10324">DOI: 10.48550/arXiv.2506.10324</a>
+					<span set:html={ref(3)}></span>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`This paper proposes a shift from compliance-centered web accessibility to a care-driven model that prioritizes user autonomy, using neurodivergent users as a catalyst case for broader personalization needs. While accessibility standards offer a flexible framework, they are often interpreted and implemented as static compliance checklists, our approach reframes it as a flexible, user-centered process. We introduce a customizable Comfort Mode framework that allows users to adapt interface settings, such as contrast, typography, motion, and scaling, according to their individual needs, while retaining the brand's core visual identity. Grounded in psychological and cognitive accessibility principles, our design supports personalization without sacrificing creative freedom. We present both minimal and advanced implementation models with mock-ups, demonstrating how inclusive design can be seamlessly integrated at minimal cost. This approach aims to broaden digital inclusivity by offering autonomy to those who require it, without imposing changes on those who do not. The proposed system is adaptable, scalable, and suitable for a wide range of users and brands, offering a new paradigm where user autonomy, aesthetic integrity, and accessibility converge not through compromise, but through choice.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://doi.org/10.13140/RG.2.2.31005.37601">Reimagining Software Engineering Interviews in the AI Era: Beyond LeetCode Toward Real-World Competency Assessment</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Preprint</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.13140/RG.2.2.31005.37601">DOI: 10.13140/RG.2.2.31005.37601</a>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`Traditional technical interviews for software engineering positions have relied heavily on algorithmic problem-solving assessments, commonly referred to as "LeetCode-style" interviews, since their standardization in the 1990s. Recent advances in large language models (LLMs) have disrupted this paradigm by demonstrating substantial capability on algorithmic challenges, prompting industry reconsideration of assessment validity. This paper synthesizes empirical evidence from software engineering research, psychometric studies, learning science, and industry practice to examine whether algorithmic interviews remain effective predictors of job performance in the AI era. We present five converging lines of evidence: (1) LLMs achieve 31.68-43.36% pass rates on hard LeetCode problems, with performance reaching the 63rd percentile of human submissions; (2) empirical data from 131 candidates show zero correlation (r=0.0, p > 0.05) between weekly LeetCode preparation hours and interview readiness; (3) historical analysis reveals the format originated from 1980s-1990s practical constraints rather than pedagogical validation; (4) psychometric research demonstrates that isolated cognitive tests exhibit validity coefficients of 0.31-0.42, substantially lower than multimethod approaches combining work samples and structured interviews (0.63-0.65); and (5) production software engineering tasks—legacy code maintenance, collaborative debugging, architectural design—diverge fundamentally from isolated algorithmic puzzles. These findings suggest that the traditional interview format measures pattern-matching capabilities that AI systems increasingly replicate, rather than the complex judgment, collaboration, and contextual reasoning that characterize professional software development. We discuss implications for educators, employers, candidates, and propose evidence-based directions for interview redesign that emphasize authentic task simulation and multimethod assessment.`)} />
+			</li>
+			<li class="work">
+				<a class="work-title" href="https://doi.org/10.13140/RG.2.2.32588.07049">Beyond the Human Blueprint: Toward Robomorphic Design in Autonomous Systems</a>
+				<div class="work-authors">Lalitha A R</div>
+				<div class="work-meta">
+					<span class="work-type">Preprint</span>
+					<span aria-hidden="true">·</span>
+					<span>2025</span>
+					<span aria-hidden="true">·</span>
+					<a class="doi-link" href="https://doi.org/10.13140/RG.2.2.32588.07049">DOI: 10.13140/RG.2.2.32588.07049</a>
+					<span set:html={ref(4)}></span>
+				</div>
+				<p class="work-abstract" set:html={renderAbstract(`The default assumption that robots should mimic human embodiment has constrained the field's design thinking for decades. We propose a design paradigm shift analogous to the evolution from skeuomorphic to native design in digital interfaces: rather than defaulting to anthropomorphic forms, robots should be designed as task-native agents that exploit robotic affordances. Drawing on evidence from soft robotics, human-robot interaction research, and design theory, we articulate principles for what we term robomorphic design-embodiment strategies that prioritize task fit and leverage robot-specific capabilities over human mimicry. This position paper consolidates emerging practices across robotics subfields, provides design heuristics for practitioners, and argues that the field has matured sufficiently to embrace non-anthropomorphic embodiment as a principled, first-class design choice rather than a compromise.`)} />
+			</li>
+		</ol>
+			</article>
+			<WorkNotes notes={notes} />
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.profile {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+		margin-bottom: 2rem;
+	}
+
+	.avatar {
+		width: 110px;
+		height: 110px;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	.profile-text h1 {
+		margin: 0;
+		font-size: 1.5rem;
+	}
+
+	.affiliation {
+		margin: 0.25rem 0;
+		opacity: 0.7;
+	}
+
+	.stats {
+		margin: 0.25rem 0;
+		font-size: 0.9rem;
+		opacity: 0.8;
+	}
+
+	.stats span[aria-hidden='true'] {
+		margin: 0 0.35rem;
+		opacity: 0.4;
+	}
+
+	.links {
+		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	.links span {
+		margin: 0 0.35rem;
+		opacity: 0.4;
+	}
+
+	.section-heading {
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		opacity: 0.6;
+		border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+		padding-bottom: 0.4rem;
+	}
+
+	.works {
+		list-style: none;
+		padding-left: 0;
+		margin-top: 1.5rem;
+	}
+
+	.work {
+		margin-bottom: 1.5rem;
+	}
+
+	.work-title {
+		display: block;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.work-title:hover {
+		text-decoration: underline;
+	}
+
+	.work-authors {
+		font-size: 0.9rem;
+		opacity: 0.7;
+		margin-top: 0.15rem;
+	}
+
+	.work-meta {
+		font-size: 0.85rem;
+		opacity: 0.6;
+		margin-top: 0.15rem;
+	}
+
+	.work-meta span[aria-hidden='true'] {
+		margin: 0 0.35rem;
+		opacity: 0.4;
+	}
+
+	.work-abstract {
+		margin-top: 0.5rem;
+		margin-bottom: 0;
+		font-size: 0.88rem;
+		line-height: 1.6;
+		opacity: 0.85;
+	}
+
+	.doi-link {
+		color: inherit;
+		opacity: 0.9;
+		text-decoration: none;
+	}
+
+	.doi-link:hover {
+		text-decoration: underline;
+	}
+</style>

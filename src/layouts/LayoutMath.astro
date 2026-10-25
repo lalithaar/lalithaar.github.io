@@ -144,6 +144,19 @@ p {
   margin-bottom: 0;
 }
 
+/*
+  Fallback for Astro's responsive-image sizing CSS, which it only injects on
+  src/pages/*.md and not on content-collection notes. Matches Astro's own
+  :where() rules so it never wins over the injected stylesheet.
+*/
+:global(img[data-astro-image]) {
+  height: auto;
+}
+
+:global(img[data-astro-image='constrained']) {
+  max-width: 100%;
+}
+
 
 </style>
 

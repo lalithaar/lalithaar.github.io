@@ -132,6 +132,23 @@ const description =
     margin-bottom: 0;
   }
 
+  /*
+    Astro emits the responsive-image sizing CSS (@layer astro.images) per page,
+    but it only lands on src/pages/*.md. Content-collection notes (rendered
+    through NotesFeed here, or [slug].astro on their permalink) get the srcset
+    and data-astro-image attributes without that stylesheet, which would let a
+    full-size image overflow the 70ch measure. These mirror Astro's own
+    :where() rules (zero specificity) so they never override the injected ones
+    where those do exist.
+  */
+  :global(img[data-astro-image]) {
+    height: auto;
+  }
+
+  :global(img[data-astro-image='constrained']) {
+    max-width: 100%;
+  }
+
 
 </style>
 

@@ -55,6 +55,9 @@ My work usually spans based on
 
 See [timeline](/timeline/) for an overview of problems/projects I have taken up, that I didn't and why so. Feel free to reach out through lalithaar.research@gmail.com [^1]if you are thinking of a problem that belongs here, and I can tell you if my shot at it would be a good fit or otherwise.
 
+TL;DR: I have worked across [web accessibility](/google-scholar-if-it-worked/), [perceptual color science](https://github.com/comfort-mode-toolkit/cm-colors/), [wildlife rehabilitation](/i-do-not-wish-to-talk-about-wildlife-rehab), data science/ml, [computational law](https://doi.org/10.5281/zenodo.18741725) and [immunology - food allergens](https://github.com/isrl-research/sandbox-research/discussions/4), [nutrition science](https://zenodo.org/records/18714527),  product design,... 
+
+
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
 
@@ -70,31 +73,6 @@ This site is currently a work in progress, pages will appear whenever my two rem
 
 
 <!-- 
-If you are in a regulated industry, you are probably looking for:
-
-- [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)
-- [The Legal-Tech Playbook if you are building in India](/the-legal-tech-playbook-if-you-are-building-in-india)
-- [Here's how to map out legal risks and keep up with court cases and regulations that may affect your business model]()
-
-If you are in Tamilnadu, you are probably looking for:
-
-Business owner in tamilnadu?
-- [Every business doesn’t need a website - How to decide if you need one](/every-business-doesnt-need-a-website)
-
-
-If you are in product/engineering space, you are probably looking for: 
-
-- [You don't need an mvp to validate, and you don't (mostly) need to raise to build an mvp](/you-dont-need-an-mvp-to-validate-and-you-dont-mostly-need-to-raise-to-build-an-mvp)
-- [Make the AI invisible in your product: what to do when buyers don't trust the AI label](/make-the-ai-invisible-in-your-product-what-to-do-when-buyers-dont-trust-the-ai-label)
-- [Observe the workflows before you build and talk to the customers before you talk to investors](/observe-the-workflows-before-you-build-and-talk-to-the-customers-before-you-talk-to-investors)
-- [Here's how to fix colors that look really good and on brand but isn't readable without changing how it looks](/heres-how-to-fix-colors-that-look-really-good-and-on-brand-but-isnt-readable-without-changing-how-it-looks)
-- [Before you hire more support, find out what's actually causing the tickets](/before-you-hire-more-support-find-out-whats-actually-causing-the-tickets)
-
-
-If you are in research, you are probably looking for:
-- [Using Claude for Research: a few things that actually work](/using-claude-for-research-a-few-things-that-actually-work)
-- [Why awareness organisation sites cannot be cited directly]()
-- [How do I find the most updated law/regulation when doing legal research?]()
 
 ## Rules for writings that in anyway describes the author or their work.
 1. Never use the person as the subject. The focus stays entirely on "the work." No "I," "me," at the start of the sentence. Use "my work" or "my {object}" to refer as the subject. I can be used when it is telling about an intended action or flow instead of trying to describe or box the 'I' into a label.

@@ -34,3 +34,5 @@ scripts/logs/
 src/pages/.obsidian
 src/pages/ideas.md
 src/pages/templates
+.obsidian
+.keep-the-rhythm
