@@ -1,0 +1,10 @@
+{
+  "identifier": "default",
+  "description": "Default permissions for the note widget window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-start-dragging",
+    "core:window:allow-start-resize-dragging"
+  ]
+}

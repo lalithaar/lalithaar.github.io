@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>note</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header id="titlebar" data-tauri-drag-region>
+      <span class="title" data-tauri-drag-region>note</span>
+      <button id="attach" title="Attach images (or drop them in)">img</button>
+      <button id="save" title="Save note (Ctrl+S)">save</button>
+      <button id="close" title="Close">&times;</button>
+    </header>
+
+    <textarea
+      id="editor"
+      spellcheck="false"
+      placeholder="type a note — paste or drop images anywhere to attach them"
+    ></textarea>
+
+    <section id="strip" aria-label="attached images"></section>
+
+    <footer id="status"></footer>
+
+    <input id="files" type="file" accept="image/*" multiple hidden />
+
+    <script src="app.js"></script>
+  </body>
+</html>

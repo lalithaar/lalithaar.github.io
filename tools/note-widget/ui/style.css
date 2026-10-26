@@ -1,0 +1,181 @@
+:root {
+  --title-bg: #26262c;
+  --body-bg: #1b1b1f;
+  --edit-bg: #1e1e23;
+  --border: #3c3c44;
+  --text: #e6e6eb;
+  --dim: #8c8c98;
+  --accent: #7aa2f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--body-bg);
+  color: var(--text);
+  font: 14px/1.45 "Segoe UI", system-ui, sans-serif;
+  user-select: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 4px 0 10px;
+  background: var(--title-bg);
+  border-bottom: 1px solid var(--border);
+  flex: 0 0 auto;
+}
+
+#titlebar .title {
+  flex: 1;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+#titlebar button {
+  border: 0;
+  background: transparent;
+  color: var(--dim);
+  font: inherit;
+  font-size: 13px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#titlebar button:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+#editor {
+  flex: 1 1 auto;
+  min-height: 60px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: var(--edit-bg);
+  color: var(--text);
+  font: 14px/1.5 Consolas, "Cascadia Mono", monospace;
+  user-select: text;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+#editor::placeholder {
+  color: var(--dim);
+}
+
+#editor.dropping {
+  box-shadow: inset 0 0 0 2px var(--accent);
+  background: #20202a;
+}
+
+/* The attachment strip only exists once the note references an image, so an
+   empty draft stays one writing surface instead of two stacked panels. */
+#strip {
+  position: relative;
+  flex: 0 0 140px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--edit-bg);
+  border-top: 1px solid #2a2a31;
+}
+
+#strip.has-images {
+  display: flex;
+}
+
+.thumb {
+  position: relative;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.thumb img {
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.thumb.selected {
+  outline: 1px solid var(--accent);
+}
+
+.thumb .handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+  cursor: ew-resize;
+  background: transparent;
+}
+
+.thumb.selected .handle {
+  background: var(--accent);
+}
+
+.thumb .handle.left {
+  left: 0;
+}
+
+.thumb .handle.right {
+  right: 0;
+}
+
+.thumb .label {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(8, 8, 10, 0.72);
+  font-size: 10px;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.thumb.selected .label {
+  opacity: 1;
+}
+
+#status {
+  flex: 0 0 auto;
+  height: 22px;
+  padding: 0 10px;
+  background: var(--title-bg);
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  line-height: 22px;
+  color: var(--dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#status.flash {
+  color: var(--accent);
+}
