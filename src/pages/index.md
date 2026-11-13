@@ -57,17 +57,13 @@ See [timeline](/timeline/) for an overview of problems/projects I have taken up,
 
 TL;DR: I have worked across [web accessibility](/google-scholar-if-it-worked/), [perceptual color science](https://github.com/comfort-mode-toolkit/cm-colors/), [wildlife rehabilitation](/i-do-not-wish-to-talk-about-wildlife-rehab), data science/ml, [computational law](https://doi.org/10.5281/zenodo.18741725) and [immunology - food allergens](https://github.com/isrl-research/sandbox-research/discussions/4), [nutrition science](https://zenodo.org/records/18714527),  product design,... 
 
-
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
 
 
-[Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)
-
-[A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)
-
-[Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)
-
+[Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)\
+[A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)\
+[Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)\
 [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)
 
 
