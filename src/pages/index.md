@@ -59,7 +59,7 @@ TL;DR: I have worked across [web accessibility](/google-scholar-if-it-worked/), 
 
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
-
+See past research works at: https://isrl.in/google-scholar-if-it-worked/
 
 [Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)\
 [A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)\
