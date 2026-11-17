@@ -80,5 +80,4 @@ See past research works at: https://isrl.in/google-scholar-if-it-worked/
 7. Respect the reader. Do not state the obvious. If there are two bullets on the screen, do not waste the reader's time by adding the word "two."
 
 --- -->
-
 [^1]: Yes, I do have lalithaar@isrl.in, but I don't check it that often lol.
