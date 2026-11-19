@@ -2,7 +2,8 @@
 title: "Timeline"
 layout: ../layouts/Layout.astro
 ---
-> If you see a gap month or year between these, it's either I am legally bound to keep it shut, or a personal project or it's just being human and staring at the wall or resting. You know, the latter somehow always satisfies  my criteria for choosing problems perfectly.
+> If you see a gap month or year between these, it's either I am legally bound to keep it shut, or a personal project or it's just being human and staring at the wall or resting. You know, the latter somehow always satisfies  my criteria for choosing problems perfectly. 
+> Edit: I know this comes across as if I say no to almost all projects lol, but see [this note](https://isrl.in/notes/20261113-afe14963365f4f72a4a773b119e7383b/) for more context. I would be the first person to say so if it's not a fit. But I have also been able to work on interesting projects with wonderful folks!
  
 ### June 2025:
 
@@ -47,6 +48,14 @@ Came across an interesting role at an LMS platform I have been following with th
 
 Considered a mentor/teaching role engagement for one of my fav subjects, but it did not align on one of the heuristics- #2, so it wasn't a good fit.
 
+There was a really interesting oncology project proposal that was oddly a really good fit. Complementary series to Hallmarks of cancer, but here focusing on the mapping and nature of what succeeded and failed, to see if we can derive underlying principles and characteristics across hundreds of papers. This would mean going through the nature of replication failures, is this something that can be generalized as a principle or is it an anamoly and doesn't imply a principle? How do we calibrate the boundaries between edge cases in a subject where non edge-cases are the anamoly?
+
+It is something that caught my interest really fast, and something that would be a really good fit for my toolkit. But I didn't want to work hundreds of hours in a morbid topic too soon for another project. So it was a no for now.
+
+---
+### October 2026
+
+The proposal was about improving the current algorithms and finding the formulation for color contrast that is closest to human perception (how human eyes view things). It would have been a great project, but the bureaucracy and legal landmines along with my prior overlap with the space from working on cm-colors meant I wouldn't get the same kind of fresh stretch I'm looking for right now.
 
 ---
 
