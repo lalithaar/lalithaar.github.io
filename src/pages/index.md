@@ -74,7 +74,7 @@ RSS Feeds if you want to follow: [^2]
 [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)\
 [Value of Free and Open Source Software in AI era](/value-of-free-and-open-source-softwares-in-ai-era)\
 [Honoring what a system holds, and seeing what it leaves out](/honoring-what-a-system-holds-and-seeing-what-it-leaves-out/)\
-[AI may be great, but it can't be greater than a living human being](/ai-may-be-great-but-it-cant-be-greater-than-a-living-human-being\)\
+[AI may be great, but it can't be greater than a living human being](/ai-may-be-great-but-it-cant-be-greater-than-a-living-human-being/)\
 
 <!-- 
 
