@@ -60,13 +60,17 @@ TL;DR: I have worked across [web accessibility](/google-scholar-if-it-worked/), 
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
 See past research works at: https://isrl.in/google-scholar-if-it-worked/
+RSS Feeds if you want to follow [^2]:
+- Notes / Micro feed - https://isrl.in/notes.xml
+- Long form essays - https://isrl.in/rss.xml
+
+[^2]: I have thought a bit about if email based notification (usual newsletters) would be better instead, but it's too much work to do right now. Especially with stripping off unnecessary bloat.
 
 [Pausing iSRL: Respecting the work, supporters, and oneself](/pausing-isrl-respecting-the-work-supporters-and-oneself)\
 [A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)\
 [Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)\
 [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)\
 [Value of Free and Open Source Software in AI era](/value-of-free-and-open-source-softwares-in-ai-era)
-
 
 
 <!-- 
