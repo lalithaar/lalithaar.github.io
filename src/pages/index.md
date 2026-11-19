@@ -44,7 +44,9 @@ jsonLd: |
       "https://www.linkedin.com/in/lalithaar/",
       "https://orcid.org/0009-0001-7466-3531",
       "https://www.researchgate.net/profile/Lalitha-A-R",
-      "https://pypi.org/user/lalithaar/"
+      "https://pypi.org/user/lalithaar/",
+      "https://www.npmjs.com/~lalithaar",
+      "https://crates.io/users/lalithaar",
     ]
   }
 ---
