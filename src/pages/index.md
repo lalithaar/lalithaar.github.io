@@ -60,7 +60,7 @@ TL;DR: I have worked across [web accessibility](/google-scholar-if-it-worked/), 
 This site is currently a work in progress, pages will appear whenever my two remaining brain cells cooperate.
 
 See past research works at: [https://isrl.in/google-scholar-if-it-worked/](https://isrl.in/google-scholar-if-it-worked/)\
-RSS Feeds if you want to follow [^2]:
+RSS Feeds if you want to follow: [^2]
 - Notes / Micro feed - https://isrl.in/notes.xml
 - Long form essays - https://isrl.in/rss.xml
 
