@@ -72,8 +72,9 @@ RSS Feeds if you want to follow: [^2]
 [A founder’s guide to building on public court data without walking into a wall](/a-founders-guide-to-building-on-public-court-data-without-walking-into-a-wall)\
 [Maximising variance in dimensionality reduction and chettinad paneer gravy](/maximising-variance-in-dimensionality-reduction-and-chettinad-paneer-gravy)\
 [Comments on the Draft Regulations for Use of Artificial Intelligence in Courts, 2026](/comments-on-the-draft-regulations-for-use-of-artificial-intelligence-in-courts-2026)\
-[Value of Free and Open Source Software in AI era](/value-of-free-and-open-source-softwares-in-ai-era)
-
+[Value of Free and Open Source Software in AI era](/value-of-free-and-open-source-softwares-in-ai-era)\
+[Honoring what a system holds, and seeing what it leaves out](/honoring-what-a-system-holds-and-seeing-what-it-leaves-out/)\
+[AI may be great, but it can't be greater than a living human being](/ai-may-be-great-but-it-cant-be-greater-than-a-living-human-being\)\
 
 <!-- 
 
