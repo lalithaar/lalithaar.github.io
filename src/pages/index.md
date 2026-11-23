@@ -46,7 +46,7 @@ jsonLd: |
       "https://www.researchgate.net/profile/Lalitha-A-R",
       "https://pypi.org/user/lalithaar/",
       "https://www.npmjs.com/~lalithaar",
-      "https://crates.io/users/lalithaar",
+      "https://crates.io/users/lalithaar"
     ]
   }
 ---
