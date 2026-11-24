@@ -633,7 +633,7 @@ Right now, direct financial backing and introductions to people who back indepen
     <h3 class="fw-card-title">Sponsor on GitHub</h3>
     <p class="fw-card-body">For backers outside India or teams already set up on GitHub billing.</p>
     <div class="fw-card-meta">
-      <a class="fw-card-btn" href="https://github.com/sponsors/YOUR-HANDLE" target="_blank" rel="noopener noreferrer">Open GitHub Sponsors →</a>
+      <a class="fw-card-btn" href="https://github.com/sponsors/lalithaar" target="_blank" rel="noopener noreferrer">Open GitHub Sponsors →</a>
     </div>
   </div>
 </div>
