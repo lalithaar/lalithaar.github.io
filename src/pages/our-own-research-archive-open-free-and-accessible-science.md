@@ -681,7 +681,7 @@ It was a microgrant of ₹50K to cover a component of the work done by the open 
 ## FAQ
 
 1. **What do you mean by ₹2.5L being a gate?**\
-   The compute and hardware will not be useful immediately unless I have the capacity locked in to work on this in time and effort.
+   The compute and hardware will not be useful immediately unless I have the capacity locked in to work on this in time and effort. Bonus: Once it hits 2.5L, I will reveal the story behind logo design of OORA.
 2. **Why this project?**\
    I am familiar with underlying components of this seperately: data aggregation and classification using AI, how research publishing happens, golang and it's library ecosystem, and python. So that makes it clean enough to execute, but still challenging enough for it to be fascinating.
 3. **Why not instituional grants that pay far more?**\
