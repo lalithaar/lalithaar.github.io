@@ -638,6 +638,8 @@ Right now, direct financial backing and introductions to people who back indepen
   </div>
 </div>
 
+Once you've made a transfer, fill out the [OORA Backer Acknowledgment form](https://forms.gle/7VBiFQxgC9wpT6NM9) if you'd like to be credited or share a link alongside your name or leave it blank to stay anonymous.
+
 ## Who is on your team? What's your track record on similar projects?
 
 I will be working on this solo, while consulting Subject Matter Experts for any doubts that may arise during tag creations in the respective fields. 
