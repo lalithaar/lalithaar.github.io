@@ -1,0 +1,155 @@
+---
+import Pixel from '../components/Pixel.astro';
+import Sidenotes from '../components/Sidenotes.astro';
+import Wordmark from '../components/Wordmark.astro';
+
+interface Props {
+	title?: string;
+	description?: string;
+	frontmatter?: { title?: string; description?: string; jsonLd?: string };
+}
+
+const props = Astro.props;
+const title = props.title ?? props.frontmatter?.title ?? 'Lalitha A R';
+const description =
+	props.description ??
+	props.frontmatter?.description ??
+	'Under construction whenever my brain cells decide to cooperate.';
+
+
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<link rel="alternate" type="application/rss+xml" title={title} href="/rss.xml" />
+		<link rel="alternate" type="application/rss+xml" title="Notes" href="/notes.xml" />
+		<title>{title}</title>
+		{props.frontmatter?.jsonLd && (
+			<script is:inline type="application/ld+json" set:html={props.frontmatter.jsonLd} />
+		)}
+	</head>
+	<body>
+		{props.frontmatter ? (
+			<div class="md-content">
+				<Wordmark />
+				<slot />
+			</div>
+		) : (
+			<slot />
+		)}
+		<Pixel />
+		<Sidenotes />
+	</body>
+
+<style>
+  :root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color-scheme: light dark;
+  }
+
+  body {
+    background-color: Canvas;
+    color: CanvasText;
+
+
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    line-height: 1.5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #121212; 
+      
+      color: #e0e0e0; 
+    }
+  }
+
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+
+  }
+
+
+  :global(blockquote) {
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid currentColor;
+    opacity: 0.8;
+    font-style: italic; /* optional */
+  }
+
+  :global(blockquote > p) {
+    margin: 0;
+  }
+
+  :global(hr) {
+    border: none;
+    border-top: 1px solid currentColor;
+    opacity: 0.2;
+    margin: 2rem 0;
+  }
+
+  :global(.backlinks) {
+    margin-top: 2rem;
+  }
+
+  :global(.backlinks h2) {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+  }
+
+  :global(.backlinks ul) {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  :global(.backlinks li) {
+    margin-bottom: 1.25rem;
+  }
+
+  :global(.backlinks li:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.backlink-context) {
+    font-size: 0.9em;
+    opacity: 0.7;
+    line-height: 1.5;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+  }
+
+  /*
+    Astro emits the responsive-image sizing CSS (@layer astro.images) per page,
+    but it only lands on src/pages/*.md. Content-collection notes (rendered
+    through NotesFeed here, or [slug].astro on their permalink) get the srcset
+    and data-astro-image attributes without that stylesheet, which would let a
+    full-size image overflow the 70ch measure. These mirror Astro's own
+    :where() rules (zero specificity) so they never override the injected ones
+    where those do exist.
+  */
+  :global(img[data-astro-image]) {
+    height: auto;
+  }
+
+  :global(img[data-astro-image='constrained']) {
+    max-width: 100%;
+  }
+
+
+</style>
+
+</html>
