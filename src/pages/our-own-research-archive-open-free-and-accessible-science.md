@@ -291,7 +291,7 @@ But today:
 - They tell you, your work is accepted to their journal
 - So after doing the work, you also pay in thousands of dollars to sign over your copyright, you bundle it into 2 column 8pt layout that got it's culture from 17th century when you had to save space, except it's digital now and still hasn't changed after centuries. 
 - Your institution either pays millions of dollars to read and access the work they funded.
-- Oh you want it without a subscription? Pay $48 for 24 hours access to this specific article. For the work your fellow colleague did.
+- Oh you want it without a subscription? Pay \48 for 24 hours access to this specific article. For the work your fellow colleague did.
 
 and that's assuming your paper fits that specific human committee's vision of what the field should read. 
 
@@ -481,11 +481,11 @@ But grounding it through taxonomy, and guidelines that's not just mark down file
 
 ## How will this funding be used?
 
-Total to get it running: ₹5,00,000 (~$5,400) (brought down from ~$8,500 as shown in manifund)
+Total to get it running: ₹5,00,000 (~\$5,400) (brought down from ~\$8,500 as shown in manifund)
 
 **Capex:**
 - ₹1,00,000 for hardware (Marker PDF, core library needed for this work needs better hardware) 
-- ₹50,000 (~$500) for server (Looking into Hetzner CAX21), image processing, backups and deployment.
+- ₹50,000 (~\$500) for server (Looking into Hetzner CAX21), image processing, backups and deployment.
 
 **Opex:** ₹1,00,000 for AI credits across parsing, typesetting, taxonomy work, etc.
 
@@ -664,7 +664,7 @@ I paused the project few months later to protect the integrity of the work, beca
 
 The second doubt was, why is it not published in an international Q1 journal (Even if that would mean watering down the reports to fit the journal’s vision and to generalize it so it’s not ‘only for India’ but widely applicable. In a work, that is specifically for India.)
 
-That was an open question I had in mind since then, where is the space for works that don't fit the specific academic silo a particular journal expects? That publishing a non silo'd work in the open without paying $8000 shouldn't mean the work being inaccessible, un-indexed, skepticism at every stance instead of rational judgement of the work.
+That was an open question I had in mind since then, where is the space for works that don't fit the specific academic silo a particular journal expects? That publishing a non silo'd work in the open without paying \$8000 shouldn't mean the work being inaccessible, un-indexed, skepticism at every stance instead of rational judgement of the work.
 
 Few months later is when I got a direction on how we can tackle this, cue OORA.
 
