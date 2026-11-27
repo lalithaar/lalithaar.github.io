@@ -291,7 +291,7 @@ But today:
 - They tell you, your work is accepted to their journal
 - So after doing the work, you also pay in thousands of dollars to sign over your copyright, you bundle it into 2 column 8pt layout that got it's culture from 17th century when you had to save space, except it's digital now and still hasn't changed after centuries. 
 - Your institution either pays millions of dollars to read and access the work they funded.
-- Oh you want it without a subscription? Pay 48 for 24 hours access to this specific article. For the work your fellow colleague did.
+- Oh you want it without a subscription? Pay \$48 for 24 hours access to this specific article. For the work your fellow colleague did.
 
 and that's assuming your paper fits that specific human committee's vision of what the field should read. 
 
